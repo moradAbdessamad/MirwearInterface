@@ -1,0 +1,192 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+.container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    /* border: solid 2px blue; */
+}
+
+.videoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 60%;
+    /* border: solid 1px gray; */
+}
+
+.logo {
+    /* border: solid 2px red; */
+    position: absolute;
+    top: 5px;
+    font-size: large;
+    left: -14px;
+    transform: scale(0.7);
+}
+
+.title {
+    position: absolute;
+    top: 45px;
+    background-color: #2b212f;
+    border-radius: 5px;
+    padding: 5px 8px;
+    color: #fff;
+    font-size: 19px;
+    text-transform: capitalize;
+}
+
+#video {
+    width: 100%;
+    height: 100%;
+}
+
+.buttonsCon {
+    padding: 0px;
+    /* border: solid 2px rebeccapurple; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: absolute;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.rights_button {
+    /* border: solid 2px green; */
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    /* position: absolute; */
+    right: 0px;
+    /* border: solid 2px red; */
+    padding: 9px;
+    gap: 10px;
+    border-radius: 9px;
+    /* display: none; */
+    overflow: hidden;
+}
+
+#buttonContainer {
+    /* position: absolute; */
+    padding: 9px;
+    border-radius: 9px;
+    top: 155px;
+    gap: 10px;
+    left: 13px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    /* border: solid 2px red; */
+}
+
+.button {
+    width: 110px;
+    height: 50px;
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.recommend-button {
+    position: absolute;
+    bottom: 20px;
+    width: 120px;
+    height: 45px;
+    background-color: #facfad;
+    padding: 5px 9px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.image-container {
+    width: 100px;
+    height: 100px;
+}
+
+.image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain; 
+    z-index: 10;
+    border: solid 2px black;
+    border-radius: 16px;
+}
+
+/* the outline pagse style */
+
+.outline_container {
+    /* border: solid 2px red; */
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 60%;
+}
+
+#logo-outline {
+    font-size: large;
+    position: absolute;
+    left: -14px;
+    top: 5px;
+    transform: scale(0.7);
+}
+
+.outline_container h1 {
+    position: absolute;
+    top: 54px;
+    font-size: 19px;
+    background-color: #2b212f;
+    color: #fff;
+    padding: 5px 8px;
+    border-radius: 5px;
+}
+
+.image_outline {
+    /* border: solid 2px blue; */
+    width: 52%;
+    position: absolute;
+    top: 30px;
+}
+
+#video-outline {
+    /* border: solid 2px green; */
+    position: absolute;
+    z-index: -1;
+    /* width: 100%; */
+    top: 30px;
+}
+
+#overlay {
+    /* display: inline; */
+    position: relative;
+    width: 100%;
+    top: 30px;
+    height: 100%;
+    transform: scale(1.15);
+    z-index: 1;
+}
+
+#video-outline {
+    /* border: solid 2px green; */
+    position: absolute;
+    z-index: -1;
+    /* width: 100%; */
+    top: 5px;
+}
+
+/* CSS Preloading the image */

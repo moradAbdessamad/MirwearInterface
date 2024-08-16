@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Webcam Stream</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="videoContainer">
+        <div class="logo">
+          <svg
+            width="183"
+            height="68"
+            viewBox="0 0 183 68"
+            fill="white"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_162_2)">
+              <path
+                d="M2.79003 67.3276C1.10003 66.4376 0.260028 65.3776 0.260028 64.1376L2.78285e-05 8.05757C2.78285e-05 8.05757 -0.0299722 5.86757 1.88003 4.45757C3.79003 3.04757 7.28003 2.03757 11.2 5.57757L57.07 45.0276L105.45 0.00756836L106.56 13.2776C106.69 14.7776 106.13 16.2576 105.05 17.3076L64.8 56.1876C64.17 56.7276 63.2 57.2476 61.88 57.7476C60.56 58.2476 59.14 58.4976 57.59 58.4976C54.27 58.4976 51.73 57.7776 49.96 56.3276L12.15 23.7376L12.41 64.0976V64.1376C12.41 65.3776 11.57 66.4376 9.88003 67.3276C8.19003 68.2176 4.48003 68.2176 2.79003 67.3276Z"
+                fill="#fff"
+              />
+              <path
+                d="M179.779 0.6775C181.469 1.5675 182.309 2.6275 182.309 3.8675L182.569 59.9475C182.569 59.9475 182.599 62.1375 180.689 63.5475C178.779 64.9575 175.289 65.9675 171.369 62.4275L125.499 22.9775L77.1285 67.9975L76.0185 54.7275C75.8885 53.2275 76.4485 51.7475 77.5285 50.6975L117.779 11.8175C118.409 11.2775 119.379 10.7575 120.699 10.2575C122.019 9.7575 123.439 9.5075 124.989 9.5075C128.309 9.5075 130.849 10.2275 132.619 11.6775L170.429 44.2575L170.169 3.8975V3.8575C170.169 2.6175 171.009 1.5575 172.699 0.6675C174.389 -0.2225 178.099 -0.2225 179.789 0.6675L179.779 0.6775Z"
+                fill="#fff"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_162_2">
+                <rect width="182.66" height="67.99" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+
+        <h1 class="title">Pls hover with u finger_tip_index for 1s to click</h1>
+
+        <img id="video" src="{{ url_for('video_feed') }}" />
+
+        <div class="buttonsCon">
+          <div id="buttonContainer">
+            <div class="image-container">
+              <img
+                id="button1"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_1.png') }}"
+                style="display: inline"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="button2"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_2.png') }}"
+                style="display: inline"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="button3"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_3.png') }}"
+                style="display: inline"
+              />
+            </div>
+          </div>
+
+          <div class="rights_button" id="rights_button">
+            <div class="image-container">
+              <img
+                id="option1_1"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_1.png') }}"
+                style="display: none"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="option1_2"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_2.png') }}"
+                style="display: none"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="option1_3"
+                class="cloth-image"
+                src="{{ url_for('static', filename='Cloths/option1_3.png') }}"
+                style="display: none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button id="recommend" class="recommend-button">Recommend</button>
+      </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          // Initialize SocketIO
+          var socket = io();
+
+          // Listen for button_hover events
+          socket.on("button_hover", function (data) {
+            var image1 = document.getElementById("option1_1");
+            var image2 = document.getElementById("option1_2");
+            var image3 = document.getElementById("option1_3");
+
+            console.log(image1);
+            console.log(data);
+
+            if (data.button == "Option 1") {
+              image1.style.display = "block";
+              image2.style.display = "block";
+              image3.style.display = "block";
+
+              image1.src =
+                "{{ url_for('static', filename = 'Cloths/option1_1.png') }}";
+              image2.src =
+                "{{ url_for('static', filename = 'Cloths/option1_2.png') }}";
+              image3.src =
+                "{{ url_for('static', filename = 'Cloths/option1_3.png') }}";
+            } else if (data.button == "Option 2") {
+              image1.style.display = "block";
+              image2.style.display = "block";
+              image3.style.display = "block";
+
+              image1.src =
+                "{{ url_for('static', filename = 'Cloths/option2_1.png') }}";
+              image2.src =
+                "{{ url_for('static', filename = 'Cloths/option2_2.png') }}";
+              image3.src =
+                "{{ url_for('static', filename = 'Cloths/option2_3.png') }}";
+            } else if (data.button == "Option 3") {
+              image1.style.display = "block";
+              image2.style.display = "block";
+              image3.style.display = "block";
+
+              image1.src =
+                "{{ url_for('static', filename = 'Cloths/option3_1.png') }}";
+              image2.src =
+                "{{ url_for('static', filename = 'Cloths/option3_2.png') }}";
+              image3.src =
+                "{{ url_for('static', filename = 'Cloths/option3_3.png') }}";
+            }
+          });
+
+          // Get all buttons inside the container
+          let buttons = document.querySelectorAll(".buttonsCon .button");
+
+          buttons.forEach((button) => {
+            // Get the bounding rectangle of the button
+            const rect = button.getBoundingClientRect();
+
+            // Get the bounding rectangle of the grandparent element (videoContainer)
+            const grandparentRect = document
+              .querySelector(".videoContainer")
+              .getBoundingClientRect();
+
+            const topLeft = {
+              x: rect.left - grandparentRect.left,
+              y: rect.top - grandparentRect.top,
+            };
+
+            const bottomRight = {
+              x: rect.right - grandparentRect.left,
+              y: rect.bottom - grandparentRect.top,
+            };
+
+            // Log the coordinates to the console
+            console.log(
+              `${button.id}: { top_left: (${topLeft.x}, ${topLeft.y}), bottom_right: (${bottomRight.x}, ${bottomRight.y}) }`
+            );
+          });
+        });
+
+        function preloadImages() {
+          const images = [
+              '{{ url_for('static', filename='Cloths/image.png') }}',
+              '{{ url_for('static', filename='Cloths/option1_1.png') }}',
+              '{{ url_for('static', filename='Cloths/option1_2.png') }}',
+              '{{ url_for('static', filename='Cloths/option1_3.png') }}',
+              '{{ url_for('static', filename='Cloths/option2_1.png') }}',
+              '{{ url_for('static', filename='Cloths/option2_2.png') }}',
+              '{{ url_for('static', filename='Cloths/option2_3.png') }}',
+              '{{ url_for('static', filename='Cloths/option3_1.png') }}',
+              '{{ url_for('static', filename='Cloths/option3_2.png') }}',
+              '{{ url_for('static', filename='Cloths/option3_3.png') }}'
+          ];
+
+          console.log("Starting to load images...");
+
+          images.forEach(image => {
+              const img = new Image();
+              img.onload = () => {
+                  console.log(`${image} loaded successfully`);
+              };
+              img.onerror = (e) => {
+                  console.error(`Error loading ${image}: `, e);
+              };
+              img.src = image;
+          });
+      }
+
+      window.onload = preloadImages;
+    </script>
+  </body>
+</html>

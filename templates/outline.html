@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Outline Check</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <div class="outline_container">
+        <div class="logo" id="logo-outline">
+          <svg
+            width="183"
+            height="68"
+            viewBox="0 0 183 68"
+            fill="white"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_162_2)">
+              <path
+                d="M2.79003 67.3276C1.10003 66.4376 0.260028 65.3776 0.260028 64.1376L2.78285e-05 8.05757C2.78285e-05 8.05757 -0.0299722 5.86757 1.88003 4.45757C3.79003 3.04757 7.28003 2.03757 11.2 5.57757L57.07 45.0276L105.45 0.00756836L106.56 13.2776C106.69 14.7776 106.13 16.2576 105.05 17.3076L64.8 56.1876C64.17 56.7276 63.2 57.2476 61.88 57.7476C60.56 58.2476 59.14 58.4976 57.59 58.4976C54.27 58.4976 51.73 57.7776 49.96 56.3276L12.15 23.7376L12.41 64.0976V64.1376C12.41 65.3776 11.57 66.4376 9.88003 67.3276C8.19003 68.2176 4.48003 68.2176 2.79003 67.3276Z"
+                fill="#fff"
+              />
+              <path
+                d="M179.779 0.6775C181.469 1.5675 182.309 2.6275 182.309 3.8675L182.569 59.9475C182.569 59.9475 182.599 62.1375 180.689 63.5475C178.779 64.9575 175.289 65.9675 171.369 62.4275L125.499 22.9775L77.1285 67.9975L76.0185 54.7275C75.8885 53.2275 76.4485 51.7475 77.5285 50.6975L117.779 11.8175C118.409 11.2775 119.379 10.7575 120.699 10.2575C122.019 9.7575 123.439 9.5075 124.989 9.5075C128.309 9.5075 130.849 10.2275 132.619 11.6775L170.429 44.2575L170.169 3.8975V3.8575C170.169 2.6175 171.009 1.5575 172.699 0.6675C174.389 -0.2225 178.099 -0.2225 179.789 0.6675L179.779 0.6775Z"
+                fill="#fff"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_162_2">
+                <rect width="182.66" height="67.99" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+        <h1>
+          Stand Still in the Outline for <span id="countdown">5</span> Seconds
+        </h1>
+        <h1 id="message"></h1>
+        <div class="image_outline">
+          <img
+            src="{{ url_for('static', filename='Cloths/image.png') }}"
+            id="overlay"
+          />
+        </div>
+        <img
+          src="{{ url_for('video_feed_outline') }}"
+          style="width: 100%"
+          id="video-outline"
+        />
+      </div>
+    </div>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const socket = io();
+        let countdownActive = false;
+
+        socket.on("connect", () => {
+          console.log("WebSocket connected:", socket.id);
+        });
+
+        socket.on("disconnect", () => {
+          console.log("WebSocket disconnected");
+        });
+
+        socket.on("connect_error", (error) => {
+          console.log("WebSocket connection error:", error);
+        });
+
+        socket.on("user_status", (data) => {
+          console.log("Received user_status:", data);
+
+          const messageElement = document.getElementById("message");
+          const countdownElement = document.getElementById("countdown");
+
+          if (data.status === "standing_still") {
+            if (countdownActive) {
+              console.log("Can't start countdown, one is already active.");
+              return;
+            }
+
+            console.log("User is standing still. Starting countdown...");
+            let countdown = 5;
+            countdownElement.textContent = countdown;
+            countdownActive = true;
+
+            const countdownInterval = setInterval(() => {
+              countdown--;
+              countdownElement.textContent = countdown;
+
+              if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                countdownElement.textContent = "";
+                countdownActive = false;
+                window.location.href = "/";
+              }
+            }, 1000);
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
