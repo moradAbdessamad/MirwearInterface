@@ -23,6 +23,8 @@ buttons = {
     'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
 }
 
+
+
 hover_start_time = {}
 hover_duration = 1  # Duration to hover in seconds
 
@@ -180,14 +182,34 @@ buttons_recommand = {
     'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
     'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
     'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
+
+    'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
+    'summer': {'top_left': (130, 265), 'bottom_right': (200, 295)},
+    'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
+    'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
+
+    'male': {'top_left': (234, 226), 'bottom_right': (304, 251)},
+    'female': {'top_left': (234, 265), 'bottom_right': (304, 295)},
+    'unisex': {'top_left': (234, 310), 'bottom_right': (304, 336)},
+    'kids': {'top_left': (234, 352), 'bottom_right': (304, 376)},
+
+    'red': {'top_left': (334, 226), 'bottom_right': (412, 251)},
+    'blue': {'top_left': (334, 265), 'bottom_right': (412, 295)},
+    'green': {'top_left': (334, 310), 'bottom_right': (412, 336)},
+    'yellow': {'top_left': (334, 352), 'bottom_right': (412, 376)},
+
+    'casual': {'top_left': (442, 226), 'bottom_right': (512, 251)},
+    'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
+    'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
+    'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
 }
 
-# buttons_recommand = {
-#     'Season': {'top_left': (400, 218), 'bottom_right': (505, 270)},
-#     'Gender': {'top_left': (536, 218), 'bottom_right': (640, 270)},
-#     'Color': {'top_left': (671, 218), 'bottom_right': (770, 270)},
-#     'Style': {'top_left': (801, 218), 'bottom_right': (900, 270)},
-# }
+button_season = {
+    'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
+    'summer': {'top_left': (130, 226), 'bottom_right': (200, 295)},
+    'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
+    'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
+}
 
 
 hover_start_time_recommand = {}
@@ -223,6 +245,7 @@ def gen_frames_for_recommandation():
             frame = cv2.flip(frame, 1)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
+            # Draw rectangles based on the received positions
             for button, coords in buttons_recommand.items():
                 cv2.rectangle(frame, 
                               coords['top_left'], 
@@ -236,9 +259,8 @@ def gen_frames_for_recommandation():
                 for hand_landmarks in results.multi_hand_landmarks:
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
-                    print("The frame shape is ", frame.shape)
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    print("the finger tipe index : ", (cx, cy))
+                    # print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
@@ -247,6 +269,7 @@ def gen_frames_for_recommandation():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
 
 
 
@@ -275,6 +298,9 @@ def video_feed_recommandation():
 @app.route('/recommandation')
 def recommandation():
     return render_template('recommandation.html')
+
+
+
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
