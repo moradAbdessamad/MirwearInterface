@@ -98,7 +98,7 @@
     border-radius: 5px;
 }
 
-.recommend-button {
+.recommend-button, .recommend-button-recommand{
     position: absolute;
     bottom: 20px;
     width: 120px;

@@ -202,6 +202,8 @@ buttons_recommand = {
     'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
     'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
     'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
+
+    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)}
 }
 
 button_season = {
@@ -300,6 +302,10 @@ def recommandation():
     return render_template('recommandation.html')
 
 
+@socketio.on('recommendation_selected')
+def handle_recommendation_selected(data):
+    print("Received recommendation selections:", data)
+    # Process the data as needed, for example, generate a recommendation based on the selections
 
 
 if __name__ == '__main__':
