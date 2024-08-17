@@ -173,27 +173,82 @@ def gen_frames_for_outline():
     cv2.destroyAllWindows()
     yield b''
 
-def gen_frames_for_recommandation():
-    cap = cv2.VideoCapture(0)
-    
-    if not cap.isOpened():
-        print('Error opening the camera in the Recommandation')
-        yield b''
-        return
-    
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            print("Error reading the camera feed")
-            break
 
-        frame = cv2.flip(frame, 1)
-        frame_h, frame_w, _ = frame.shape
-        
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+buttons_recommand = {
+    'Season': {'top_left': (102, 167), 'bottom_right': (186, 203)},
+    'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
+    'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
+    'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
+}
+
+# buttons_recommand = {
+#     'Season': {'top_left': (400, 218), 'bottom_right': (505, 270)},
+#     'Gender': {'top_left': (536, 218), 'bottom_right': (640, 270)},
+#     'Color': {'top_left': (671, 218), 'bottom_right': (770, 270)},
+#     'Style': {'top_left': (801, 218), 'bottom_right': (900, 270)},
+# }
+
+
+hover_start_time_recommand = {}
+hover_duration = 0.5  # 1 second hover duration
+
+def check_button_hover_recommand(finger_tip_coords):
+    global hover_start_time_recommand
+
+    if finger_tip_coords:
+        for button, coords in buttons_recommand.items():
+            if (coords['top_left'][0] <= finger_tip_coords['x'] <= coords['bottom_right'][0] and
+                coords['top_left'][1] <= finger_tip_coords['y'] <= coords['bottom_right'][1]):
+                
+                if button not in hover_start_time_recommand:
+                    hover_start_time_recommand[button] = time.time()
+                elif time.time() - hover_start_time_recommand[button] >= hover_duration:
+                    message = {'button_recommand': button}
+                    print(f"Emitting message: {message}")
+                    socketio.emit('button_hover_recommand', message)
+                    hover_start_time_recommand.pop(button)
+                    return
+            else:
+                if button in hover_start_time_recommand:
+                    hover_start_time_recommand.pop(button)
+
+def gen_frames_for_recommandation():
+    camera = cv2.VideoCapture(0)
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            frame = cv2.flip(frame, 1)
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            for button, coords in buttons_recommand.items():
+                cv2.rectangle(frame, 
+                              coords['top_left'], 
+                              coords['bottom_right'], 
+                              (0, 255, 0), 2)  # Green rectangle with thickness of 2
+            
+            results = hands.process(frame_rgb)
+            finger_tip_coords = None
+
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                    h, w, _ = frame.shape
+                    print("The frame shape is ", frame.shape)
+                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
+                    print("the finger tipe index : ", (cx, cy))
+                    finger_tip_coords = {'x': cx, 'y': cy}
+                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
+                    check_button_hover_recommand(finger_tip_coords)
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
 
 @app.route('/video_feed_outline')
 def video_feed_outline():

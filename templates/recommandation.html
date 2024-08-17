@@ -86,10 +86,47 @@
         </div>
       </div>
     </div>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        console.log("loaded")
-      });
+        document.addEventListener("DOMContentLoaded", function () {
+            // Establish a connection to the WebSocket
+            var socket = io.connect(window.location.protocol + '//' + window.location.host);
+        
+            // Listen for the 'button_hover_recommand' event from the server
+            socket.on('button_hover_recommand', function (message) {
+                var buttonName = message.button_recommand;
+                showDropdownContent(buttonName);
+            });
+        
+            function showDropdownContent(buttonName) {
+                // Hide all dropdown contents first
+                var dropdownContents = document.querySelectorAll('.dropdown-content');
+                dropdownContents.forEach(function (content) {
+                    content.style.display = 'none';
+                });
+        
+                // Display the relevant dropdown content based on the button name
+                var dropdown;
+                switch (buttonName) {
+                    case 'Season':
+                        dropdown = document.querySelector('#seasonDropdown .dropdown-content');
+                        break;
+                    case 'Gender':
+                        dropdown = document.querySelector('#genderDropdown .dropdown-content');
+                        break;
+                    case 'Color':
+                        dropdown = document.querySelector('#colorDropdown .dropdown-content');
+                        break;
+                    case 'Style':
+                        dropdown = document.querySelector('#styleDropdown .dropdown-content');
+                        break;
+                }
+        
+                if (dropdown) {
+                    dropdown.style.display = 'flex';
+                }
+            }
+        });                     
     </script>
   </body>
 </html>

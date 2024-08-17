@@ -209,7 +209,7 @@
 .recommandation-buttons-container {
     display: flex;
     position: absolute;
-    bottom: 100px;
+    top: 216px;
     /* background-color: #f5ac72; */
     /* border-radius: 11px; */
     color: #fff;
@@ -220,9 +220,10 @@
 .dropdown {
     flex: 1;
     display: flex;
+    gap: 15px;
     flex-direction: column;
     /* border: 1px solid #2b212f; */
-    width: 25%; /* Ensures all dropdowns take up equal width */
+    width: 25%;
 }
 
 .dropbtn {
@@ -236,7 +237,7 @@
 }
 
 .dropdown-content {
-    display: flex;
+    display: none;
     /* background-color: #facfad; */
     gap: 10px;
     color: #2b212f;
