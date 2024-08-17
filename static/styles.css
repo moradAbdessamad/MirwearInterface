@@ -204,3 +204,51 @@
 .title_recommandation {
     border: solid 2px green;
 }
+
+
+.recommandation-buttons-container {
+    display: flex;
+    position: absolute;
+    bottom: 100px;
+    /* background-color: #f5ac72; */
+    /* border-radius: 11px; */
+    color: #fff;
+    width: 500px;
+    gap: 31px;
+}
+
+.dropdown {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid #2b212f; */
+    width: 25%; /* Ensures all dropdowns take up equal width */
+}
+
+.dropbtn {
+    background-color: transparent;
+    color: #2b212f;
+    padding: 11px;
+    font-size: 24px;
+    text-align: center;
+    border: 1px solid #facfad;
+    /* width: 100%; */
+}
+
+.dropdown-content {
+    display: flex;
+    /* background-color: #facfad; */
+    gap: 10px;
+    color: #2b212f;
+    flex-direction: column;
+    /* border: 2px solid #fff; */
+    width: 100%;
+}
+
+.dropdown-content div {
+    padding: 12px;
+    /* cursor: pointer; */
+    border: 1px solid #fff;
+    text-align: center;
+}
+
