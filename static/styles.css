@@ -189,4 +189,18 @@
     top: 5px;
 }
 
-/* CSS Preloading the image */
+/* the recommandation page style */
+
+.recommandation_outline {
+    border: solid 2px red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 85%;
+}
+
+.title_recommandation {
+    border: solid 2px green;
+}

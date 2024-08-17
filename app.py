@@ -173,6 +173,28 @@ def gen_frames_for_outline():
     cv2.destroyAllWindows()
     yield b''
 
+def gen_frames_for_recommandation():
+    cap = cv2.VideoCapture(0)
+    
+    if not cap.isOpened():
+        print('Error opening the camera in the Recommandation')
+        yield b''
+        return
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Error reading the camera feed")
+            break
+
+        frame = cv2.flip(frame, 1)
+        frame_h, frame_w, _ = frame.shape
+        
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
 @app.route('/video_feed_outline')
 def video_feed_outline():
     return Response(gen_frames_for_outline(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -189,6 +211,15 @@ def video_feed():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+@app.route('/video_feed_recommandation')
+def video_feed_recommandation():
+    return Response(gen_frames_for_recommandation(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/recommandation')
+def recommandation():
+    return render_template('recommandation.html')
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
