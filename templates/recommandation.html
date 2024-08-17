@@ -94,31 +94,35 @@
         document.addEventListener("DOMContentLoaded", function () {
             // Establish a connection to the WebSocket
             var socket = io.connect(window.location.protocol + '//' + window.location.host);
-        
+            
             var selectedItems = {
                 'Season': null,
                 'Gender': null,
                 'Color': null,
                 'Style': null
             };
-        
+            
             // Listen for the 'button_hover_recommand' event from the server
             socket.on('button_hover_recommand', function (message) {
                 var buttonName = message.button_recommand;
-                handleButtonRecommand(buttonName);
+                if (buttonName === 'recommand') {
+                    handleRecommendButtonClick();
+                } else {
+                    handleButtonRecommand(buttonName);
+                }
             });
-        
+            
             function handleButtonRecommand(buttonName) {
                 // Hide all dropdown contents first
                 var dropdownContents = document.querySelectorAll('.dropdown-content');
                 dropdownContents.forEach(function (content) {
                     content.style.display = 'none';
                 });
-        
+            
                 // Determine which category the button corresponds to
                 var category = null;
                 var dropdown = null;
-        
+            
                 switch (buttonName.toLowerCase()) {
                     case 'season':
                         dropdown = document.querySelector('#seasonDropdown .dropdown-content');
@@ -161,27 +165,45 @@
                         category = 'Style';
                         break;
                 }
-        
+            
                 if (dropdown) {
                     // Display the relevant dropdown content
                     dropdown.style.display = 'flex';
                 }
-        
+            
                 if (category && buttonName.toLowerCase() !== category.toLowerCase()) {
                     // If the button name is a specific selection (e.g., "Winter"), update the selectedItems
                     selectedItems[category] = buttonName.charAt(0).toUpperCase() + buttonName.slice(1).toLowerCase();
                     console.log(`Selected ${category}: ${selectedItems[category]}`);
                 }
             }
-        
-            // Handle "Recommend" button click
-            var recommendButton = document.getElementById('recommend-recommand');
-            recommendButton.addEventListener('click', function () {
+            
+            function handleRecommendButtonClick() {
                 console.log("Recommendation clicked with selections:", selectedItems);
                 socket.emit('recommendation_selected', selectedItems);
-            });
-        });
-                      
+            
+                // Reset the selectedItems object after sending
+                selectedItems = {
+                    'Season': null,
+                    'Gender': null,
+                    'Color': null,
+                    'Style': null
+                };
+                console.log("Selections reset:", selectedItems);
+            
+                // Hide all dropdown contents
+                var dropdownContents = document.querySelectorAll('.dropdown-content');
+                dropdownContents.forEach(function (content) {
+                    content.style.display = 'none';
+                });
+        
+                // Hide all dropbtn elements
+                var dropbtns = document.querySelectorAll('.dropbtn');
+                dropbtns.forEach(function (btn) {
+                    btn.style.display = 'none';
+                });
+            }
+        });                                 
     </script>
   </body>
 </html>

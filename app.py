@@ -262,7 +262,7 @@ def gen_frames_for_recommandation():
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    # print("The fingertip index:", (cx, cy))
+                    print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
