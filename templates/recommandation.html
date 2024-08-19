@@ -84,12 +84,43 @@
             </div>
         </div>
 
+        <div class="recommanded-images">
+            <div class="recommanded-image-container">
+              <img
+                id="recommanded-top"
+                class="cloth-image-recommand"
+                src="{{ url_for('static', filename='Cloths/option1_1.png') }}"
+              />
+            </div>
+          
+            <div class="recommanded-image-container">
+              <img
+                id="recommanded-bottom"
+                class="cloth-image-recommand"
+                src="{{ url_for('static', filename='Cloths/option1_2.png') }}"
+              />
+            </div>
+          
+            <div class="recommanded-image-container">
+              <img
+                id="recommanded-foot"
+                class="cloth-image-recommand"
+                src="{{ url_for('static', filename='Cloths/option1_3.png') }}"
+              />
+            </div>
+
+            <i class="fa-solid fa-shuffle" id="shuffle-icone"></i>
+
+          </div>
+          
+
         <button id="recommend-recommand" class="recommend-button-recommand">Recommend</button>
 
         </div>
       </div>
     </div>
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://kit.fontawesome.com/5fce5f9bd9.js" crossorigin="anonymous"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Establish a connection to the WebSocket
@@ -202,6 +233,9 @@
                 dropbtns.forEach(function (btn) {
                     btn.style.display = 'none';
                 });
+
+                var recommandedImages = document.querySelector('.recommanded-images');
+                recommandedImages.style.display = 'flex';
             }
         });                                 
     </script>

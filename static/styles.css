@@ -253,3 +253,35 @@
     text-align: center;
 }
 
+.recommanded-images {
+    width: 15%;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    border: solid 2px black;
+    border-radius: 10px;
+    position: absolute;
+    right: 2%;
+    gap: 10px;
+    padding: 15px;
+}
+
+.recommanded-image-container {
+    width: 100%;
+}
+  
+.cloth-image-recommand {
+    width: 100%;
+    height: auto;
+    border: solid 2px black;
+    border-radius: 8px;
+}
+
+#shuffle-icone {
+    /* border: solid 2px red; */
+    font-size: 130%;
+    color: white;
+    background-color: black;
+    padding: 7px;
+    border-radius: 9px;
+}
