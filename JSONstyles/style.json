@@ -1,0 +1,209 @@
+{
+    "style_1": {
+        "10788.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "darksalmon",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "15110.jpg": {
+            "type": "Jeans",
+            "gender": "Women",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20676.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkolivegreen",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_2": {
+        "10796.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "burlywood",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "15112.jpg": {
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "darkgrey",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20677.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "dimgray",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_3": {
+        "10800.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "lightseagreen",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "15111.jpg": {
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "darkolivegreen",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20700.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "gray",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_4": {
+        "10797.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "dimgray",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "15113.jpg": {
+            "type": "Leggings",
+            "gender": "Women",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Ethnic"
+        },
+        "20704.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Fall",
+            "style": "Casual"
+        }
+    },
+    "style_5": {
+        "10825.jpg": {
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "lightseagreen",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "15115.jpg": {
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Formal"
+        },
+        "20705.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_6": {
+        "10829.jpg": {
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "deepskyblue",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "15132.jpg": {
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20699.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkolivegreen",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_7": {
+        "10837.jpg": {
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "mediumvioletred",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "15140.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "brown",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20697.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_8": {
+        "10841.jpg": {
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "seagreen",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "15147.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "khaki",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "20690.jpg": {
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_9": {
+        "10845.jpg": {
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "firebrick",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "15145.jpg": {
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "steelblue",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "20715.jpg": {
+            "type": "Formal Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Formal"
+        }
+    }
+}

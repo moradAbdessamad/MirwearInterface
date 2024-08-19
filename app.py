@@ -203,7 +203,9 @@ buttons_recommand = {
     'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
     'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
 
-    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)}
+    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
+
+    'shoffle': {'top_left': (550, 400), 'bottom_right': (573, 417)}
 }
 
 button_season = {
