@@ -424,13 +424,6 @@ wardrobe_data = {
         "season": "Summer",
         "style": "Casual"
     },
-    "15331.jpg": {
-        "type": "Sports Shoes",
-        "gender": "Women",
-        "color": "gainsboro",
-        "season": "Summer",
-        "style": "Casual"
-    },
     "15332.jpg": {
         "type": "Track Pants",
         "gender": "Men",
@@ -1317,15 +1310,15 @@ wardrobe_data = {
 
 # Recommendation criteria
 criteria = {
-    "season": "summer",
-    "gender": "female",
-    "color": "any",
-    "style": "casual"
+    "season": "None",
+    "gender": "None",
+    "color": "None",
+    "style": "None"
 }
 
 # Define the prompt
 prompt = f"""
-You are tasked with creating fashion style recommendations based on the user's wardrobe data and specific criteria. 
+You are tasked with creating fashion style recommendations based on the user's wardrobe data and specific criteria.
 
 User wardrobe data:
 {json.dumps(wardrobe_data, indent=2)}
@@ -1333,7 +1326,13 @@ User wardrobe data:
 Recommendation criteria:
 {json.dumps(criteria, indent=2)}
 
-Your goal is to generate complete style recommendations that meet the criteria provided. Each style should include a top, bottom, and shoes. Please ensure that the combinations are coherent and stylish. The output should be formatted as follows:
+Your goal is to generate complete style recommendations that meet the criteria provided. Each style should include a distinct top, bottom, and shoes. Ensure that each item (top, bottom, shoes) used in a style is unique and not repeated in other styles. The combinations should be coherent, stylish, and diverse across the styles.
+
+If any criteria elements are `None`, then simply recommend styles that include a top, bottom, and shoes that look good together, while respecting the gender of the items. For example, generate complete random styles for men or women, but do not mix items for women in a men's style and vice versa.
+
+If there are multiple items available in a category (e.g., multiple tops), make sure to use different items in each style. No item should be repeated across different styles. If you run out of unique items to use, limit the number of styles generated accordingly.
+
+The output should be formatted as follows:
 
 {{
     "style_1": {{
@@ -1363,15 +1362,39 @@ Your goal is to generate complete style recommendations that meet the criteria p
         }}
     }},
     "style_2": {{
-        // Another complete outfit recommendation
+        "top": {{
+            "image": "another_image_name.jpg",
+            "type": "Another_Top_Type",
+            "gender": "Gender",
+            "color": "Color",
+            "season": "Season",
+            "style": "Style"
+        }},
+        "bottom": {{
+            "image": "another_image_name.jpg",
+            "type": "Another_Bottom_Type",
+            "gender": "Gender",
+            "color": "Color",
+            "season": "Season",
+            "style": "Style"
+        }},
+        "shoes": {{
+            "image": "another_image_name.jpg",
+            "type": "Another_Shoes_Type",
+            "gender": "Gender",
+            "color": "Color",
+            "season": "Season",
+            "style": "Style"
+        }}
     }},
     "style_3": {{
-        // Another complete outfit recommendation
+        // Another complete outfit recommendation with distinct items if available
     }}
 }}
 
-Please provide at least three style options that align with the given criteria.
+Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
 """
+
 
 
 # Request completion from the model

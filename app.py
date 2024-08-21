@@ -4,6 +4,7 @@ from flask_socketio import SocketIO, emit
 import cv2
 import mediapipe as mp
 import time
+import os
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -299,9 +300,22 @@ def index():
 def video_feed_recommandation():
     return Response(gen_frames_for_recommandation(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
 @app.route('/recommandation')
 def recommandation():
     return render_template('recommandation.html')
+
+
+@app.route('/get_style_recommendations', methods=['GET'])
+def get_style_recommendations():
+    # Adjust the path as needed
+    json_file_path = os.path.join('D:/OSC/MirwearInterface/JSONstyles', 'style_recommendations.json')
+    
+    with open(json_file_path, 'r') as json_file:
+        data = json_file.read()
+    
+    return data, 200, {'Content-Type': 'application/json'}
+
 
 
 @socketio.on('recommendation_selected')

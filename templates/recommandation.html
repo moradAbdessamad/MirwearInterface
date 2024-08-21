@@ -122,122 +122,155 @@
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
     <script src="https://kit.fontawesome.com/5fce5f9bd9.js" crossorigin="anonymous"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Establish a connection to the WebSocket
-            var socket = io.connect(window.location.protocol + '//' + window.location.host);
-            
-            var selectedItems = {
+      document.addEventListener("DOMContentLoaded", function () {
+        // Establish a connection to the WebSocket
+        var socket = io.connect(window.location.protocol + '//' + window.location.host);
+        
+        var selectedItems = {
+            'Season': null,
+            'Gender': null,
+            'Color': null,
+            'Style': null
+        };
+        
+        let currentStyleIndex = 1;  // Start with style_1
+        let stylesData = null;      // To store the styles data
+    
+        // Fetch the JSON data initially and store it
+        fetch('/get_style_recommendations')
+            .then(response => response.json())
+            .then(data => {
+                stylesData = data;
+                updateImages(stylesData[`style_${currentStyleIndex}`]);  // Initialize with style_1
+            })
+            .catch(error => console.error('Error loading the JSON file:', error));
+    
+        // Listen for the 'button_hover_recommand' event from the server
+        socket.on('button_hover_recommand', function (message) {
+            var buttonName = message.button_recommand;
+            if (buttonName === 'recommand') {
+                handleRecommendButtonClick();
+            } else if (buttonName === 'shoffle') {
+                shuffleImages();
+            } else {
+                handleButtonRecommand(buttonName);
+            }
+        });
+    
+        function handleButtonRecommand(buttonName) {
+            // Hide all dropdown contents first
+            var dropdownContents = document.querySelectorAll('.dropdown-content');
+            dropdownContents.forEach(function (content) {
+                content.style.display = 'none';
+            });
+        
+            // Determine which category the button corresponds to
+            var category = null;
+            var dropdown = null;
+        
+            switch (buttonName.toLowerCase()) {
+                case 'season':
+                    dropdown = document.querySelector('#seasonDropdown .dropdown-content');
+                    category = 'Season';
+                    break;
+                case 'winter':
+                case 'summer':
+                case 'spring':
+                case 'fall':
+                    category = 'Season';
+                    break;
+                case 'gender':
+                    dropdown = document.querySelector('#genderDropdown .dropdown-content');
+                    category = 'Gender';
+                    break;
+                case 'male':
+                case 'female':
+                case 'unisex':
+                case 'kids':
+                    category = 'Gender';
+                    break;
+                case 'color':
+                    dropdown = document.querySelector('#colorDropdown .dropdown-content');
+                    category = 'Color';
+                    break;
+                case 'red':
+                case 'blue':
+                case 'green':
+                case 'yellow':
+                    category = 'Color';
+                    break;
+                case 'style':
+                    dropdown = document.querySelector('#styleDropdown .dropdown-content');
+                    category = 'Style';
+                    break;
+                case 'casual':
+                case 'formal':
+                case 'sport':
+                case 'vintage':
+                    category = 'Style';
+                    break;
+            }
+        
+            if (dropdown) {
+                // Display the relevant dropdown content
+                dropdown.style.display = 'flex';
+            }
+        
+            if (category && buttonName.toLowerCase() !== category.toLowerCase()) {
+                // If the button name is a specific selection (e.g., "Winter"), update the selectedItems
+                selectedItems[category] = buttonName.charAt(0).toUpperCase() + buttonName.slice(1).toLowerCase();
+                console.log(`Selected ${category}: ${selectedItems[category]}`);
+            }
+        }
+    
+        function handleRecommendButtonClick() {
+            console.log("Recommendation clicked with selections:", selectedItems);
+    
+            updateImages(stylesData[`style_${currentStyleIndex}`]);
+    
+            socket.emit('recommendation_selected', selectedItems);
+        
+            // Reset the selectedItems object after sending
+            selectedItems = {
                 'Season': null,
                 'Gender': null,
                 'Color': null,
                 'Style': null
             };
-            
-            // Listen for the 'button_hover_recommand' event from the server
-            socket.on('button_hover_recommand', function (message) {
-                var buttonName = message.button_recommand;
-                if (buttonName === 'recommand') {
-                    handleRecommendButtonClick();
-                } else {
-                    handleButtonRecommand(buttonName);
-                }
-            });
-            
-            function handleButtonRecommand(buttonName) {
-                // Hide all dropdown contents first
-                var dropdownContents = document.querySelectorAll('.dropdown-content');
-                dropdownContents.forEach(function (content) {
-                    content.style.display = 'none';
-                });
-            
-                // Determine which category the button corresponds to
-                var category = null;
-                var dropdown = null;
-            
-                switch (buttonName.toLowerCase()) {
-                    case 'season':
-                        dropdown = document.querySelector('#seasonDropdown .dropdown-content');
-                        category = 'Season';
-                        break;
-                    case 'winter':
-                    case 'summer':
-                    case 'spring':
-                    case 'fall':
-                        category = 'Season';
-                        break;
-                    case 'gender':
-                        dropdown = document.querySelector('#genderDropdown .dropdown-content');
-                        category = 'Gender';
-                        break;
-                    case 'male':
-                    case 'female':
-                    case 'unisex':
-                    case 'kids':
-                        category = 'Gender';
-                        break;
-                    case 'color':
-                        dropdown = document.querySelector('#colorDropdown .dropdown-content');
-                        category = 'Color';
-                        break;
-                    case 'red':
-                    case 'blue':
-                    case 'green':
-                    case 'yellow':
-                        category = 'Color';
-                        break;
-                    case 'style':
-                        dropdown = document.querySelector('#styleDropdown .dropdown-content');
-                        category = 'Style';
-                        break;
-                    case 'casual':
-                    case 'formal':
-                    case 'sport':
-                    case 'vintage':
-                        category = 'Style';
-                        break;
-                }
-            
-                if (dropdown) {
-                    // Display the relevant dropdown content
-                    dropdown.style.display = 'flex';
-                }
-            
-                if (category && buttonName.toLowerCase() !== category.toLowerCase()) {
-                    // If the button name is a specific selection (e.g., "Winter"), update the selectedItems
-                    selectedItems[category] = buttonName.charAt(0).toUpperCase() + buttonName.slice(1).toLowerCase();
-                    console.log(`Selected ${category}: ${selectedItems[category]}`);
-                }
-            }
-            
-            function handleRecommendButtonClick() {
-                console.log("Recommendation clicked with selections:", selectedItems);
-                socket.emit('recommendation_selected', selectedItems);
-            
-                // Reset the selectedItems object after sending
-                selectedItems = {
-                    'Season': null,
-                    'Gender': null,
-                    'Color': null,
-                    'Style': null
-                };
-                console.log("Selections reset:", selectedItems);
-            
-                // Hide all dropdown contents
-                var dropdownContents = document.querySelectorAll('.dropdown-content');
-                dropdownContents.forEach(function (content) {
-                    content.style.display = 'none';
-                });
+            console.log("Selections reset:", selectedItems);
         
-                // Hide all dropbtn elements
-                var dropbtns = document.querySelectorAll('.dropbtn');
-                dropbtns.forEach(function (btn) {
-                    btn.style.display = 'none';
-                });
-
-                var recommandedImages = document.querySelector('.recommanded-images');
-                recommandedImages.style.display = 'flex';
-            }
-        });                                 
+            // Hide all dropdown contents
+            var dropdownContents = document.querySelectorAll('.dropdown-content');
+            dropdownContents.forEach(function (content) {
+                content.style.display = 'none';
+            });
+    
+            // Hide all dropbtn elements
+            var dropbtns = document.querySelectorAll('.dropbtn');
+            dropbtns.forEach(function (btn) {
+                btn.style.display = 'none';
+            });
+    
+            var recommandedImages = document.querySelector('.recommanded-images');
+            recommandedImages.style.display = 'flex';
+        }
+    
+        function shuffleImages() {
+            // Increment the style index, and loop back to 1 if it exceeds the number of styles
+            currentStyleIndex = (currentStyleIndex % 3) + 1;  // Assuming there are always 3 styles
+            updateImages(stylesData[`style_${currentStyleIndex}`]);
+        }
+    
+        function updateImages(style) {
+            var recommandTop = document.getElementById('recommanded-top');
+            var recommandBottom = document.getElementById('recommanded-bottom');
+            var recommandFoot = document.getElementById('recommanded-foot');
+    
+            recommandTop.src = "{{ url_for('static', filename='Item/' ) }}" + style.top.image;
+            recommandBottom.src = "{{ url_for('static', filename='Item/' ) }}" + style.bottom.image;
+            recommandFoot.src = "{{ url_for('static', filename='Item/' ) }}" + style.shoes.image;
+        }
+    });                  
     </script>
   </body>
 </html>

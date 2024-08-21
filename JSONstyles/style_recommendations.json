@@ -1,10 +1,36 @@
 {
     "style_1": {
         "top": {
-            "image": "2268.jpg",
-            "type": "Tops",
-            "gender": "Women",
-            "color": "darkgrey",
+            "image": "12360.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "12286.jpg",
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Formal"
+        },
+        "shoes": {
+            "image": "2372.jpg",
+            "type": "Formal Shoes",
+            "gender": "Men",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Formal"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "2274.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "gainsboro",
             "season": "Summer",
             "style": "Casual"
         },
@@ -17,20 +43,20 @@
             "style": "Casual"
         },
         "shoes": {
-            "image": "15331.jpg",
-            "type": "Sports Shoes",
-            "gender": "Women",
-            "color": "gainsboro",
+            "image": "2368.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         }
     },
-    "style_2": {
+    "style_3": {
         "top": {
-            "image": "2135.jpg",
-            "type": "Kurtas",
-            "gender": "Women",
-            "color": "saddlebrown",
+            "image": "2269.jpg",
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "tan",
             "season": "Summer",
             "style": "Casual"
         },
@@ -39,32 +65,6 @@
             "type": "Jeans",
             "gender": "Women",
             "color": "darkslategray",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "shoes": {
-            "image": "2369.jpg",
-            "type": "Casual Shoes",
-            "gender": "Men",
-            "color": "gainsboro",
-            "season": "Summer",
-            "style": "Casual"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "2293.jpg",
-            "type": "Tshirts",
-            "gender": "Women",
-            "color": "hotpink",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "13248.jpg",
-            "type": "Jeans",
-            "gender": "Girls",
-            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
