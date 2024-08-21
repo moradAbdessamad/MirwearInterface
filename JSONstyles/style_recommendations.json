@@ -1,49 +1,23 @@
 {
     "style_1": {
         "top": {
-            "image": "12360.jpg",
+            "image": "12354.jpg",
             "type": "Shirts",
             "gender": "Men",
+            "color": "gainsboro",
+            "season": "Fall",
+            "style": "Formal"
+        },
+        "bottom": {
+            "image": "13248.jpg",
+            "type": "Jeans",
+            "gender": "Girls",
             "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
-        "bottom": {
-            "image": "12286.jpg",
-            "type": "Trousers",
-            "gender": "Men",
-            "color": "darkslategray",
-            "season": "Summer",
-            "style": "Formal"
-        },
         "shoes": {
-            "image": "2372.jpg",
-            "type": "Formal Shoes",
-            "gender": "Men",
-            "color": "gainsboro",
-            "season": "Summer",
-            "style": "Formal"
-        }
-    },
-    "style_2": {
-        "top": {
-            "image": "2274.jpg",
-            "type": "Shirts",
-            "gender": "Men",
-            "color": "gainsboro",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "13247.jpg",
-            "type": "Leggings",
-            "gender": "Women",
-            "color": "darkslategray",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "shoes": {
-            "image": "2368.jpg",
+            "image": "2371.jpg",
             "type": "Casual Shoes",
             "gender": "Men",
             "color": "darkslategray",
@@ -51,25 +25,51 @@
             "style": "Casual"
         }
     },
-    "style_3": {
+    "style_2": {
         "top": {
-            "image": "2269.jpg",
+            "image": "1645.jpg",
             "type": "Tshirts",
             "gender": "Men",
-            "color": "tan",
+            "color": "lightgray",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "13259.jpg",
-            "type": "Jeans",
-            "gender": "Women",
+            "image": "12289.jpg",
+            "type": "Trousers",
+            "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         },
         "shoes": {
-            "image": "2382.jpg",
+            "image": "2389.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "2266.jpg",
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "lightgreen",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "13251.jpg",
+            "type": "Jeans",
+            "gender": "Boys",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "1543.jpg",
             "type": "Casual Shoes",
             "gender": "Men",
             "color": "gainsboro",

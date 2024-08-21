@@ -5,10 +5,19 @@ import cv2
 import mediapipe as mp
 import time
 import os
+from groq import Groq
+import json
+import datetime
+import re
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 size_capture_done = False
+
+# Initialize the Groq client with your API key
+client = Groq(
+    api_key=os.environ.get("GROQ_API_KEY"),
+)
 
 # Initialize MediaPipe Hands
 mp_hands = mp.solutions.hands
@@ -178,36 +187,36 @@ def gen_frames_for_outline():
 
 
 
-buttons_recommand = {
-    'Season': {'top_left': (102, 167), 'bottom_right': (186, 203)},
-    'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
-    'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
-    'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
+# buttons_recommand = {
+#     'Season': {'top_left': (102, 167), 'bottom_right': (186, 203)},
+#     'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
+#     'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
+#     'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
 
-    'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
-    'summer': {'top_left': (130, 265), 'bottom_right': (200, 295)},
-    'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
-    'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
+#     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
+#     'summer': {'top_left': (130, 265), 'bottom_right': (200, 295)},
+#     'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
+#     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
 
-    'male': {'top_left': (234, 226), 'bottom_right': (304, 251)},
-    'female': {'top_left': (234, 265), 'bottom_right': (304, 295)},
-    'unisex': {'top_left': (234, 310), 'bottom_right': (304, 336)},
-    'kids': {'top_left': (234, 352), 'bottom_right': (304, 376)},
+#     'male': {'top_left': (234, 226), 'bottom_right': (304, 251)},
+#     'female': {'top_left': (234, 265), 'bottom_right': (304, 295)},
+#     'unisex': {'top_left': (234, 310), 'bottom_right': (304, 336)},
+#     'kids': {'top_left': (234, 352), 'bottom_right': (304, 376)},
 
-    'red': {'top_left': (334, 226), 'bottom_right': (412, 251)},
-    'blue': {'top_left': (334, 265), 'bottom_right': (412, 295)},
-    'green': {'top_left': (334, 310), 'bottom_right': (412, 336)},
-    'yellow': {'top_left': (334, 352), 'bottom_right': (412, 376)},
+#     'red': {'top_left': (334, 226), 'bottom_right': (412, 251)},
+#     'blue': {'top_left': (334, 265), 'bottom_right': (412, 295)},
+#     'green': {'top_left': (334, 310), 'bottom_right': (412, 336)},
+#     'yellow': {'top_left': (334, 352), 'bottom_right': (412, 376)},
 
-    'casual': {'top_left': (442, 226), 'bottom_right': (512, 251)},
-    'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
-    'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
-    'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
+#     'casual': {'top_left': (442, 226), 'bottom_right': (512, 251)},
+#     'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
+#     'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
+#     'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
 
-    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
+#     'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
 
-    'shoffle': {'top_left': (550, 400), 'bottom_right': (573, 417)}
-}
+#     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
+# }
 
 button_season = {
     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
@@ -216,6 +225,36 @@ button_season = {
     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
 }
 
+buttons_recommand = {
+    'Season': {'top_left': (150, 156), 'bottom_right': (221, 185)},
+    'Gender': {'top_left': (240, 156), 'bottom_right': (315, 185)},
+    'Color': {'top_left': (330, 156), 'bottom_right': (409, 185)},
+    'Style': {'top_left': (420, 156), 'bottom_right': (493, 185)},
+
+    'winter': {'top_left': (150, 200), 'bottom_right': (223, 222)},
+    'summer': {'top_left': (150, 237), 'bottom_right': (223, 263)},
+    'spring': {'top_left': (150, 274), 'bottom_right': (223, 304)},
+    'fall': {'top_left': (150, 311), 'bottom_right': (223, 345)},
+
+    'male': {'top_left': (246, 200), 'bottom_right': (314, 222)},
+    'female': {'top_left': (246, 237), 'bottom_right': (314, 260)},
+    'unisex': {'top_left': (246, 274), 'bottom_right': (314, 298)},
+    'kids': {'top_left': (246, 311), 'bottom_right': (314, 336)},
+
+    'red': {'top_left': (338, 200), 'bottom_right': (407, 222)},
+    'blue': {'top_left': (338, 237), 'bottom_right': (407, 260)},
+    'green': {'top_left': (338, 274), 'bottom_right': (407, 298)},
+    'yellow': {'top_left': (338, 311), 'bottom_right': (407, 336)},
+
+    'casual': {'top_left': (430, 200), 'bottom_right': (493, 222)},
+    'formal': {'top_left': (430, 237), 'bottom_right': (493, 260)},
+    'sport': {'top_left': (430, 274), 'bottom_right': (493, 298)},
+    'vintage': {'top_left': (430, 311), 'bottom_right': (493, 336)},
+
+    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
+
+    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
+}
 
 hover_start_time_recommand = {}
 hover_duration = 0.5  # 1 second hover duration
@@ -277,7 +316,6 @@ def gen_frames_for_recommandation():
 
 
 
-
 @app.route('/video_feed_outline')
 def video_feed_outline():
     return Response(gen_frames_for_outline(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -306,9 +344,163 @@ def recommandation():
     return render_template('recommandation.html')
 
 
+
+def load_wardrobe_data(file_path):
+    with open(file_path, 'r') as json_file:
+        return json.load(json_file)
+
+# Path to the wardrobe data JSON file
+wardrobe_file_path = r'D:\OSC\MirwearInterface\JSONstyles\style.json'
+
+@socketio.on('recommendation_selected')
+def handle_recommendation_selected(data):
+    print("Received recommendation selections:", data)
+    
+    # Load the wardrobe data from the JSON file
+    wardrobe_data = load_wardrobe_data(wardrobe_file_path)
+    
+    # Criteria received from the client
+    criteria = {
+        "season": data.get('Season', "None"),
+        "gender": data.get('Gender', "None"),
+        "color": data.get('Color', "None"),
+        "style": data.get('Style', "None")
+    }
+
+    # Define the prompt with the criteria and wardrobe data
+    prompt = f"""
+    You are tasked with creating fashion style recommendations based on the user's wardrobe data and specific criteria.
+
+    User wardrobe data:
+    {json.dumps(wardrobe_data, indent=2)}
+
+    Recommendation criteria:
+    {json.dumps(criteria, indent=2)}
+
+    Your goal is to generate complete style recommendations that meet the criteria provided. Each style should include a distinct top, bottom, and shoes. Ensure that each item (top, bottom, shoes) used in a style is unique and not repeated in other styles. The combinations should be coherent, stylish, and diverse across the styles.
+
+    If any criteria elements are `None`, then simply recommend styles that include a top, bottom, and shoes that look good together, while respecting the gender of the items. For example, generate complete random styles for men or women, but do not mix items for women in a men's style and vice versa.
+
+    If there are multiple items available in a category (e.g., multiple tops), make sure to use different items in each style. No item should be repeated across different styles. If you run out of unique items to use, limit the number of styles generated accordingly.
+
+    The output should be formatted as follows:
+
+    {{
+        "style_1": {{
+            "top": {{
+                "image": "image_name.jpg",
+                "type": "Top_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }},
+            "bottom": {{
+                "image": "image_name.jpg",
+                "type": "Bottom_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }},
+            "shoes": {{
+                "image": "image_name.jpg",
+                "type": "Shoes_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }}
+        }},
+        "style_2": {{
+            "top": {{
+                "image": "another_image_name.jpg",
+                "type": "Another_Top_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }},
+            "bottom": {{
+                "image": "another_image_name.jpg",
+                "type": "Another_Bottom_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }},
+            "shoes": {{
+                "image": "another_image_name.jpg",
+                "type": "Another_Shoes_Type",
+                "gender": "Gender",
+                "color": "Color",
+                "season": "Season",
+                "style": "Style"
+            }}
+        }},
+        "style_3": {{
+            // Another complete outfit recommendation with distinct items if available
+        }}
+    }}
+
+    Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
+    """
+
+    # Request completion from the model
+    completion = client.chat.completions.create(
+        model="llama-3.1-70b-versatile",
+        messages=[
+            {"role": "user", "content": prompt}
+        ],
+        temperature=0.7,
+        max_tokens=1500,
+        top_p=1,
+        stream=False,
+        stop=None,
+    )
+
+    response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
+    # print(response_content)
+
+    # Extract and save the JSON
+    extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/JSONstyles/style_recommendations.json')
+
+    # Programmatically call the route to update the JSON
+    update_recommendations()
+
+def extract_and_save_json(response_content, file_path):
+    # Check if response_content is a ChatCompletionMessage object and extract content
+    if hasattr(response_content, 'content'):
+        response_content = response_content.content
+    
+    # Ensure response_content is now a string
+    if isinstance(response_content, str):
+        # Debugging: print the type and a snippet of the content
+        print(f"response_content is of type {type(response_content)}")
+        print(f"Snippet of response_content: {response_content[:200]}")
+        
+        # Use regex to extract the JSON content between ```json and ```
+        match = re.search(r'```json\s*(\{.*?\})\s*```', response_content, re.DOTALL)
+        
+        if match:
+            json_content = match.group(1)
+            
+            # Convert the JSON content string to a dictionary
+            json_data = json.loads(json_content)
+            
+            # Write the dictionary to a file as JSON
+            with open(file_path, 'w') as json_file:
+                json.dump(json_data, json_file, indent=4)
+            
+            print(f"JSON content has been saved to {file_path}")
+        else:
+            print("No JSON content found in the response.")
+    else:
+        print(f"Expected a string, but got {type(response_content)}")
+
+# Route to get the updated style recommendations
 @app.route('/get_style_recommendations', methods=['GET'])
 def get_style_recommendations():
-    # Adjust the path as needed
     json_file_path = os.path.join('D:/OSC/MirwearInterface/JSONstyles', 'style_recommendations.json')
     
     with open(json_file_path, 'r') as json_file:
@@ -316,12 +508,12 @@ def get_style_recommendations():
     
     return data, 200, {'Content-Type': 'application/json'}
 
+# Function to call the get_style_recommendations route programmatically
+def update_recommendations():
+    response = app.test_client().get('/get_style_recommendations')
+    print(f"Updated recommendations: {response.get_data(as_text=True)}")
 
 
-@socketio.on('recommendation_selected')
-def handle_recommendation_selected(data):
-    print("Received recommendation selections:", data)
-    # Process the data as needed, for example, generate a recommendation based on the selections
 
 
 if __name__ == '__main__':
