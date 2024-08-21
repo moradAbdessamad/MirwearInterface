@@ -152,6 +152,8 @@
                 "{{ url_for('static', filename = 'Cloths/option3_2.png') }}";
               image3.src =
                 "{{ url_for('static', filename = 'Cloths/option3_3.png') }}";
+            } else if (data.button == "Recommend") {
+              window.location.href = "/recommandation";
             }
           });
 

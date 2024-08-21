@@ -1,0 +1,80 @@
+{
+    "style_1": {
+        "top": {
+            "image": "2268.jpg",
+            "type": "Tops",
+            "gender": "Women",
+            "color": "darkgrey",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "13247.jpg",
+            "type": "Leggings",
+            "gender": "Women",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "15331.jpg",
+            "type": "Sports Shoes",
+            "gender": "Women",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "2135.jpg",
+            "type": "Kurtas",
+            "gender": "Women",
+            "color": "saddlebrown",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "13259.jpg",
+            "type": "Jeans",
+            "gender": "Women",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "2369.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "2293.jpg",
+            "type": "Tshirts",
+            "gender": "Women",
+            "color": "hotpink",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "13248.jpg",
+            "type": "Jeans",
+            "gender": "Girls",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "2382.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    }
+}
