@@ -9,16 +9,16 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "17472673.jpg",
-            "type": "Trousers",
+            "image": "sadal.png",
+            "type": "Track Pants",
             "gender": "Men",
-            "color": "lightgray",
+            "color": "midnightblue",
             "season": "Summer",
-            "style": "Sports"
+            "style": "Casual"
         },
         "shoes": {
-            "image": "sadal.png",
-            "type": "Sports Shoes",
+            "image": "5372175.jpg",
+            "type": "Casual Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
@@ -35,7 +35,7 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "52785916.jpg",
+            "image": "17472673.jpg",
             "type": "Trousers",
             "gender": "Men",
             "color": "dimgray",
@@ -43,8 +43,8 @@
             "style": "Formal"
         },
         "shoes": {
-            "image": "5372175.jpg",
-            "type": "Casual Shoes",
+            "image": "sadal.png",
+            "type": "Sports Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
@@ -53,26 +53,26 @@
     },
     "style_3": {
         "top": {
-            "image": "14873764.jpg",
-            "type": "Trousers",
-            "gender": "Women",
-            "color": "black",
-            "season": "Summer",
-            "style": "Formal"
-        },
-        "bottom": {
-            "image": "44395368.jpg",
-            "type": "Trousers",
-            "gender": "Women",
-            "color": "black",
-            "season": "Summer",
-            "style": "Formal"
-        },
-        "shoes": {
-            "image": "5372175.jpg",
-            "type": "Casual Shoes",
+            "image": "t-shirt.jpg",
+            "type": "Tshirts",
             "gender": "Men",
             "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "49495098.jpg",
+            "type": "Track Pants",
+            "gender": "Men",
+            "color": "midnightblue",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "sadal.png",
+            "type": "Track Pants",
+            "gender": "Men",
+            "color": "midnightblue",
             "season": "Summer",
             "style": "Casual"
         }

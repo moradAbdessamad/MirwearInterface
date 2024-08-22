@@ -38,7 +38,7 @@
             </defs>
           </svg>
         </div>
-        <h1 class="title" class="title_recommandation">Hello world</h1>
+        <h1 class="title" class="title_recommandation" id="title_recommandation">Hello world</h1>
         <img
           src="{{ url_for('video_feed_recommandation') }}"
           style="width: 100%"
@@ -125,6 +125,21 @@
       document.addEventListener("DOMContentLoaded", function () {
         // Establish a connection to the WebSocket
         var socket = io.connect(window.location.protocol + '//' + window.location.host);
+
+        titleRecommandation = document.getElementById('title_recommandation')
+
+        socket.on('process_status', function(status) {
+          if (status.status === 'in_progress') {
+              console.log("Recommendation process is in progress...");
+              // Update the UI to indicate that processing is in progress
+              titleRecommandation.innerHTML = "Recommandation is in progress..."
+          } else if (status.status === 'complete') {
+              console.log("Recommendation process is complete.");
+              // Update the UI to indicate that processing is complete
+              titleRecommandation.innerHTML = "Recommandation is complete"
+          }
+        });
+
         
         var selectedItems = {
             'Season': null,

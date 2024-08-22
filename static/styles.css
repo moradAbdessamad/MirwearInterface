@@ -234,30 +234,35 @@ body, html {
 }
 
 .dropbtn {
-    background-color: transparent;
+    background-color: #F5AC72;
     color: #2b212f;
-    padding: 11px;
-    font-size: 24px;
+    padding: 10px;
+    font-size: 21px;
     text-align: center;
-    border: 1px solid #facfad;
-    /* width: 100%; */
+    font-weight: 600;
+    font-family: "Roboto", sans-serif;
+    border-radius: 10px;
 }
 
 .dropdown-content {
     display: none;
-    /* background-color: #facfad; */
     gap: 10px;
     color: #2b212f;
     flex-direction: column;
-    /* border: 2px solid #fff; */
     width: 100%;
 }
 
 .dropdown-content div {
-    padding: 12px;
+    padding: 10px;
     /* cursor: pointer; */
-    border: 1px solid #fff;
+    /* border: 1px solid #fff; */
     text-align: center;
+    background-color: #F5AC72;
+    color: #2b212f;
+    border-radius: 10px;
+    font-size: 19px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 200;
 }
 
 .recommanded-images {

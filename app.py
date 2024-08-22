@@ -346,16 +346,14 @@ def recommandation():
 
 
 
-def load_wardrobe_data(file_path):
-    with open(file_path, 'r') as json_file:
-        return json.load(json_file)
-
-# Path to the wardrobe data JSON file
 wardrobe_file_path = r'D:\OSC\MirwearInterface\JSONstyles\style.json'
 
 @socketio.on('recommendation_selected')
 def handle_recommendation_selected(data):
     print("Received recommendation selections:", data)
+    
+    # Emit that the processing is starting
+    socketio.emit('process_status', {'status': 'in_progress'})
     
     # Load the wardrobe data from the JSON file
     wardrobe_data = load_wardrobe_data(wardrobe_file_path)
@@ -384,9 +382,8 @@ def handle_recommendation_selected(data):
 
     If there are multiple items available in a category (e.g., multiple tops), make sure to use different items in each style. No item should be repeated across different styles. If you run out of unique items to use, limit the number of styles generated accordingly.
 
-    The output should be formatted as follows and match the JSON pattern:
+    The output should be formatted as follows:
 
-    ```json
     {{
         "style_1": {{
             "top": {{
@@ -444,7 +441,9 @@ def handle_recommendation_selected(data):
             // Another complete outfit recommendation with distinct items if available
         }}
     }}
-"""
+
+    Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
+    """
 
     # Request completion from the model
     completion = client.chat.completions.create(
@@ -464,6 +463,9 @@ def handle_recommendation_selected(data):
     # Extract and save the JSON
     extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/JSONstyles/style_recommendations.json')
 
+    # Emit that the processing is complete
+    socketio.emit('process_status', {'status': 'complete'})
+
 
 def extract_and_save_json(response_content, file_path):
     # Check if response_content is a ChatCompletionMessage object and extract content
@@ -471,7 +473,7 @@ def extract_and_save_json(response_content, file_path):
         response_content = response_content.content
     
     # Print the response to the terminal 
-    print("The response of the llama-3.1-70b-versatile is:")
+    print("The response of the llama model is:")
     print(response_content)
 
     # Ensure response_content is now a string
@@ -496,6 +498,10 @@ def extract_and_save_json(response_content, file_path):
     else:
         print(f"Expected a string, but got {type(response_content)}")
 
+
+def load_wardrobe_data(file_path):
+    with open(file_path, 'r') as json_file:
+        return json.load(json_file)
 
 
 
