@@ -136,15 +136,6 @@
         let currentStyleIndex = 1;  // Start with style_1
         let stylesData = null;      // To store the styles data
     
-        // Fetch the JSON data initially and store it
-        fetch('/get_style_recommendations')
-            .then(response => response.json())
-            .then(data => {
-                stylesData = data;
-                updateImages(stylesData[`style_${currentStyleIndex}`]);  // Initialize with style_1
-            })
-            .catch(error => console.error('Error loading the JSON file:', error));
-    
         // Listen for the 'button_hover_recommand' event from the server
         socket.on('button_hover_recommand', function (message) {
             var buttonName = message.button_recommand;
@@ -155,6 +146,14 @@
             } else {
                 handleButtonRecommand(buttonName);
             }
+        });
+    
+        // Listen for the 'style_recommendations' event from the server
+        socket.on('style_recommendations', function(data) {
+            console.log("Received style recommendations:", data);
+            stylesData = data; // Update the stylesData with the received data
+            currentStyleIndex = 1; // Reset to the first style after receiving new recommendations
+            updateImages(stylesData[`style_${currentStyleIndex}`]);
         });
     
         function handleButtonRecommand(buttonName) {
@@ -226,10 +225,8 @@
         function handleRecommendButtonClick() {
             console.log("Recommendation clicked with selections:", selectedItems);
     
-            updateImages(stylesData[`style_${currentStyleIndex}`]);
-    
             socket.emit('recommendation_selected', selectedItems);
-        
+            
             // Reset the selectedItems object after sending
             selectedItems = {
                 'Season': null,
@@ -257,20 +254,24 @@
     
         function shuffleImages() {
             // Increment the style index, and loop back to 1 if it exceeds the number of styles
-            currentStyleIndex = (currentStyleIndex % 3) + 1;  // Assuming there are always 3 styles
-            updateImages(stylesData[`style_${currentStyleIndex}`]);
+            if (stylesData) {
+                currentStyleIndex = (currentStyleIndex % Object.keys(stylesData).length) + 1;  // Loop through available styles
+                updateImages(stylesData[`style_${currentStyleIndex}`]);
+            }
         }
     
         function updateImages(style) {
-            var recommandTop = document.getElementById('recommanded-top');
-            var recommandBottom = document.getElementById('recommanded-bottom');
-            var recommandFoot = document.getElementById('recommanded-foot');
+            if (style) {
+                var recommandTop = document.getElementById('recommanded-top');
+                var recommandBottom = document.getElementById('recommanded-bottom');
+                var recommandFoot = document.getElementById('recommanded-foot');
     
-            recommandTop.src = "{{ url_for('static', filename='Item/' ) }}" + style.top.image;
-            recommandBottom.src = "{{ url_for('static', filename='Item/' ) }}" + style.bottom.image;
-            recommandFoot.src = "{{ url_for('static', filename='Item/' ) }}" + style.shoes.image;
+                recommandTop.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.top.image;
+                recommandBottom.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.bottom.image;
+                recommandFoot.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.shoes.image;
+            }
         }
-    });                  
+    });    
     </script>
   </body>
 </html>

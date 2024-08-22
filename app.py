@@ -304,7 +304,7 @@ def gen_frames_for_recommandation():
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    print("The fingertip index:", (cx, cy))
+                    # print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
@@ -342,6 +342,7 @@ def video_feed_recommandation():
 @app.route('/recommandation')
 def recommandation():
     return render_template('recommandation.html')
+
 
 
 
@@ -383,8 +384,9 @@ def handle_recommendation_selected(data):
 
     If there are multiple items available in a category (e.g., multiple tops), make sure to use different items in each style. No item should be repeated across different styles. If you run out of unique items to use, limit the number of styles generated accordingly.
 
-    The output should be formatted as follows:
+    The output should be formatted as follows and match the JSON pattern:
 
+    ```json
     {{
         "style_1": {{
             "top": {{
@@ -442,17 +444,15 @@ def handle_recommendation_selected(data):
             // Another complete outfit recommendation with distinct items if available
         }}
     }}
-
-    Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
-    """
+"""
 
     # Request completion from the model
     completion = client.chat.completions.create(
-        model="llama-3.1-70b-versatile",
+        model="llama3-groq-70b-8192-tool-use-preview",
         messages=[
             {"role": "user", "content": prompt}
         ],
-        temperature=0.7,
+        temperature=0.5,
         max_tokens=1500,
         top_p=1,
         stream=False,
@@ -460,58 +460,42 @@ def handle_recommendation_selected(data):
     )
 
     response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
-    # print(response_content)
 
     # Extract and save the JSON
     extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/JSONstyles/style_recommendations.json')
 
-    # Programmatically call the route to update the JSON
-    update_recommendations()
 
 def extract_and_save_json(response_content, file_path):
     # Check if response_content is a ChatCompletionMessage object and extract content
     if hasattr(response_content, 'content'):
         response_content = response_content.content
     
+    # Print the response to the terminal 
+    print("The response of the llama-3.1-70b-versatile is:")
+    print(response_content)
+
     # Ensure response_content is now a string
-    if isinstance(response_content, str):
-        # Debugging: print the type and a snippet of the content
-        print(f"response_content is of type {type(response_content)}")
-        print(f"Snippet of response_content: {response_content[:200]}")
-        
-        # Use regex to extract the JSON content between ```json and ```
-        match = re.search(r'```json\s*(\{.*?\})\s*```', response_content, re.DOTALL)
-        
-        if match:
-            json_content = match.group(1)
-            
-            # Convert the JSON content string to a dictionary
-            json_data = json.loads(json_content)
+    if isinstance(response_content, str):        
+        # Since the JSON is already in the response_content, we can attempt to directly parse it
+        try:
+            # Convert the string to a dictionary
+            json_data = json.loads(response_content)
             
             # Write the dictionary to a file as JSON
             with open(file_path, 'w') as json_file:
                 json.dump(json_data, json_file, indent=4)
             
             print(f"JSON content has been saved to {file_path}")
-        else:
-            print("No JSON content found in the response.")
+
+            # Emit the JSON data via socketio to the client
+            socketio.emit('style_recommendations', json_data)
+            print("The data is emitted:", json_data)
+            
+        except json.JSONDecodeError as e:
+            print(f"Failed to decode JSON: {e}")
     else:
         print(f"Expected a string, but got {type(response_content)}")
 
-# Route to get the updated style recommendations
-@app.route('/get_style_recommendations', methods=['GET'])
-def get_style_recommendations():
-    json_file_path = os.path.join('D:/OSC/MirwearInterface/JSONstyles', 'style_recommendations.json')
-    
-    with open(json_file_path, 'r') as json_file:
-        data = json_file.read()
-    
-    return data, 200, {'Content-Type': 'application/json'}
-
-# Function to call the get_style_recommendations route programmatically
-def update_recommendations():
-    response = app.test_client().get('/get_style_recommendations')
-    print(f"Updated recommendations: {response.get_data(as_text=True)}")
 
 
 
