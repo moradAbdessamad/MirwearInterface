@@ -87,6 +87,24 @@
             </div>
         </div>
 
+        <div class="arrow-container">
+          <dir class="top-arrow-class">
+            <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="top-left"></i>
+            <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="top-right"></i>
+          </dir>
+
+          <dir class="bottom-arrow-class">
+            <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="bottom-left"></i>
+            <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="bottom-right"></i>
+          </dir>
+
+          <dir class="shoes-arrow-class">
+            <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="shoes-left"></i>
+            <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="shoes-right"></i>
+          </dir>
+
+        </div>
+
         <div class="recommanded-images">
             <div class="recommanded-image-container">
               <img
@@ -298,6 +316,9 @@
 
             var recommandationButtonsContainer = document.querySelector('.recommandation-buttons-container')
             recommandationButtonsContainer.style.display = "none"
+
+            arrowIcones = document.querySelector('.arrow-container')
+            arrowIcones.style.display = 'flex'
         }
     
         function shuffleImages() {

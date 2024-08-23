@@ -316,6 +316,25 @@ body, html {
     display: none;
 }
 
+.arrow-container {
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 100px;
+    width: 60%;
+    display: none;
+}
+
+.top-arrow-class, .bottom-arrow-class, .shoes-arrow-class {
+    display: flex;
+    justify-content: space-between;
+}
+
+#arrow-icone {
+    font-size: 220%;
+    color: #F5AC72;
+}
+
 /* Animation for the buttom and all of the page */
 
 @keyframes  dropdownContentAnimation {
