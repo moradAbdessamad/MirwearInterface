@@ -319,6 +319,13 @@
 
             arrowIcones = document.querySelector('.arrow-container')
             arrowIcones.style.display = 'flex'
+
+            //emit a message back to know wich element is displayed the arrow contaoner or the recomandation factors elements
+            if (checkDisplay(recommandationButtonsContainer) == 'flex') {
+              socket.emit('ui_update', {element: 'recommandationButtonsContainer'});
+            } else if (checkDisplay(recommandationButtonsContainer) == 'none') {
+              socket.emit('ui_update', {element: 'arrowIcones'});
+            }
         }
     
         function shuffleImages() {
@@ -339,6 +346,20 @@
                 recommandBottom.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.bottom.image;
                 recommandFoot.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.shoes.image;
             }
+        }
+
+        function checkDisplay(element) {
+          var style = window.getComputedStyle(element);
+          if (style.display === 'flex') {
+              console.log('The element is displayed as flex.');
+              return 'flex';
+          } else if (style.display === 'none') {
+              console.log('The element is hidden (display: none).');
+              return 'none';
+          } else {
+              console.log('The element has a different display style:', style.display);
+              return style.display; // Returning the actual display style if it's something else
+          }
         }
     });    
     </script>

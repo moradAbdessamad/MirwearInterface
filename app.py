@@ -256,14 +256,28 @@ buttons_recommand = {
     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
 }
 
+arrow_recommand = {
+    'topLeft': {'top_left': (490, 150), 'bottom_right': (520, 180)},
+    'topright': {'top_left': (123, 147), 'bottom_right': (153, 177)},
+    'bottomLeft': {'top_left': (483, 226), 'bottom_right': (513, 256)},
+    'bottomRight': {'top_left': (130, 225), 'bottom_right': (160, 255)},
+    'shoesLeft': {'top_left': (486, 303), 'bottom_right': (516, 333)},
+    'shoesRight': {'top_left': (118, 301), 'bottom_right': (148, 331)},
+}
+
 hover_start_time_recommand = {}
 hover_duration = 0.5  # 1 second hover duration
+current_recommand_mode = 'buttons'
 
 def check_button_hover_recommand(finger_tip_coords):
     global hover_start_time_recommand
+    global current_recommand_mode
+
+    # Determine which set of coordinates to use
+    coords_to_check = buttons_recommand if current_recommand_mode == 'buttons' else arrow_recommand
 
     if finger_tip_coords:
-        for button, coords in buttons_recommand.items():
+        for button, coords in coords_to_check.items():
             if (coords['top_left'][0] <= finger_tip_coords['x'] <= coords['bottom_right'][0] and
                 coords['top_left'][1] <= finger_tip_coords['y'] <= coords['bottom_right'][1]):
                 
@@ -295,6 +309,13 @@ def gen_frames_for_recommandation():
                               coords['top_left'], 
                               coords['bottom_right'], 
                               (0, 255, 0), 2)  # Green rectangle with thickness of 2
+
+
+            for button, coords in arrow_recommand.items():
+                cv2.rectangle(frame,
+                              coords['top_left'],
+                              coords['bottom_right'],
+                               (255, 255, 255))      
             
             results = hands.process(frame_rgb)
             finger_tip_coords = None
@@ -304,7 +325,7 @@ def gen_frames_for_recommandation():
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    # print("The fingertip index:", (cx, cy))
+                    print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
@@ -343,6 +364,17 @@ def video_feed_recommandation():
 def recommandation():
     return render_template('recommandation.html')
 
+@socketio.on('ui_update')
+def handle_ui_update(data):
+    global current_recommand_mode
+    element = data.get('element')
+
+    if element == 'recommandationButtonsContainer':
+        current_recommand_mode = 'buttons'
+        print("Switched to buttons mode.")
+    elif element == 'arrowIcones':
+        current_recommand_mode = 'arrows'
+        print("Switched to arrows mode.")
 
 
 

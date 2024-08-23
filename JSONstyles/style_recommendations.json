@@ -1,10 +1,10 @@
 {
     "style_1": {
         "top": {
-            "image": "t-shirt.jpg",
+            "image": "1254967.jpg",
             "type": "Tshirts",
             "gender": "Men",
-            "color": "black",
+            "color": "rosybrown",
             "season": "Summer",
             "style": "Casual"
         },
@@ -35,10 +35,10 @@
             "style": "Sports"
         },
         "bottom": {
-            "image": "1244967.jpg",
-            "type": "Trousers",
+            "image": "t-shirt.jpg",
+            "type": "Tshirts",
             "gender": "Men",
-            "color": "rosybrown",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
@@ -53,26 +53,26 @@
     },
     "style_3": {
         "top": {
-            "image": "47244926.jpg",
-            "type": "Kurtas",
-            "gender": "Men",
+            "image": "14873764.jpg",
+            "type": "Trousers",
+            "gender": "Women",
             "color": "black",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Formal"
         },
         "bottom": {
-            "image": "49495098.jpg",
-            "type": "Track Pants",
-            "gender": "Men",
-            "color": "midnightblue",
+            "image": "35829107.jpg",
+            "type": "Shorts",
+            "gender": "Women",
+            "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         },
         "shoes": {
-            "image": "5372175.jpg",
-            "type": "Casual Shoes",
-            "gender": "Men",
-            "color": "black",
+            "image": "49495098.jpg",
+            "type": "Track Pants",
+            "gender": "Women",
+            "color": "midnightblue",
             "season": "Summer",
             "style": "Casual"
         }
