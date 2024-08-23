@@ -9,8 +9,9 @@
       href="{{ url_for('static', filename='styles.css') }}"
     />
     <title>Recommandation Page</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  </head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">  </head>
   <body>
     <div class="container">
       <div class="recommandation_outline">
@@ -39,7 +40,8 @@
             </defs>
           </svg>
         </div>
-        <h1 class="title" class="title_recommandation" id="title_recommandation">Hello world</h1>
+        <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;">Hello world</h1>
+        <i class="fa-solid fa-spinner fa-spin-pulse" id="spin-icones"></i>
         <img
           src="{{ url_for('video_feed_recommandation') }}"
           style="width: 100%"
@@ -111,6 +113,7 @@
             </div>
 
             <i class="fa-solid fa-shuffle" id="shuffle-icone"></i>
+            <i class="fa-solid fa-circle-notch fa-spin" id="spin-icone-second"></i>            
 
           </div>
           
@@ -128,16 +131,22 @@
         var socket = io.connect(window.location.protocol + '//' + window.location.host);
 
         titleRecommandation = document.getElementById('title_recommandation')
+        spinIcones = document.querySelector('#spin-icones')
+        spinIconeSecond = document.querySelector('#spin-icone-second')
+        shuffleIcone = document.querySelector('#shuffle-icone')
 
         socket.on('process_status', function(status) {
           if (status.status === 'in_progress') {
               console.log("Recommendation process is in progress...");
               // Update the UI to indicate that processing is in progress
-              titleRecommandation.innerHTML = "Recommandation is in progress..."
+
+              spinIcones.style.display = 'block'
           } else if (status.status === 'complete') {
               console.log("Recommendation process is complete.");
               // Update the UI to indicate that processing is complete
-              titleRecommandation.innerHTML = "Recommandation is complete"
+
+              spinIcones.style.display = 'none'
+
               var recommandedImages = document.querySelector('.recommanded-images');
               recommandedImages.style.display = 'flex';
           }
@@ -156,15 +165,28 @@
     
         // Listen for the 'button_hover_recommand' event from the server
         socket.on('button_hover_recommand', function (message) {
-            var buttonName = message.button_recommand;
-            if (buttonName === 'recommand') {
-                handleRecommendButtonClick();
-            } else if (buttonName === 'shoffle') {
-                shuffleImages();
-            } else {
-                handleButtonRecommand(buttonName);
-            }
+          var buttonName = message.button_recommand;
+      
+          if (buttonName === 'recommand') {
+              handleRecommendButtonClick();
+          } else if (buttonName === 'shoffle') {
+              // Hide the shuffle icon and display the spin icon
+              shuffleIcone.style.display = 'none';
+              spinIconeSecond.style.display = 'block';
+      
+              // Set a timeout to shuffle the images and then revert the icons
+              setTimeout(function() {
+                  shuffleImages(); // Call your shuffleImages function
+      
+                  // After shuffling, display the shuffle icon and hide the spin icon
+                  shuffleIcone.style.display = 'block';
+                  spinIconeSecond.style.display = 'none';
+              }, 2000); // 2-second delay
+          } else {
+              handleButtonRecommand(buttonName);
+          }
         });
+         
     
         // Listen for the 'style_recommendations' event from the server
         socket.on('style_recommendations', function(data) {
@@ -229,8 +251,16 @@
             }
         
             if (dropdown) {
-                // Display the relevant dropdown content
-                dropdown.style.display = 'flex';
+                // Display the relevant dropdown content                
+                if (dropdown.style.display == 'none') {
+                  dropdown.style.display = 'flex'
+
+                  setTimeout(() => {
+                    dropdown.classList.add('animationdropdownContentClass')
+                  }, 10)
+                } else {
+                  dropdown.classList.remove('animationdropdownContentClass')
+                }
             }
         
             if (category && buttonName.toLowerCase() !== category.toLowerCase()) {

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 * {
     padding: 0;
@@ -108,17 +108,18 @@ body, html {
     border-radius: 5px;
 }
 
-.recommend-button, .recommend-button-recommand{
+.recommend-button, .recommend-button-recommand {
     position: absolute;
     bottom: 20px;
-    width: 120px;
-    height: 45px;
-    background-color: #facfad;
-    padding: 5px 9px;
+    background-color: #f5ac72;
+    padding: 10px;
     border-radius: 10px;
     border: none;
     cursor: pointer;
-    font-size: 18px;
+    color: #000;
+    font-size: 20px;
+    font-weight: 500;
+    font-family: 'Roboto', sans-serif;
 }
 
 .image-container {
@@ -213,6 +214,7 @@ body, html {
 
 .title_recommandation {
     border: solid 2px green;
+    
 }
 
 
@@ -238,11 +240,11 @@ body, html {
 
 .dropbtn {
     background-color: #F5AC72;
-    color: #2b212f;
+    color: #fff;
     padding: 10px;
     font-size: 21px;
     text-align: center;
-    font-weight: 600;
+    font-weight: 400;
     font-family: "Roboto", sans-serif;
     border-radius: 10px;
 }
@@ -257,15 +259,12 @@ body, html {
 
 .dropdown-content div {
     padding: 10px;
-    /* cursor: pointer; */
-    /* border: 1px solid #fff; */
     text-align: center;
     background-color: #F5AC72;
-    color: #2b212f;
+    color: #fff;
     border-radius: 10px;
-    font-size: 19px;
-    font-family: "Roboto", sans-serif;
-    font-weight: 200;
+    font-size: 18px;
+    font-weight: 300;
 }
 
 .recommanded-images {
@@ -293,12 +292,28 @@ body, html {
 }
 
 #shuffle-icone {
-    /* border: solid 2px red; */
     font-size: 130%;
     color: white;
-    background-color: black;
-    padding: 7px;
-    border-radius: 9px;
+    background-color: #f5ac72;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+#spin-icone-second {
+    font-size: 130%;
+    background-color: #f5ac72;
+    padding: 10px;
+    border-radius: 20px;
+    color: #fff;
+    display: none;
+}
+
+#spin-icones {
+    font-size: 40px;
+    color: #facfad;
+    position: absolute;
+    top: 27px;
+    display: none;
 }
 
 /* Animation for the buttom and all of the page */
@@ -323,5 +338,5 @@ body, html {
 .animationdropdownContentClass {
     opacity: 0;
     transform: translateY(20px);
-    animation: dropdownContentAnimation 0.5s ease;
+    animation: dropdownContentAnimation 0.5s forwards;
 }

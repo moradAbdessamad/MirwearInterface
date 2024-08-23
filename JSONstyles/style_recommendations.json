@@ -9,6 +9,32 @@
             "style": "Casual"
         },
         "bottom": {
+            "image": "17472673.jpg",
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "lightgray",
+            "season": "Summer",
+            "style": "Sports"
+        },
+        "shoes": {
+            "image": "sadal.png",
+            "type": "Sports Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "1254967.jpg",
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "rosybrown",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
             "image": "52785916.jpg",
             "type": "Trousers",
             "gender": "Men",
@@ -25,48 +51,22 @@
             "style": "Casual"
         }
     },
-    "style_2": {
+    "style_3": {
         "top": {
+            "image": "43294360.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "lightgray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
             "image": "47244926.jpg",
             "type": "Kurtas",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
             "style": "Casual"
-        },
-        "bottom": {
-            "image": "17472673.jpg",
-            "type": "Tshirts",
-            "gender": "Men",
-            "color": "lightgray",
-            "season": "Summer",
-            "style": "Sports"
-        },
-        "shoes": {
-            "image": "sadal.png",
-            "type": "Sports Shoes",
-            "gender": "Men",
-            "color": "black",
-            "season": "Summer",
-            "style": "Casual"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "1254967.jpg",
-            "type": "Tshirts",
-            "gender": "Men",
-            "color": "rosybrown",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "38709796.jpg",
-            "type": "Track Pants",
-            "gender": "Men",
-            "color": "tan",
-            "season": "Summer",
-            "style": "Ethnic"
         },
         "shoes": {
             "image": "5372175.jpg",
