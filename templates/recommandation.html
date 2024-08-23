@@ -9,6 +9,7 @@
       href="{{ url_for('static', filename='styles.css') }}"
     />
     <title>Recommandation Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   </head>
   <body>
     <div class="container">
@@ -137,6 +138,8 @@
               console.log("Recommendation process is complete.");
               // Update the UI to indicate that processing is complete
               titleRecommandation.innerHTML = "Recommandation is complete"
+              var recommandedImages = document.querySelector('.recommanded-images');
+              recommandedImages.style.display = 'flex';
           }
         });
 
@@ -262,9 +265,9 @@
             dropbtns.forEach(function (btn) {
                 btn.style.display = 'none';
             });
-    
-            var recommandedImages = document.querySelector('.recommanded-images');
-            recommandedImages.style.display = 'flex';
+
+            var recommandationButtonsContainer = document.querySelector('.recommandation-buttons-container')
+            recommandationButtonsContainer.style.display = "none"
         }
     
         function shuffleImages() {

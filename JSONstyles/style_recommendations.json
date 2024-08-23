@@ -9,12 +9,12 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "sadal.png",
-            "type": "Track Pants",
+            "image": "52785916.jpg",
+            "type": "Trousers",
             "gender": "Men",
-            "color": "midnightblue",
+            "color": "dimgray",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Formal"
         },
         "shoes": {
             "image": "5372175.jpg",
@@ -27,20 +27,20 @@
     },
     "style_2": {
         "top": {
-            "image": "1254967.jpg",
-            "type": "Tshirts",
+            "image": "47244926.jpg",
+            "type": "Kurtas",
             "gender": "Men",
-            "color": "rosybrown",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
             "image": "17472673.jpg",
-            "type": "Trousers",
+            "type": "Tshirts",
             "gender": "Men",
-            "color": "dimgray",
+            "color": "lightgray",
             "season": "Summer",
-            "style": "Formal"
+            "style": "Sports"
         },
         "shoes": {
             "image": "sadal.png",
@@ -53,26 +53,26 @@
     },
     "style_3": {
         "top": {
-            "image": "t-shirt.jpg",
+            "image": "1254967.jpg",
             "type": "Tshirts",
             "gender": "Men",
-            "color": "black",
+            "color": "rosybrown",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "49495098.jpg",
+            "image": "38709796.jpg",
             "type": "Track Pants",
             "gender": "Men",
-            "color": "midnightblue",
+            "color": "tan",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Ethnic"
         },
         "shoes": {
-            "image": "sadal.png",
-            "type": "Track Pants",
+            "image": "5372175.jpg",
+            "type": "Casual Shoes",
             "gender": "Men",
-            "color": "midnightblue",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         }
