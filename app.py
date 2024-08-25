@@ -304,19 +304,20 @@ def gen_frames_for_recommandation():
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # Draw rectangles based on the received positions
-            for button, coords in buttons_recommand.items():
-                cv2.rectangle(frame, 
-                              coords['top_left'], 
-                              coords['bottom_right'], 
-                              (0, 255, 0), 2)  # Green rectangle with thickness of 2
+            if current_recommand_mode == 'buttons':
+                for button, coords in buttons_recommand.items():
+                    cv2.rectangle(frame, 
+                                coords['top_left'], 
+                                coords['bottom_right'], 
+                                (0, 255, 0), 2)  # Green rectangle with thickness of 2
 
-
-            for button, coords in arrow_recommand.items():
-                cv2.rectangle(frame,
-                              coords['top_left'],
-                              coords['bottom_right'],
-                               (255, 255, 255))      
-            
+            if current_recommand_mode == 'arrows':
+                for button, coords in arrow_recommand.items():
+                    cv2.rectangle(frame,
+                                coords['top_left'],
+                                coords['bottom_right'],
+                                (255, 255, 255))      
+                
             results = hands.process(frame_rgb)
             finger_tip_coords = None
 
@@ -325,7 +326,7 @@ def gen_frames_for_recommandation():
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    print("The fingertip index:", (cx, cy))
+                    # print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)

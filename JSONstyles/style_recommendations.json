@@ -1,10 +1,36 @@
 {
     "style_1": {
         "top": {
-            "image": "1254967.jpg",
+            "image": "t-shirt.jpg",
             "type": "Tshirts",
             "gender": "Men",
-            "color": "rosybrown",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "17472673.jpg",
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "lightgray",
+            "season": "Summer",
+            "style": "Sports"
+        },
+        "shoes": {
+            "image": "sadal.png",
+            "type": "Sports Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "43294360.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "lightgray",
             "season": "Summer",
             "style": "Casual"
         },
@@ -25,18 +51,18 @@
             "style": "Casual"
         }
     },
-    "style_2": {
+    "style_3": {
         "top": {
-            "image": "17472673.jpg",
+            "image": "1254967.jpg",
             "type": "Tshirts",
             "gender": "Men",
-            "color": "lightgray",
+            "color": "rosybrown",
             "season": "Summer",
-            "style": "Sports"
+            "style": "Casual"
         },
         "bottom": {
-            "image": "t-shirt.jpg",
-            "type": "Tshirts",
+            "image": "47244926.jpg",
+            "type": "Kurtas",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
@@ -47,32 +73,6 @@
             "type": "Sports Shoes",
             "gender": "Men",
             "color": "black",
-            "season": "Summer",
-            "style": "Casual"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "14873764.jpg",
-            "type": "Trousers",
-            "gender": "Women",
-            "color": "black",
-            "season": "Summer",
-            "style": "Formal"
-        },
-        "bottom": {
-            "image": "35829107.jpg",
-            "type": "Shorts",
-            "gender": "Women",
-            "color": "darkslategray",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "shoes": {
-            "image": "49495098.jpg",
-            "type": "Track Pants",
-            "gender": "Women",
-            "color": "midnightblue",
             "season": "Summer",
             "style": "Casual"
         }
