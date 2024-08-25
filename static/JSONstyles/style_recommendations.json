@@ -14,33 +14,7 @@
             "gender": "Men",
             "color": "lightgray",
             "season": "Summer",
-            "style": "Sports"
-        },
-        "shoes": {
-            "image": "sadal.png",
-            "type": "Sports Shoes",
-            "gender": "Men",
-            "color": "black",
-            "season": "Summer",
             "style": "Casual"
-        }
-    },
-    "style_2": {
-        "top": {
-            "image": "1254967.jpg",
-            "type": "Tshirts",
-            "gender": "Men",
-            "color": "rosybrown",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "52785916.jpg",
-            "type": "Trousers",
-            "gender": "Men",
-            "color": "dimgray",
-            "season": "Summer",
-            "style": "Formal"
         },
         "shoes": {
             "image": "5372175.jpg",
@@ -51,26 +25,52 @@
             "style": "Casual"
         }
     },
-    "style_3": {
+    "style_2": {
         "top": {
-            "image": "43294360.jpg",
-            "type": "Shirts",
+            "image": "sadal.png",
+            "type": "Sports Shoes",
             "gender": "Men",
-            "color": "lightgray",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "49702676.jpg",
-            "type": "Trousers",
-            "gender": "Men",
+            "image": "35829107.jpg",
+            "type": "Shorts",
+            "gender": "Women",
             "color": "darkslategray",
             "season": "Summer",
-            "style": "Formal"
+            "style": "Casual"
         },
         "shoes": {
             "image": "sadal.png",
             "type": "Sports Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "t-shirt.jpg",
+            "type": "Tshirts",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "35829107.jpg",
+            "type": "Shorts",
+            "gender": "Women",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "5372175.jpg",
+            "type": "Casual Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",

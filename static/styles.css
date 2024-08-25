@@ -36,20 +36,23 @@ body, html {
 .logo {
     /* border: solid 2px red; */
     position: absolute;
-    top: 5px;
+    top: -12px;
     font-size: large;
-    left: -14px;
-    transform: scale(0.7);
+    left: -26px;
+    transform: scale(0.653);
+    background-color: #f5ac72;
+    padding: 15px;
+    border-radius: 10px;
 }
 
 .title {
     position: absolute;
-    top: 45px;
+    top: 65px;
     background-color: #2b212f;
-    border-radius: 5px;
-    padding: 5px 8px;
+    border-radius: 10px;
+    padding: 10px;
     color: #fff;
-    font-size: 19px;
+    font-size: 18px;
     text-transform: capitalize;
 }
 
@@ -130,10 +133,10 @@ body, html {
 .image-container img {
     max-width: 100%;
     max-height: 100%;
-    object-fit: contain; 
+    object-fit: contain;
     z-index: 10;
-    border: solid 2px black;
-    border-radius: 16px;
+    border: solid 2px #facfad;
+    border-radius: 10px;
 }
 
 /* the outline pagse style */
