@@ -1,0 +1,121 @@
+{
+    "top": {
+      "1254967.jpg": {
+        "type": "Tshirts",
+        "gender": "Men",
+        "color": "rosybrown",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "17472673.jpg": {
+        "type": "Tshirts",
+        "gender": "Men",
+        "color": "lightgray",
+        "season": "Summer",
+        "style": "Sports"
+      },
+      "43294360.jpg": {
+        "type": "Shirts",
+        "gender": "Men",
+        "color": "lightgray",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "t-shirt.jpg": {
+        "type": "Tshirts",
+        "gender": "Men",
+        "color": "black",
+        "season": "Summer",
+        "style": "Casual"
+      }
+    },
+    "bottom": {
+      "14873764.jpg": {
+        "type": "Trousers",
+        "gender": "Women",
+        "color": "black",
+        "season": "Summer",
+        "style": "Formal"
+      },
+      "32988008.jpg": {
+        "type": "Trousers",
+        "gender": "Women",
+        "color": "darkslategray",
+        "season": "Summer",
+        "style": "Formal"
+      },
+      "33373246.jpg": {
+        "type": "Trousers",
+        "gender": "Women",
+        "color": "darkslategray",
+        "season": "Summer",
+        "style": "Formal"
+      },
+      "35829107.jpg": {
+        "type": "Shorts",
+        "gender": "Women",
+        "color": "darkslategray",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "38709796.jpg": {
+        "type": "Track Pants",
+        "gender": "Men",
+        "color": "tan",
+        "season": "Summer",
+        "style": "Ethnic"
+      },
+      "38772161.jpg": {
+        "type": "Trousers",
+        "gender": "Women",
+        "color": "darkslateblue",
+        "season": "Summer",
+        "style": "Ethnic"
+      },
+      "44395368.jpg": {
+        "type": "Trousers",
+        "gender": "Women",
+        "color": "black",
+        "season": "Summer",
+        "style": "Formal"
+      },
+      "45300648.jpg": {
+        "type": "Jeans",
+        "gender": "Women",
+        "color": "black",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "49495098.jpg": {
+        "type": "Track Pants",
+        "gender": "Women",
+        "color": "midnightblue",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "52785916.jpg": {
+        "type": "Trousers",
+        "gender": "Men",
+        "color": "dimgray",
+        "season": "Summer",
+        "style": "Formal"
+      }
+    },
+    "shoes": {
+      "5372175.jpg": {
+        "type": "Casual Shoes",
+        "gender": "Men",
+        "color": "black",
+        "season": "Summer",
+        "style": "Casual"
+      },
+      "sadal.png": {
+        "type": "Sports Shoes",
+        "gender": "Men",
+        "color": "black",
+        "season": "Summer",
+        "style": "Casual"
+      }
+    }
+  }
+  

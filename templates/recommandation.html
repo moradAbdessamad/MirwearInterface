@@ -170,7 +170,27 @@
           }
         });
 
-        
+        let topIndex = 0;
+        let bottomIndex = 0;
+        let shoesIndex = 0;
+
+        const items = {
+            top: [],
+            bottom: [],
+            shoes: []
+        };
+
+        // Load the JSON file containing the items
+        fetch("{{ url_for('static', filename='JSONstyles/itemsByType.json') }}")
+          .then(response => response.json())
+          .then(data => {
+            items.top = Object.keys(data.top);
+            items.bottom = Object.keys(data.bottom);
+            items.shoes = Object.keys(data.shoes);
+          })
+          .catch(error => console.error('Error loading JSON:', error));
+
+
         var selectedItems = {
             'Season': null,
             'Gender': null,
@@ -204,8 +224,14 @@
               handleButtonRecommand(buttonName);
           }
 
+          if (buttonName == 'topright' || buttonName == 'topLeft') {
+            updateImageForArrow('top')
+          } else if (buttonName == 'bottomLeft' || buttonName == 'bottomRight') {
+            updateImageForArrow('bottom')
+          } else if (buttonName == 'shoesLeft' || buttonName == 'shoesRight') {
+            updateImageForArrow('shoes')
+          }
 
-          
         });
          
     
@@ -364,6 +390,32 @@
               return style.display; // Returning the actual display style if it's something else
           }
         }
+
+        function updateImageForArrow(category) {
+          let index;
+          let element;
+      
+          switch(category) {
+              case 'top':
+                  index = topIndex;
+                  element = document.getElementById('recommanded-top');
+                  topIndex = (topIndex + 1) % items.top.length;
+                  break;
+              case 'bottom':
+                  index = bottomIndex;
+                  element = document.getElementById('recommanded-bottom');
+                  bottomIndex = (bottomIndex + 1) % items.bottom.length;
+                  break;
+              case 'shoes':
+                  index = shoesIndex;
+                  element = document.getElementById('recommanded-foot');
+                  shoesIndex = (shoesIndex + 1) % items.shoes.length;
+                  break;
+          }
+      
+          const itemName = items[category][index];
+          element.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + itemName;
+      }
     });    
     </script>
   </body>

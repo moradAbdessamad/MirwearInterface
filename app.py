@@ -263,6 +263,7 @@ arrow_recommand = {
     'bottomRight': {'top_left': (130, 225), 'bottom_right': (160, 255)},
     'shoesLeft': {'top_left': (486, 303), 'bottom_right': (516, 333)},
     'shoesRight': {'top_left': (118, 301), 'bottom_right': (148, 331)},
+    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
 }
 
 hover_start_time_recommand = {}
@@ -379,7 +380,7 @@ def handle_ui_update(data):
 
 
 
-wardrobe_file_path = r'D:\OSC\MirwearInterface\JSONstyles\style.json'
+wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style.json'
 
 @socketio.on('recommendation_selected')
 def handle_recommendation_selected(data):
@@ -494,7 +495,7 @@ def handle_recommendation_selected(data):
     response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
 
     # Extract and save the JSON
-    extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/JSONstyles/style_recommendations.json')
+    extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
 
     # Emit that the processing is complete
     socketio.emit('process_status', {'status': 'complete'})
