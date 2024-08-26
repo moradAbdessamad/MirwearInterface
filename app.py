@@ -27,9 +27,11 @@ pose = mp_pose.Pose()
 mp_drawing = mp.solutions.drawing_utils
 
 buttons = {
-    'Top': {'top_left': (20, 90), 'bottom_right': (118, 175)},
-    'Bottom': {'top_left': (20, 200), 'bottom_right': (108, 286)},
-    'Foot': {'top_left': (30, 300), 'bottom_right': (105, 396)},
+    'Top': {'top_left': (13, 156), 'bottom_right': (60, 210)},
+    'Bottom': {'top_left': (13, 200), 'bottom_right': (60, 286)},
+    'Foot': {'top_left': (13, 280), 'bottom_right': (60, 333)},
+
+
     'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
     'Changedown': {'top_left': (567, 395), 'bottom_right': (607, 435)},
     'ChangeUp': {'top_left': (559, 55), 'bottom_right': (599, 95)},
@@ -135,7 +137,7 @@ def gen_frames():
                     h, w, c = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                     finger_tip_coords = {'x': cx, 'y': cy}
-                    # print("The coord of finger : ", (cx, cy))
+                    print("The coord of finger : ", (cx, cy))
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover(finger_tip_coords)
 

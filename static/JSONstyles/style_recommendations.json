@@ -10,42 +10,42 @@
         },
         "bottom": {
             "image": "image102.jpg",
-            "type": "Casual Shoes",
+            "type": "Track Pants",
             "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         },
         "shoes": {
-            "image": "image105.jpg",
-            "type": "Formal Shoes",
+            "image": "image138.jpg",
+            "type": "Sports Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
-            "style": "Formal"
+            "style": "Casual"
         }
     },
     "style_2": {
         "top": {
-            "image": "image112.jpg",
-            "type": "Shirts",
+            "image": "image113.jpg",
+            "type": "Tshirts",
             "gender": "Men",
-            "color": "darkgrey",
+            "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "image110.jpg",
-            "type": "Trousers",
-            "gender": "Men",
-            "color": "gray",
-            "season": "Fall",
-            "style": "Casual"
+            "image": "image144.jpg",
+            "type": "Skirts",
+            "gender": "Women",
+            "color": "cadetblue",
+            "season": "Summer",
+            "style": "Ethnic"
         },
         "shoes": {
-            "image": "image139.jpg",
+            "image": "image132.jpg",
             "type": "Casual Shoes",
-            "gender": "Men",
+            "gender": "Women",
             "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
@@ -53,7 +53,7 @@
     },
     "style_3": {
         "top": {
-            "image": "image146.jpg",
+            "image": "image145.jpg",
             "type": "Shirts",
             "gender": "Boys",
             "color": "black",
@@ -61,15 +61,15 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "image118.jpg",
+            "image": "image146.jpg",
             "type": "Track Pants",
             "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
-            "style": "Ethnic"
+            "style": "Casual"
         },
         "shoes": {
-            "image": "image138.jpg",
+            "image": "image136.jpg",
             "type": "Formal Shoes",
             "gender": "Men",
             "color": "black",
