@@ -473,7 +473,7 @@ def handle_recommendation_selected(data):
         }},
         "style_3": {{
             // Another complete outfit recommendation with distinct items if available
-        }}
+        }} 
     }}
 
     Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
@@ -486,7 +486,7 @@ def handle_recommendation_selected(data):
             {"role": "user", "content": prompt}
         ],
         temperature=0.5,
-        max_tokens=1500,
+        max_tokens=4096,
         top_p=1,
         stream=False,
         stop=None,
