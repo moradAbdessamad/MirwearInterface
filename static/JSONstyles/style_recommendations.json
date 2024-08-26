@@ -1,67 +1,67 @@
 {
     "style_1": {
         "top": {
-            "image": "41gCUcwspYL._AC_SX385_.jpg",
+            "image": "image100.jpg",
             "type": "Shirts",
+            "gender": "Men",
+            "color": "lightgray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "image102.jpg",
+            "type": "Casual Shoes",
             "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         },
-        "bottom": {
-            "image": "41gKN5B8O0L._AC_SX569_.jpg",
-            "type": "Track Pants",
-            "gender": "Men",
-            "color": "dimgray",
-            "season": "Summer",
-            "style": "Casual"
-        },
         "shoes": {
-            "image": "31eAZ-ojQL._AC_UY1000_.jpg",
-            "type": "Casual Shoes",
+            "image": "image105.jpg",
+            "type": "Formal Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Formal"
         }
     },
     "style_2": {
         "top": {
-            "image": "61gR641zL._AC_SX342_.jpg",
+            "image": "image112.jpg",
             "type": "Shirts",
             "gender": "Men",
-            "color": "darkolivegreen",
+            "color": "darkgrey",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "41gJ5B8O0L._AC_SX569_.jpg",
-            "type": "Track Pants",
+            "image": "image110.jpg",
+            "type": "Trousers",
             "gender": "Men",
-            "color": "dimgray",
-            "season": "Summer",
+            "color": "gray",
+            "season": "Fall",
             "style": "Casual"
         },
         "shoes": {
-            "image": "71CCgxVyULL._SY535_.jpg",
+            "image": "image139.jpg",
             "type": "Casual Shoes",
             "gender": "Men",
-            "color": "darkolivegreen",
+            "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         }
     },
     "style_3": {
         "top": {
-            "image": "71fKAhnKcpL._AC_UY1000_.jpg",
+            "image": "image146.jpg",
             "type": "Shirts",
-            "gender": "Men",
-            "color": "darkolivegreen",
+            "gender": "Boys",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "41WcGpew0wL._AC_UY1000_.jpg",
+            "image": "image118.jpg",
             "type": "Track Pants",
             "gender": "Men",
             "color": "darkslategray",
@@ -69,12 +69,12 @@
             "style": "Ethnic"
         },
         "shoes": {
-            "image": "71LDPanrFaL._AC_SX342_.jpg",
-            "type": "Casual Shoes",
+            "image": "image138.jpg",
+            "type": "Formal Shoes",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Formal"
         }
     }
 }

@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Main Page </title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Main Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       type="text/css"
@@ -39,7 +42,9 @@
           </svg>
         </div>
 
-        <h1 class="title">Please hover with your index fingertip for 1 second to click</h1>
+        <h1 class="title">
+          Please hover with your index fingertip for 1 second to click
+        </h1>
 
         <img id="video" src="{{ url_for('video_feed') }}" />
 
@@ -73,149 +78,133 @@
             </div>
           </div>
 
-          <div class="rights_button" id="rights_button">
-            <div class="image-container">
-              <img
-                id="option1_1"
-                class="cloth-image"
-                src="{{ url_for('static', filename='Cloths/option1_1.png') }}"
-                style="display: none"
-              />
+          <div class="rights_button" id="rights_button" style="display: none">
+            <i
+              class="fa-solid fa-circle-arrow-up"
+              id="down-arrow"
+            ></i>
+
+            <div class="image-container-rights">
+              <img id="option1_1" class="cloth-image" src="" alt="Top Image" />
             </div>
 
-            <div class="image-container">
+            <div class="image-container-rights">
               <img
                 id="option1_2"
                 class="cloth-image"
-                src="{{ url_for('static', filename='Cloths/option1_2.png') }}"
-                style="display: none"
+                src=""
+                alt="Bottom Image"
               />
             </div>
 
-            <div class="image-container">
-              <img
-                id="option1_3"
-                class="cloth-image"
-                src="{{ url_for('static', filename='Cloths/option1_3.png') }}"
-                style="display: none"
-              />
+            <div class="image-container-rights">
+              <img id="option1_3" class="cloth-image" src="" alt="Foot Image" />
             </div>
+
+            <i
+              class="fa-solid fa-circle-arrow-down"
+              id="up-arrow"
+            ></i>
           </div>
         </div>
 
         <button id="recommend" class="recommend-button">Recommend</button>
       </div>
     </div>
+    <script
+      src="https://kit.fontawesome.com/5fce5f9bd9.js"
+      crossorigin="anonymous"
+    ></script>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          // Initialize SocketIO
-          var socket = io();
-
-          // Listen for button_hover events
-          socket.on("button_hover", function (data) {
-            var image1 = document.getElementById("option1_1");
-            var image2 = document.getElementById("option1_2");
-            var image3 = document.getElementById("option1_3");
-
-            console.log(image1);
-            console.log(data);
-
-            if (data.button == "Option 1") {
-              image1.style.display = "block";
-              image2.style.display = "block";
-              image3.style.display = "block";
-
-              image1.src =
-                "{{ url_for('static', filename = 'Cloths/option1_1.png') }}";
-              image2.src =
-                "{{ url_for('static', filename = 'Cloths/option1_2.png') }}";
-              image3.src =
-                "{{ url_for('static', filename = 'Cloths/option1_3.png') }}";
-            } else if (data.button == "Option 2") {
-              image1.style.display = "block";
-              image2.style.display = "block";
-              image3.style.display = "block";
-
-              image1.src =
-                "{{ url_for('static', filename = 'Cloths/option2_1.png') }}";
-              image2.src =
-                "{{ url_for('static', filename = 'Cloths/option2_2.png') }}";
-              image3.src =
-                "{{ url_for('static', filename = 'Cloths/option2_3.png') }}";
-            } else if (data.button == "Option 3") {
-              image1.style.display = "block";
-              image2.style.display = "block";
-              image3.style.display = "block";
-
-              image1.src =
-                "{{ url_for('static', filename = 'Cloths/option3_1.png') }}";
-              image2.src =
-                "{{ url_for('static', filename = 'Cloths/option3_2.png') }}";
-              image3.src =
-                "{{ url_for('static', filename = 'Cloths/option3_3.png') }}";
+      document.addEventListener("DOMContentLoaded", function () {
+        var socket = io();
+        var jsonData = null;
+        var currentIndex = { "top": 0, "bottom": 0, "foot": 0 };
+        const itemsPerPage = 3;
+        var lastCategory = null;
+    
+        // Load the JSON file
+        fetch("/static/JSONstyles/itemsByType.json")
+        .then((response) => response.json())
+        .then((data) => {
+            jsonData = data;
+            console.log("JSON data loaded:", jsonData);
+        })
+        .catch((error) => console.error("Error loading JSON:", error));
+    
+        function updateImages(category) {
+          if (!jsonData) {
+              console.error("JSON data not loaded yet");
+              return;
+          }
+      
+          var image1 = document.getElementById("option1_1");
+          var image2 = document.getElementById("option1_2");
+          var image3 = document.getElementById("option1_3");
+      
+          // Calculate the remaining items
+          const remainingItems = Object.keys(jsonData[category]).length - currentIndex[category];
+      
+          // If there are not enough items left to display, reset the index to 0
+          if (remainingItems < itemsPerPage) {
+              currentIndex[category] = 0;
+          }
+      
+          // Get the images from JSON starting at currentIndex[category]
+          const images = Object.keys(jsonData[category]).slice(currentIndex[category], currentIndex[category] + itemsPerPage);
+      
+          console.log(
+              `Displaying items ${currentIndex[category] + 1} to ${currentIndex[category] + images.length} for category: ${category}`
+          );
+      
+          // Update the src attributes of the images, only if the images exist
+          image1.src = images[0] ? `static/ClothsImageTest/${images[0]}` : "";
+          image2.src = images[1] ? `static/ClothsImageTest/${images[1]}` : "";
+          image3.src = images[2] ? `static/ClothsImageTest/${images[2]}` : "";
+      
+          // Optionally, hide the image elements if they have no valid src
+          image1.style.display = images[0] ? "block" : "none";
+          image2.style.display = images[1] ? "block" : "none";
+          image3.style.display = images[2] ? "block" : "none";
+      
+          // Toggle arrow visibility
+          document.getElementById("up-arrow").style.display = (currentIndex[category] > 0) ? "block" : "none";
+          document.getElementById("down-arrow").style.display = (currentIndex[category] + itemsPerPage < Object.keys(jsonData[category]).length) ? "block" : "none";
+      }         
+    
+        socket.on("button_hover", function (data) {
+            var rightsImages = document.querySelector("#rights_button");
+            rightsImages.style.display = "flex";
+    
+            if (data.button == "Top") {
+                lastCategory = "top";
+                updateImages("top");
+            } else if (data.button == "Bottom") {
+                lastCategory = "bottom";
+                updateImages("bottom");
+            } else if (data.button == "Foot") {
+                lastCategory = "foot";
+                updateImages("foot");
             } else if (data.button == "Recommend") {
-              window.location.href = "/recommandation";
+                window.location.href = "/recommandation";
+            } else if (data.button == "ChangeUp" && lastCategory) {
+                currentIndex[lastCategory] += itemsPerPage;
+                if (currentIndex[lastCategory] >= Object.keys(jsonData[lastCategory]).length) {
+                    currentIndex[lastCategory] = 0; // Reset to 0 if the end is reached
+                }
+                updateImages(lastCategory);
+            } else if (data.button == "Changedown" && lastCategory) {
+                if (currentIndex[lastCategory] > 0) {
+                    currentIndex[lastCategory] -= itemsPerPage;
+                } else {
+                    // Wrap around to the last page if ChangeDown is pressed on the first page
+                    currentIndex[lastCategory] = Math.max(0, Object.keys(jsonData[lastCategory]).length - itemsPerPage);
+                }
+                updateImages(lastCategory);
             }
-          });
-
-          // Get all buttons inside the container
-          let buttons = document.querySelectorAll(".buttonsCon .button");
-
-          buttons.forEach((button) => {
-            // Get the bounding rectangle of the button
-            const rect = button.getBoundingClientRect();
-
-            // Get the bounding rectangle of the grandparent element (videoContainer)
-            const grandparentRect = document
-              .querySelector(".videoContainer")
-              .getBoundingClientRect();
-
-            const topLeft = {
-              x: rect.left - grandparentRect.left,
-              y: rect.top - grandparentRect.top,
-            };
-
-            const bottomRight = {
-              x: rect.right - grandparentRect.left,
-              y: rect.bottom - grandparentRect.top,
-            };
-
-            // Log the coordinates to the console
-            console.log(
-              `${button.id}: { top_left: (${topLeft.x}, ${topLeft.y}), bottom_right: (${bottomRight.x}, ${bottomRight.y}) }`
-            );
-          });
         });
-
-        function preloadImages() {
-          const images = [
-              '{{ url_for('static', filename='Cloths/image.png') }}',
-              '{{ url_for('static', filename='Cloths/option1_1.png') }}',
-              '{{ url_for('static', filename='Cloths/option1_2.png') }}',
-              '{{ url_for('static', filename='Cloths/option1_3.png') }}',
-              '{{ url_for('static', filename='Cloths/option2_1.png') }}',
-              '{{ url_for('static', filename='Cloths/option2_2.png') }}',
-              '{{ url_for('static', filename='Cloths/option2_3.png') }}',
-              '{{ url_for('static', filename='Cloths/option3_1.png') }}',
-              '{{ url_for('static', filename='Cloths/option3_2.png') }}',
-              '{{ url_for('static', filename='Cloths/option3_3.png') }}'
-          ];
-
-          console.log("Starting to load images...");
-
-          images.forEach(image => {
-              const img = new Image();
-              img.onload = () => {
-                  console.log(`${image} loaded successfully`);
-              };
-              img.onerror = (e) => {
-                  console.error(`Error loading ${image}: `, e);
-              };
-              img.src = image;
-          });
-      }
-
-      window.onload = preloadImages;
+    });
+          
     </script>
   </body>
 </html>

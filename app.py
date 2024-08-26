@@ -27,10 +27,12 @@ pose = mp_pose.Pose()
 mp_drawing = mp.solutions.drawing_utils
 
 buttons = {
-    'Option 1': {'top_left': (20, 90), 'bottom_right': (118, 175)},
-    'Option 2': {'top_left': (20, 200), 'bottom_right': (108, 286)},
-    'Option 3': {'top_left': (30, 300), 'bottom_right': (105, 396)},
+    'Top': {'top_left': (20, 90), 'bottom_right': (118, 175)},
+    'Bottom': {'top_left': (20, 200), 'bottom_right': (108, 286)},
+    'Foot': {'top_left': (30, 300), 'bottom_right': (105, 396)},
     'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
+    'Changedown': {'top_left': (567, 395), 'bottom_right': (607, 435)},
+    'ChangeUp': {'top_left': (559, 55), 'bottom_right': (599, 95)},
 }
 
 
@@ -117,6 +119,13 @@ def gen_frames():
         else:
             frame = cv2.flip(frame, 1)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            for button, coords in buttons.items():
+                cv2.rectangle(frame,
+                            coords['top_left'],
+                            coords['bottom_right'],
+                            (255, 255, 255))
+                   
             results = hands.process(frame_rgb)
             finger_tip_coords = None
 
@@ -126,6 +135,7 @@ def gen_frames():
                     h, w, c = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                     finger_tip_coords = {'x': cx, 'y': cy}
+                    # print("The coord of finger : ", (cx, cy))
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover(finger_tip_coords)
 
@@ -158,6 +168,7 @@ def gen_frames_for_outline():
         frame = cv2.flip(frame, 1)
         frame_h, frame_w, _ = frame.shape
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
         results = pose.process(frame_rgb)
 
         if results.pose_landmarks:
@@ -365,6 +376,14 @@ def video_feed_recommandation():
 @app.route('/recommandation')
 def recommandation():
     return render_template('recommandation.html')
+
+
+@app.route('/static/JSONstyles/itemsByType.json')
+def serve_json():
+    with open('static/JSONstyles/itemsByType.json') as json_file:
+        data = json.load(json_file)
+    return jsonify(data)
+
 
 @socketio.on('ui_update')
 def handle_ui_update(data):
