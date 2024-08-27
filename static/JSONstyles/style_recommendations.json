@@ -10,7 +10,7 @@
         },
         "bottom": {
             "image": "image102.jpg",
-            "type": "Casual Pants",
+            "type": "Casual Shoes",
             "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
@@ -22,47 +22,21 @@
             "gender": "Men",
             "color": "black",
             "season": "Summer",
-            "style": "Casual"
+            "style": "Sports"
         }
     },
     "style_2": {
         "top": {
-            "image": "image111.jpg",
+            "image": "image101.jpeg",
             "type": "Shirts",
             "gender": "Men",
-            "color": "dimgray",
+            "color": "slategrey",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "image103.jpg",
-            "type": "Trousers",
-            "gender": "Men",
-            "color": "darkslategray",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "shoes": {
-            "image": "image141.jpg",
-            "type": "Casual Shoes",
-            "gender": "Men",
-            "color": "lavender",
-            "season": "Summer",
-            "style": "Casual"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "image122.jpg",
-            "type": "Shirts",
-            "gender": "Men",
-            "color": "gainsboro",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "image104.jpg",
-            "type": "Jeans",
+            "image": "image109.jpg",
+            "type": "Track Pants",
             "gender": "Men",
             "color": "black",
             "season": "Summer",
@@ -77,35 +51,9 @@
             "style": "Formal"
         }
     },
-    "style_4": {
+    "style_3": {
         "top": {
-            "image": "image145.jpg",
-            "type": "Shirts",
-            "gender": "Boys",
-            "color": "black",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "bottom": {
-            "image": "image108.jpg",
-            "type": "Shorts",
-            "gender": "Boys",
-            "color": "darkslategray",
-            "season": "Summer",
-            "style": "Casual"
-        },
-        "shoes": {
             "image": "image136.jpg",
-            "type": "Sports Shoes",
-            "gender": "Boys",
-            "color": "black",
-            "season": "Summer",
-            "style": "Casual"
-        }
-    },
-    "style_5": {
-        "top": {
-            "image": "image146.jpg",
             "type": "Shirts",
             "gender": "Men",
             "color": "darkgrey",
@@ -113,18 +61,44 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "image113.jpg",
-            "type": "Trousers",
+            "image": "image115.jpg",
+            "type": "Track Pants",
             "gender": "Men",
-            "color": "gray",
-            "season": "Fall",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Ethnic"
+        },
+        "shoes": {
+            "image": "image116.jpg",
+            "type": "Sports Shoes",
+            "gender": "Men",
+            "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image146.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "lightgray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "image108.jpg",
+            "type": "Track Pants",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
             "style": "Casual"
         },
         "shoes": {
-            "image": "image139.jpg",
+            "image": "image141.jpg",
             "type": "Casual Shoes",
             "gender": "Men",
-            "color": "darkslategray",
+            "color": "lavender",
             "season": "Summer",
             "style": "Casual"
         }

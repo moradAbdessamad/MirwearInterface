@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import filedialog, Label, Button, Frame
+from tkinter import Label, Button, Frame
 from PIL import Image, ImageTk
 import json
 import os
@@ -13,35 +13,25 @@ class StyleViewerApp:
         self.current_style_index = 0
         self.style_labels = {}
 
-        # Create buttons to select JSON and image folder
-        self.json_button = Button(root, text="Select JSON File", command=self.select_json)
-        self.json_button.pack(pady=10)
-
-        self.folder_button = Button(root, text="Select Image Folder", command=self.select_folder)
-        self.folder_button.pack(pady=10)
-
-        # Create left and right buttons for navigation
-        self.left_button = Button(root, text="<", command=self.previous_style, state="disabled")
-        self.left_button.pack(side="left", padx=10)
-
-        self.right_button = Button(root, text=">", command=self.next_style, state="disabled")
-        self.right_button.pack(side="right", padx=10)
-
         # Frame to display the style content
         self.style_frame = Frame(root)
         self.style_frame.pack(pady=20)
 
-    def select_json(self):
-        json_file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
-        if json_file_path:
-            self.styles = self.load_json(json_file_path)
-            self.update_buttons_state()
+        # Create left and right buttons for navigation
+        self.left_button = Button(root, text="<", command=self.previous_style)
+        self.left_button.pack(side="left", padx=10)
 
-    def select_folder(self):
-        self.folder_path = filedialog.askdirectory()
-        if self.folder_path:
-            if self.styles:
-                self.display_current_style()
+        self.right_button = Button(root, text=">", command=self.next_style)
+        self.right_button.pack(side="right", padx=10)
+
+        # Hard-coded paths
+        self.json_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style_recommendations.json'
+        self.folder_path = r'D:\OSC\MirwearInterface\static\ClothsImageTest'
+
+        # Load the JSON and display the first style
+        self.styles = self.load_json(self.json_file_path)
+        self.display_current_style()
+        self.update_buttons_state()
 
     def load_json(self, file_path):
         with open(file_path, 'r') as f:
@@ -70,7 +60,7 @@ class StyleViewerApp:
 
     def update_label_image(self, label, image_path):
         img = Image.open(image_path)
-        img = img.resize((100, 100), Image.ANTIALIAS)
+        img = img.resize((100, 100), Image.Resampling.LANCZOS)
         img = ImageTk.PhotoImage(img)
         label.config(image=img)
         label.image = img  # Keep a reference to avoid garbage collection
