@@ -177,8 +177,10 @@
         const items = {
             top: [],
             bottom: [],
-            shoes: []
+            foot: []
         };
+
+        socket.emit('ui_update', {element: 'recommandationButtonsContainer'});
 
         // Load the JSON file containing the items
         fetch("{{ url_for('static', filename='JSONstyles/itemsByType.json') }}")
@@ -186,7 +188,7 @@
           .then(data => {
             items.top = Object.keys(data.top);
             items.bottom = Object.keys(data.bottom);
-            items.shoes = Object.keys(data.shoes);
+            items.foot = Object.keys(data.foot);
           })
           .catch(error => console.error('Error loading JSON:', error));
 
@@ -229,7 +231,7 @@
           } else if (buttonName == 'bottomLeft' || buttonName == 'bottomRight') {
             updateImageForArrow('bottom')
           } else if (buttonName == 'shoesLeft' || buttonName == 'shoesRight') {
-            updateImageForArrow('shoes')
+            updateImageForArrow('foot')
           }
 
         });
@@ -406,10 +408,10 @@
                   element = document.getElementById('recommanded-bottom');
                   bottomIndex = (bottomIndex + 1) % items.bottom.length;
                   break;
-              case 'shoes':
+              case 'foot':
                   index = shoesIndex;
                   element = document.getElementById('recommanded-foot');
-                  shoesIndex = (shoesIndex + 1) % items.shoes.length;
+                  shoesIndex = (shoesIndex + 1) % items.foot.length;
                   break;
           }
       
