@@ -402,10 +402,18 @@ def handle_ui_update(data):
 
 
 wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style.json'
+processing_in_progress = False  # Flag to track if processing is in progress
 
 @socketio.on('recommendation_selected')
 def handle_recommendation_selected(data):
+    global processing_in_progress
+    
+    if processing_in_progress:
+        print("Processing is already in progress. Skipping this request.")
+        return  # Skip if a process is already running
+    
     print("Received recommendation selections:", data)
+    processing_in_progress = True  # Set the flag to indicate processing has started
     
     # Emit that the processing is starting
     socketio.emit('process_status', {'status': 'in_progress'})
@@ -500,27 +508,30 @@ def handle_recommendation_selected(data):
     Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
     """
 
-    # Request completion from the model
-    completion = client.chat.completions.create(
-        model="llama3-groq-70b-8192-tool-use-preview",
-        messages=[
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.5,
-        max_tokens=4096,
-        top_p=1,
-        stream=False,
-        stop=None,
-    )
+    try:
+        # Request completion from the model
+        completion = client.chat.completions.create(
+            model="llama3-groq-70b-8192-tool-use-preview",
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.5,
+            max_tokens=4096,
+            top_p=1,
+            stream=False,
+            stop=None,
+        )
 
-    response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
+        response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
 
-    # Extract and save the JSON
-    extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
+        # Extract and save the JSON
+        extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
 
-    # Emit that the processing is complete
-    socketio.emit('process_status', {'status': 'complete'})
-
+        # Emit that the processing is complete
+        socketio.emit('process_status', {'status': 'complete'})
+    
+    finally:
+        processing_in_progress = False  # Reset the flag once processing is complete
 
 def extract_and_save_json(response_content, file_path):
     # Check if response_content is a ChatCompletionMessage object and extract content
