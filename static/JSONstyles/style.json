@@ -1,415 +1,79 @@
 {
     "image100.jpg": {
-        "type": "Shirts",
+        "type": "Dress shirt",
         "gender": "Men",
-        "color": "lightgray",
-        "season": "Summer",
-        "style": "Casual"
+        "color": "Light gray",
+        "season": "Spring",
+        "style": "Daywear"
     },
     "image101.jpeg": {
-        "type": "Shirts",
+        "type": "Dress shirt",
         "gender": "Men",
-        "color": "slategrey",
-        "season": "Summer",
-        "style": "Casual"
+        "color": "Powder blue",
+        "season": "Spring",
+        "style": "Daywear"
     },
     "image101.jpg": {
-        "type": "Shirts",
+        "type": "Long sleeve shirt",
         "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
+        "color": "Oxblood",
+        "season": "Fall",
+        "style": "Daywear"
     },
     "image102.jpg": {
-        "type": "Casual Shoes",
+        "type": "Espadrilles",
         "gender": "Men",
-        "color": "darkslategray",
+        "color": "Navy",
         "season": "Summer",
-        "style": "Casual"
+        "style": "Athleisure"
     },
     "image103.jpeg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Formal"
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark gray",
+        "season": "Winter",
+        "style": "Denim"
     },
     "image103.jpg": {
-        "type": "Skirts",
-        "gender": "Women",
-        "color": "dimgray",
-        "season": "Summer",
-        "style": "Ethnic"
+        "type": "Palazzo pants",
+        "gender": "Men",
+        "color": "Warm gray",
+        "season": "Winter",
+        "style": "Loungewear"
     },
     "image104.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Formal"
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark blue",
+        "season": "Fall",
+        "style": "Capsule Wardrobe"
     },
     "image105.jpeg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Formal"
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark gray",
+        "season": "Winter",
+        "style": "Denim"
     },
     "image105.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Formal"
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "season": "Fall",
+        "style": "Capsule Wardrobe"
     },
     "image106.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Men",
-        "color": "teal",
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Dark green",
         "season": "Summer",
-        "style": "Casual"
+        "style": "Smart Casual"
     },
     "image107.jpeg": {
-        "type": "Track Pants",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image107.jpg": {
-        "type": "Shirts",
-        "gender": "Boys",
-        "color": "gainsboro",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image108.jpg": {
-        "type": "Shorts",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image109.jpeg": {
-        "type": "Sports Shoes",
-        "gender": "Men",
-        "color": "saddlebrown",
-        "season": "Summer",
-        "style": "Sports"
-    },
-    "image109.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "tan",
-        "season": "Summer",
-        "style": "Ethnic"
-    },
-    "image110.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslateblue",
-        "season": "Summer",
-        "style": "Ethnic"
-    },
-    "image111.jpeg": {
-        "type": "Tshirts",
-        "gender": "Men",
-        "color": "dimgray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image111.jpg": {
-        "type": "Tshirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image112.jpeg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image112.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image113.jpg": {
-        "type": "Trousers",
-        "gender": "Men",
-        "color": "gray",
-        "season": "Fall",
-        "style": "Casual"
-    },
-    "image114.jpeg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image114.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image115.jpeg": {
-        "type": "Formal Shoes",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Formal"
-    },
-    "image115.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image116.jpeg": {
-        "type": "Sports Shoes",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image116.jpg": {
-        "type": "Track Pants",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image117.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Women",
-        "color": "gainsboro",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image118.jpg": {
-        "type": "Track Pants",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Ethnic"
-    },
-    "image119.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "lightgray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image12.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image120.jpg": {
-        "type": "Shirts",
-        "gender": "Boys",
-        "color": "gainsboro",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image121.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "black",
-        "season": "Summer",
-        "style": "Formal"
-    },
-    "image122.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "gainsboro",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image123.jpg": {
         "type": "Jeans",
-        "gender": "Women",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image124.jpg": {
-        "type": "Kurtas",
         "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image125.jpg": {
-        "type": "Track Pants",
-        "gender": "Women",
-        "color": "midnightblue",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image126.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image127.jpg": {
-        "type": "Tshirts",
-        "gender": "Boys",
-        "color": "dimgray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image128.jpg": {
-        "type": "Tshirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image129.jpg": {
-        "type": "Trousers",
-        "gender": "Women",
-        "color": "black",
-        "season": "Summer",
-        "style": "Formal"
-    },
-    "image130.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Men",
-        "color": "lavender",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image131.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "maroon",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image132.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image133.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image134.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "silver",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image135.jpg": {
-        "type": "Sports Shoes",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image136.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "darkgrey",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image137.jpg": {
-        "type": "Sports Shoes",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Sports"
-    },
-    "image138.jpg": {
-        "type": "Formal Shoes",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Formal"
-    },
-    "image139.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Women",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image140.jpeg": {
-        "type": "Tshirts",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image140.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image141.jpg": {
-        "type": "Casual Shoes",
-        "gender": "Men",
-        "color": "darkslategray",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image142.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "midnightblue",
-        "season": "Summer",
-        "style": "Ethnic"
-    },
-    "image143.jpg": {
-        "type": "Track Pants",
-        "gender": "Men",
-        "color": "rosybrown",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image144.jpg": {
-        "type": "Skirts",
-        "gender": "Women",
-        "color": "cadetblue",
-        "season": "Summer",
-        "style": "Ethnic"
-    },
-    "image145.jpg": {
-        "type": "Shirts",
-        "gender": "Boys",
-        "color": "black",
-        "season": "Summer",
-        "style": "Casual"
-    },
-    "image146.jpg": {
-        "type": "Shirts",
-        "gender": "Men",
-        "color": "lightgray",
-        "season": "Summer",
-        "style": "Casual"
+        "color": "Navy",
+        "season": "Fall",
+        "style": "Denim"
     }
 }

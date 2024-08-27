@@ -7,7 +7,7 @@ client = Groq(
     api_key=os.environ.get("GROQ_API_KEY"),
 )
 
-wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style.json'
+wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
 
 # User wardrobe data
 def load_wordrobe_data(file_path):
