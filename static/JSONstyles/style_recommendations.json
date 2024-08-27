@@ -9,33 +9,59 @@
             "style": "Casual"
         },
         "bottom": {
-            "image": "image103.jpeg",
-            "type": "Trousers",
+            "image": "image102.jpg",
+            "type": "Casual Pants",
             "gender": "Men",
             "color": "darkslategray",
             "season": "Summer",
-            "style": "Formal"
+            "style": "Casual"
         },
         "shoes": {
-            "image": "image102.jpg",
-            "type": "Casual Shoes",
+            "image": "image135.jpg",
+            "type": "Sports Shoes",
             "gender": "Men",
-            "color": "darkslategray",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         }
     },
     "style_2": {
         "top": {
-            "image": "image112.jpg",
+            "image": "image111.jpg",
             "type": "Shirts",
             "gender": "Men",
-            "color": "black",
+            "color": "dimgray",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "image113.jpg",
+            "image": "image103.jpg",
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "darkslategray",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "image141.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "lavender",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "image122.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "gainsboro",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "image104.jpg",
             "type": "Jeans",
             "gender": "Men",
             "color": "black",
@@ -43,7 +69,7 @@
             "style": "Casual"
         },
         "shoes": {
-            "image": "image105.jpg",
+            "image": "image138.jpg",
             "type": "Formal Shoes",
             "gender": "Men",
             "color": "black",
@@ -51,28 +77,54 @@
             "style": "Formal"
         }
     },
-    "style_3": {
+    "style_4": {
         "top": {
-            "image": "image146.jpg",
+            "image": "image145.jpg",
             "type": "Shirts",
-            "gender": "Men",
-            "color": "lightgray",
+            "gender": "Boys",
+            "color": "black",
             "season": "Summer",
             "style": "Casual"
         },
         "bottom": {
-            "image": "image107.jpg",
-            "type": "Track Pants",
-            "gender": "Men",
-            "color": "midnightblue",
+            "image": "image108.jpg",
+            "type": "Shorts",
+            "gender": "Boys",
+            "color": "darkslategray",
             "season": "Summer",
-            "style": "Ethnic"
+            "style": "Casual"
         },
         "shoes": {
-            "image": "image106.jpg",
+            "image": "image136.jpg",
             "type": "Sports Shoes",
-            "gender": "Men",
+            "gender": "Boys",
             "color": "black",
+            "season": "Summer",
+            "style": "Casual"
+        }
+    },
+    "style_5": {
+        "top": {
+            "image": "image146.jpg",
+            "type": "Shirts",
+            "gender": "Men",
+            "color": "darkgrey",
+            "season": "Summer",
+            "style": "Casual"
+        },
+        "bottom": {
+            "image": "image113.jpg",
+            "type": "Trousers",
+            "gender": "Men",
+            "color": "gray",
+            "season": "Fall",
+            "style": "Casual"
+        },
+        "shoes": {
+            "image": "image139.jpg",
+            "type": "Casual Shoes",
+            "gender": "Men",
+            "color": "darkslategray",
             "season": "Summer",
             "style": "Casual"
         }

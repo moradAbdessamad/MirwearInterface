@@ -1,133 +1,102 @@
-import os
-import json
 import tkinter as tk
-from tkinter import filedialog, messagebox
+from tkinter import filedialog, Label, Button, Frame
 from PIL import Image, ImageTk
+import json
+import os
 
-class ImageDisplayApp:
+class StyleViewerApp:
     def __init__(self, root):
         self.root = root
-        self.root.title("Style Display App")
-        
-        # Frame for buttons
-        frame = tk.Frame(self.root)
-        frame.pack(pady=20)
+        self.root.title("Style Viewer")
 
-        self.load_json_button = tk.Button(frame, text="Load JSON File", command=self.load_json)
-        self.load_json_button.pack(side=tk.LEFT, padx=10)
+        self.styles = None
+        self.current_style_index = 0
+        self.style_labels = {}
 
-        self.load_folder_button = tk.Button(frame, text="Load Image Folder", command=self.load_folder)
-        self.load_folder_button.pack(side=tk.LEFT, padx=10)
+        # Create buttons to select JSON and image folder
+        self.json_button = Button(root, text="Select JSON File", command=self.select_json)
+        self.json_button.pack(pady=10)
 
-        self.prev_button = tk.Button(frame, text="Previous Style", command=self.show_previous_group, state=tk.DISABLED)
-        self.prev_button.pack(side=tk.LEFT, padx=10)
+        self.folder_button = Button(root, text="Select Image Folder", command=self.select_folder)
+        self.folder_button.pack(pady=10)
 
-        self.next_button = tk.Button(frame, text="Next Style", command=self.show_next_group, state=tk.DISABLED)
-        self.next_button.pack(side=tk.LEFT, padx=10)
+        # Create left and right buttons for navigation
+        self.left_button = Button(root, text="<", command=self.previous_style, state="disabled")
+        self.left_button.pack(side="left", padx=10)
 
-        self.quit_button = tk.Button(frame, text="Quit", command=self.root.quit)
-        self.quit_button.pack(side=tk.LEFT, padx=10)
+        self.right_button = Button(root, text=">", command=self.next_style, state="disabled")
+        self.right_button.pack(side="right", padx=10)
 
-        # Frame for displaying images and metadata
-        self.image_frame = tk.Frame(self.root)
-        self.image_frame.pack(pady=20)
+        # Frame to display the style content
+        self.style_frame = Frame(root)
+        self.style_frame.pack(pady=20)
 
-        self.group_label = tk.Label(self.image_frame, text="", font=("Arial", 16))
-        self.group_label.pack(pady=10)
-
-        self.metadata_label = tk.Label(self.image_frame, text="", font=("Arial", 12))
-        self.metadata_label.pack(pady=10)
-
-        self.image_labels = [tk.Label(self.image_frame) for _ in range(3)]
-        for label in self.image_labels:
-            label.pack(side=tk.LEFT, padx=10)
-
-        self.json_data = None
-        self.folder_path = None
-        self.current_group_index = 0
-        self.group_names = []
-
-    def load_json(self):
-        json_file_path = filedialog.askopenfilename(title="Select JSON File", filetypes=[("JSON Files", "*.json")])
+    def select_json(self):
+        json_file_path = filedialog.askopenfilename(filetypes=[("JSON files", "*.json")])
         if json_file_path:
-            with open(json_file_path, 'r') as json_file:
-                self.json_data = json.load(json_file)
-                self.group_names = list(self.json_data.keys())
-                self.current_group_index = 0
-            messagebox.showinfo("Success", "JSON file loaded successfully.")
-            self.update_buttons()
+            self.styles = self.load_json(json_file_path)
+            self.update_buttons_state()
 
-    def load_folder(self):
-        self.folder_path = filedialog.askdirectory(title="Select Image Folder")
+    def select_folder(self):
+        self.folder_path = filedialog.askdirectory()
         if self.folder_path:
-            if not self.json_data:
-                messagebox.showwarning("Warning", "Please load a JSON file first.")
-                return
-            self.display_group_and_metadata(self.current_group_index)
+            if self.styles:
+                self.display_current_style()
 
-    def display_group_and_metadata(self, group_index):
-        if not self.group_names:
-            return
+    def load_json(self, file_path):
+        with open(file_path, 'r') as f:
+            return json.load(f)
 
-        group_name = self.group_names[group_index]
-        items = self.json_data[group_name]
-
-        self.group_label.config(text=f"Style: {group_name}")
-
-        metadata_text = ""
-        item_types = ["top", "bottom", "shoes"]
+    def display_current_style(self):
+        self.clear_frame(self.style_frame)
         
-        for i, item_type in enumerate(item_types):
-            item = items[item_type]
-            metadata_text += f"{item_type.capitalize()}:\n"
-            metadata_text += f"Image: {item['image']}\n"
-            metadata_text += f"Type: {item['type']}\n"
-            metadata_text += f"Gender: {item['gender']}\n"
-            metadata_text += f"Color: {item['color']}\n"
-            metadata_text += f"Season: {item['season']}\n"
-            metadata_text += f"Style: {item['style']}\n\n"
-            
-            if i < len(self.image_labels):
-                image_path = os.path.join(self.folder_path, item['image'])
-                if os.path.isfile(image_path):
-                    # Display the image
-                    image = Image.open(image_path)
-                    image = image.resize((150, 150), Image.Resampling.LANCZOS)
-                    photo = ImageTk.PhotoImage(image)
-                    self.image_labels[i].config(image=photo)
-                    self.image_labels[i].image = photo  # Keep a reference to avoid garbage collection
-                else:
-                    self.image_labels[i].config(image=None)
-                    self.image_labels[i].image = None
+        style_key = list(self.styles.keys())[self.current_style_index]
+        style_data = self.styles[style_key]
 
-        self.metadata_label.config(text=metadata_text)
-        self.update_buttons()
+        Label(self.style_frame, text=style_key).pack()
 
-    def show_next_group(self):
-        if self.current_group_index < len(self.group_names) - 1:
-            self.current_group_index += 1
-            self.display_group_and_metadata(self.current_group_index)
+        for item_key, item_data in style_data.items():
+            item_frame = Frame(self.style_frame)
+            item_frame.pack(side="left", padx=10)
 
-    def show_previous_group(self):
-        if self.current_group_index > 0:
-            self.current_group_index -= 1
-            self.display_group_and_metadata(self.current_group_index)
+            image_path = os.path.join(self.folder_path, item_data['image'])
+            image_label = Label(item_frame)
+            self.update_label_image(image_label, image_path)
+            image_label.pack()
 
-    def update_buttons(self):
-        if self.current_group_index == 0:
-            self.prev_button.config(state=tk.DISABLED)
-        else:
-            self.prev_button.config(state=tk.NORMAL)
+            properties_text = f"Type: {item_data['type']}\nGender: {item_data['gender']}\nColor: {item_data['color']}\nSeason: {item_data['season']}\nStyle: {item_data['style']}"
+            properties_label = Label(item_frame, text=properties_text, justify="left")
+            properties_label.pack()
 
-        if self.current_group_index == len(self.group_names) - 1:
-            self.next_button.config(state=tk.DISABLED)
-        else:
-            self.next_button.config(state=tk.NORMAL)
+    def update_label_image(self, label, image_path):
+        img = Image.open(image_path)
+        img = img.resize((100, 100), Image.ANTIALIAS)
+        img = ImageTk.PhotoImage(img)
+        label.config(image=img)
+        label.image = img  # Keep a reference to avoid garbage collection
 
-def main():
-    root = tk.Tk()
-    app = ImageDisplayApp(root)
-    root.mainloop()
+    def clear_frame(self, frame):
+        for widget in frame.winfo_children():
+            widget.destroy()
+
+    def next_style(self):
+        if self.styles and self.current_style_index < len(self.styles) - 1:
+            self.current_style_index += 1
+            self.display_current_style()
+            self.update_buttons_state()
+
+    def previous_style(self):
+        if self.styles and self.current_style_index > 0:
+            self.current_style_index -= 1
+            self.display_current_style()
+            self.update_buttons_state()
+
+    def update_buttons_state(self):
+        if self.styles:
+            self.left_button.config(state="normal" if self.current_style_index > 0 else "disabled")
+            self.right_button.config(state="normal" if self.current_style_index < len(self.styles) - 1 else "disabled")
 
 if __name__ == "__main__":
-    main()
+    root = tk.Tk()
+    app = StyleViewerApp(root)
+    root.mainloop()
