@@ -122,11 +122,11 @@ def gen_frames():
             frame = cv2.flip(frame, 1)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # for button, coords in buttons.items():
-            #     cv2.rectangle(frame,
-            #                 coords['top_left'],
-            #                 coords['bottom_right'],
-            #                 (255, 255, 255))
+            for button, coords in buttons.items():
+                cv2.rectangle(frame,
+                            coords['top_left'],
+                            coords['bottom_right'],
+                            (255, 255, 255))
                    
             results = hands.process(frame_rgb)
             finger_tip_coords = None
@@ -276,7 +276,9 @@ arrow_recommand = {
     'bottomRight': {'top_left': (130, 225), 'bottom_right': (160, 255)},
     'shoesLeft': {'top_left': (486, 303), 'bottom_right': (516, 333)},
     'shoesRight': {'top_left': (118, 301), 'bottom_right': (148, 331)},
-    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
+    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)},
+
+    'refresh': {'top_left': (274, 431), 'bottom_right': (362, 460)},
 }
 
 hover_start_time_recommand = {}

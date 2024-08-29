@@ -40,7 +40,7 @@
             </defs>
           </svg>
         </div>
-        <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;">Hello world</h1>
+        <h1 class="title" class="title_recommandation" id="title_recommandation">Hello world</h1>
         <i class="fa-solid fa-spinner fa-spin-pulse" id="spin-icones"></i>
         <img
           src="{{ url_for('video_feed_recommandation') }}"
@@ -138,6 +138,8 @@
 
         <button id="recommend-recommand" class="recommend-button-recommand">Recommend</button>
 
+        <i class="fa-solid fa-rotate-right" id="refresh"></i>
+
         </div>
       </div>
     </div>
@@ -152,6 +154,8 @@
         spinIcones = document.querySelector('#spin-icones')
         spinIconeSecond = document.querySelector('#spin-icone-second')
         shuffleIcone = document.querySelector('#shuffle-icone')
+
+        titleRecommandation.style.display = 'block'
 
         socket.on('process_status', function(status) {
           if (status.status === 'in_progress') {
@@ -226,6 +230,10 @@
               handleButtonRecommand(buttonName);
           }
 
+          if (buttonName == 'refresh') {
+            window.location.href = "/recommandation";
+          }
+
           if (buttonName == 'topright' || buttonName == 'topLeft') {
             updateImageForArrow('top')
           } else if (buttonName == 'bottomLeft' || buttonName == 'bottomRight') {
@@ -233,7 +241,6 @@
           } else if (buttonName == 'shoesLeft' || buttonName == 'shoesRight') {
             updateImageForArrow('foot')
           }
-
         });
          
     
@@ -316,6 +323,8 @@
                 // If the button name is a specific selection (e.g., "Winter"), update the selectedItems
                 selectedItems[category] = buttonName.charAt(0).toUpperCase() + buttonName.slice(1).toLowerCase();
                 console.log(`Selected ${category}: ${selectedItems[category]}`);
+
+                updateTitleRecommandation();
             }
         }
     
@@ -323,6 +332,10 @@
             console.log("Recommendation clicked with selections:", selectedItems);
     
             socket.emit('recommendation_selected', selectedItems);
+
+            titleRecommandation.style.display = 'none'
+
+            updateTitleRecommandation();
             
             // Reset the selectedItems object after sending
             selectedItems = {
@@ -347,6 +360,12 @@
 
             var recommandationButtonsContainer = document.querySelector('.recommandation-buttons-container')
             recommandationButtonsContainer.style.display = "none"
+
+            var recommendButtonRecommand = document.querySelector('.recommend-button-recommand')
+            recommendButtonRecommand.style.display = 'none'
+
+            var refresh = document.querySelector('#refresh')
+            refresh.style.display = "inline "
 
             arrowIcones = document.querySelector('.arrow-container')
             arrowIcones.style.display = 'flex'
@@ -417,7 +436,29 @@
       
           const itemName = items[category][index];
           element.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + itemName;
-      }
+        }
+
+        function updateTitleRecommandation() {
+          let titleText = 'Selected: ';
+      
+          // Loop through each selected item and add it to the title if it's not null
+          for (const [key, value] of Object.entries(selectedItems)) {
+              if (value) { // Only include if the value is not null
+                  titleText += `${key}: ${value}, `;
+              }
+          }
+      
+          // Remove the trailing comma and space, if any
+          titleText = titleText.trim().replace(/,$/, '');
+      
+          // If no items are selected, provide a default message
+          if (titleText === 'Selected:') {
+              titleText = 'No selections made.';
+          }
+      
+          // Update the title element with the new text
+          titleRecommandation.textContent = titleText;
+         }       
     });    
     </script>
   </body>

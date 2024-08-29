@@ -110,6 +110,7 @@ body, html {
 }
 
 .recommend-button, .recommend-button-recommand {
+    display: block;
     position: absolute;
     bottom: 20px;
     background-color: #f5ac72;
@@ -243,6 +244,9 @@ body, html {
     
 }
 
+#title_recommandation {
+    top: 100px;
+}
 
 .recommandation-buttons-container {
     display: flex;
@@ -349,6 +353,18 @@ body, html {
     justify-content: space-between;
     gap: 100px;
     width: 60%;
+    display: none;
+}
+
+#refresh {
+    /* border: solid 2px red; */
+    font-size: 130%;
+    color: white;
+    background-color: #f5ac72;
+    padding: 10px;
+    position: absolute;
+    border-radius: 20px;
+    bottom: 20px;
     display: none;
 }
 
