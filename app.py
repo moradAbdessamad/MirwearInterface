@@ -401,7 +401,7 @@ def handle_ui_update(data):
 
 
 
-wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style.json'
+wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
 processing_in_progress = False  # Flag to track if processing is in progress
 
 @socketio.on('recommendation_selected')
@@ -431,8 +431,11 @@ def handle_recommendation_selected(data):
 
     # Define the prompt with the criteria and wardrobe data
     prompt = f"""
-    You are tasked with creating fashion style recommendations based on the user's wardrobe data and specific criteria.
+    Prompt:
 
+    You are tasked with creating fashion style recommendations based on the provided JSON data and specific criteria.
+
+    User wardrobe data:
     User wardrobe data:
     {json.dumps(wardrobe_data, indent=2)}
 
@@ -441,12 +444,13 @@ def handle_recommendation_selected(data):
 
     Your goal is to generate complete style recommendations that meet the criteria provided. Each style should include a distinct top, bottom, and shoes. Ensure that each item (top, bottom, shoes) used in a style is unique and not repeated in other styles. The combinations should be coherent, stylish, and diverse across the styles.
 
-    If any criteria elements are `None`, then simply recommend styles that include a top, bottom, and shoes that look good together, while respecting the gender of the items. For example, generate complete random styles for men or women, but do not mix items for women in a men's style and vice versa.
+    If any criteria elements are None, then simply recommend styles that include a top, bottom, and shoes that look good together, while respecting the gender of the items. For example, generate complete random styles for men or women, but do not mix items for women in a men's style and vice versa.
 
     If there are multiple items available in a category (e.g., multiple tops), make sure to use different items in each style. No item should be repeated across different styles. If you run out of unique items to use, limit the number of styles generated accordingly.
 
     The output should be formatted as follows:
 
+    json
     {{
         "style_1": {{
             "top": {{
@@ -502,16 +506,20 @@ def handle_recommendation_selected(data):
         }},
         "style_3": {{
             // Another complete outfit recommendation with distinct items if available
-        }} 
+        }}
     }}
+    Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are None, create complete random styles that look good together while respecting the gender of the items.
 
-    Please provide at least three style options that align with the given criteria, ensuring that each style is unique and does not repeat items across different styles. If the criteria elements are `None`, create complete random styles that look good together while respecting the gender of the items.
-    """
+    Response Format:
+
+    The response should be a JSON object containing the recommended styles, with no additional text.
+"""
+
 
     try:
         # Request completion from the model
         completion = client.chat.completions.create(
-            model="llama3-groq-70b-8192-tool-use-preview",
+            model="llama-3.1-70b-versatile",
             messages=[
                 {"role": "user", "content": prompt}
             ],
@@ -526,7 +534,6 @@ def handle_recommendation_selected(data):
 
         # Extract and save the JSON
         extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
-
         # Emit that the processing is complete
         socketio.emit('process_status', {'status': 'complete'})
     
@@ -537,30 +544,36 @@ def extract_and_save_json(response_content, file_path):
     # Check if response_content is a ChatCompletionMessage object and extract content
     if hasattr(response_content, 'content'):
         response_content = response_content.content
-    
+
     # Print the response to the terminal 
     print("The response of the llama model is:")
     print(response_content)
 
     # Ensure response_content is now a string
-    if isinstance(response_content, str):        
-        # Since the JSON is already in the response_content, we can attempt to directly parse it
-        try:
-            # Convert the string to a dictionary
-            json_data = json.loads(response_content)
+    if isinstance(response_content, str):
+        # Use a regular expression to extract content between ```json ... ```
+        json_match = re.search(r'```json\s*(.*?)\s*```', response_content, re.DOTALL)
+        if json_match:
+            json_string = json_match.group(1)
             
-            # Write the dictionary to a file as JSON
-            with open(file_path, 'w') as json_file:
-                json.dump(json_data, json_file, indent=4)
-            
-            print(f"JSON content has been saved to {file_path}")
+            try:
+                # Convert the string to a dictionary
+                json_data = json.loads(json_string)
+                
+                # Write the dictionary to a file as JSON
+                with open(file_path, 'w') as json_file:
+                    json.dump(json_data, json_file, indent=4)
+                
+                print(f"JSON content has been saved to {file_path}")
+                
+                # Emit the JSON data via socketio to the client
+                socketio.emit('style_recommendations', json_data)
+                print("The data is emitted:", json_data)
 
-            # Emit the JSON data via socketio to the client
-            socketio.emit('style_recommendations', json_data)
-            print("The data is emitted:", json_data)
-            
-        except json.JSONDecodeError as e:
-            print(f"Failed to decode JSON: {e}")
+            except json.JSONDecodeError as e:
+                print(f"Failed to decode JSON: {e}")
+        else:
+            print("No JSON content found between the ```json ... ``` markers.")
     else:
         print(f"Expected a string, but got {type(response_content)}")
 

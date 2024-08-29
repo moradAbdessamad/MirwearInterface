@@ -2,79 +2,116 @@
     "style_1": {
         "top": {
             "image": "image100.jpg",
-            "type": "Shirts",
+            "type": "Dress shirt",
             "gender": "Men",
-            "color": "lightgray",
-            "season": "Summer",
-            "style": "Casual"
+            "color": "Light gray",
+            "style": "Daywear"
         },
         "bottom": {
-            "image": "image113.jpg",
-            "type": "Trousers",
+            "image": "image103.jpeg",
+            "type": "Jeans",
             "gender": "Men",
-            "color": "gray",
-            "season": "Fall",
-            "style": "Casual"
+            "color": "Dark gray",
+            "style": "Denim"
         },
         "shoes": {
-            "image": "image135.jpg",
-            "type": "Sports Shoes",
+            "image": "image102.jpg",
+            "type": "Espadrilles",
             "gender": "Men",
-            "color": "black",
-            "season": "Summer",
-            "style": "Sports"
+            "color": "Navy",
+            "style": "Athleisure"
         }
     },
     "style_2": {
         "top": {
-            "image": "image101.jpeg",
-            "type": "Shirts",
+            "image": "image128.jpg",
+            "type": "Henley shirt",
             "gender": "Men",
-            "color": "slategrey",
-            "season": "Summer",
-            "style": "Casual"
+            "color": "Navy",
+            "style": "Daywear"
         },
         "bottom": {
-            "image": "image142.jpg",
-            "type": "Track Pants",
+            "image": "image115.jpg",
+            "type": "Dress pants",
             "gender": "Men",
-            "color": "midnightblue",
-            "season": "Summer",
-            "style": "Ethnic"
+            "color": "Navy",
+            "style": "Unisex"
         },
         "shoes": {
-            "image": "image141.jpg",
-            "type": "Casual Shoes",
+            "image": "image148.jpg",
+            "type": "Derby shoes",
             "gender": "Men",
-            "color": "lavender",
-            "season": "Summer",
-            "style": "Casual"
+            "color": "Espresso brown",
+            "style": "Smart Casual"
         }
     },
     "style_3": {
         "top": {
-            "image": "image112.jpg",
-            "type": "Shirts",
-            "gender": "Men",
-            "color": "black",
-            "season": "Summer",
-            "style": "Casual"
+            "image": "image119.jpg",
+            "type": "Henley shirt",
+            "gender": "Women",
+            "color": "Beige",
+            "style": "Capsule Wardrobe"
         },
         "bottom": {
-            "image": "image143.jpg",
-            "type": "Track Pants",
-            "gender": "Men",
-            "color": "rosybrown",
-            "season": "Summer",
-            "style": "Casual"
+            "image": "image125.jpg",
+            "type": "Culottes",
+            "gender": "Women",
+            "color": "Peacock blue",
+            "style": "Luxe Loungewear"
         },
         "shoes": {
-            "image": "image138.jpg",
-            "type": "Formal Shoes",
+            "image": "image88.jpg",
+            "type": "Platform shoes",
+            "gender": "Women",
+            "color": "Ivory white",
+            "style": "Occasionwear"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image146.jpg",
+            "type": "Dress shirt",
             "gender": "Men",
-            "color": "black",
-            "season": "Summer",
-            "style": "Formal"
+            "color": "Light gray",
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image121.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Dark blue",
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image164.jpg",
+            "type": "Sneakers",
+            "gender": "Men",
+            "color": "Navy",
+            "style": "Athletic Luxe"
+        }
+    },
+    "style_5": {
+        "top": {
+            "image": "image122.jpg",
+            "type": "Camisole",
+            "gender": "Women",
+            "color": "Ivory",
+            "style": "Luxe Loungewear"
+        },
+        "bottom": {
+            "image": "image134.jpg",
+            "type": "Palazzo pants",
+            "gender": "Men",
+            "color": "Taupe",
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image90.jpg",
+            "type": "Ankle boots",
+            "gender": "Women",
+            "color": "Dark gray",
+            "style": "Gothic Chic"
         }
     }
 }

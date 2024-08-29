@@ -3,77 +3,1002 @@
         "type": "Dress shirt",
         "gender": "Men",
         "color": "Light gray",
-        "season": "Spring",
         "style": "Daywear"
     },
     "image101.jpeg": {
         "type": "Dress shirt",
         "gender": "Men",
         "color": "Powder blue",
-        "season": "Spring",
         "style": "Daywear"
     },
     "image101.jpg": {
         "type": "Long sleeve shirt",
-        "gender": "Men",
+        "gender": "Women",
         "color": "Oxblood",
-        "season": "Fall",
         "style": "Daywear"
     },
     "image102.jpg": {
         "type": "Espadrilles",
-        "gender": "Men",
+        "gender": "Women",
         "color": "Navy",
-        "season": "Summer",
         "style": "Athleisure"
     },
     "image103.jpeg": {
         "type": "Jeans",
         "gender": "Men",
         "color": "Dark gray",
-        "season": "Winter",
         "style": "Denim"
     },
     "image103.jpg": {
         "type": "Palazzo pants",
-        "gender": "Men",
+        "gender": "Women",
         "color": "Warm gray",
-        "season": "Winter",
         "style": "Loungewear"
     },
     "image104.jpg": {
         "type": "Jeans",
         "gender": "Men",
         "color": "Dark blue",
-        "season": "Fall",
         "style": "Capsule Wardrobe"
     },
     "image105.jpeg": {
         "type": "Jeans",
         "gender": "Men",
         "color": "Dark gray",
-        "season": "Winter",
         "style": "Denim"
     },
     "image105.jpg": {
         "type": "Jeans",
         "gender": "Men",
         "color": "Denim",
-        "season": "Fall",
         "style": "Capsule Wardrobe"
     },
     "image106.jpg": {
         "type": "Derby shoes",
         "gender": "Both",
         "color": "Dark green",
-        "season": "Summer",
         "style": "Smart Casual"
     },
     "image107.jpeg": {
         "type": "Jeans",
         "gender": "Men",
         "color": "Navy",
-        "season": "Fall",
         "style": "Denim"
+    },
+    "image107.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Bright white",
+        "style": "Athletic Luxe"
+    },
+    "image108.jpg": {
+        "type": "Boxer briefs",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Distressed"
+    },
+    "image109.jpeg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Espresso brown",
+        "style": "Bespoke"
+    },
+    "image109.jpg": {
+        "type": "Camisole",
+        "gender": "Women",
+        "color": "Taupe",
+        "style": "Luxe Loungewear"
+    },
+    "image110.jpg": {
+        "type": "Culottes",
+        "gender": "Women",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image111.jpeg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Espresso brown",
+        "style": "Officewear"
+    },
+    "image111.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Officewear"
+    },
+    "image112.jpeg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Smart Casual"
+    },
+    "image112.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark green",
+        "style": "Tailored"
+    },
+    "image113.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Espresso brown",
+        "style": "Tailored Casual"
+    },
+    "image114.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Tailored"
+    },
+    "image114.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Burgundy",
+        "style": "Tailored"
+    },
+    "image115.jpeg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Officewear"
+    },
+    "image115.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Unisex"
+    },
+    "image116.jpeg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Officewear"
+    },
+    "image116.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image117.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Bright white",
+        "style": "Athleisure"
+    },
+    "image118.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Tailored"
+    },
+    "image119.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Beige",
+        "style": "Capsule Wardrobe"
+    },
+    "image12.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Burgundy",
+        "style": "Tailored"
+    },
+    "image120.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Pastel blue",
+        "style": "Sportswear"
+    },
+    "image121.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark blue",
+        "style": "Capsule Wardrobe"
+    },
+    "image122.jpg": {
+        "type": "Camisole",
+        "gender": "Women",
+        "color": "Ivory",
+        "style": "Luxe Loungewear"
+    },
+    "image123.jpg": {
+        "type": "Leggings",
+        "gender": "Women",
+        "color": "Black",
+        "style": "Luxe Loungewear"
+    },
+    "image124.jpg": {
+        "type": "Bodycon dress",
+        "gender": "Women",
+        "color": "Dark gray",
+        "style": "Occasionwear"
+    },
+    "image125.jpg": {
+        "type": "Culottes",
+        "gender": "Women",
+        "color": "Peacock blue",
+        "style": "Luxe Loungewear"
+    },
+    "image126.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image127.jpg": {
+        "type": "Graphic tee",
+        "gender": "Men",
+        "color": "Espresso brown",
+        "style": "Avant-Garde Streetwear"
+    },
+    "image128.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Daywear"
+    },
+    "image129.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark blue",
+        "style": "Capsule Wardrobe"
+    },
+    "image130.jpg": {
+        "type": "Espadrilles",
+        "gender": "Women",
+        "color": "Navy",
+        "style": "Athletic Luxe"
+    },
+    "image131.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Burgundy",
+        "style": "Formalwear"
+    },
+    "image132.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Aubergine",
+        "style": "Bespoke"
+    },
+    "image133.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Burgundy",
+        "style": "Tailored"
+    },
+    "image134.jpg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Taupe",
+        "style": "Luxe Loungewear"
+    },
+    "image135.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Oxblood",
+        "style": "Officewear"
+    },
+    "image136.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Capsule Wardrobe"
+    },
+    "image137.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Officewear"
+    },
+    "image138.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Officewear"
+    },
+    "image139.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Navy",
+        "style": "Bespoke"
+    },
+    "image140.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Tailored"
+    },
+    "image140.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Smart Casual"
+    },
+    "image141.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Bespoke"
+    },
+    "image142.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Purple",
+        "style": "Formalwear"
+    },
+    "image143.jpg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Khaki",
+        "style": "Luxe Loungewear"
+    },
+    "image144.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Nightwear"
+    },
+    "image145.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Periwinkle",
+        "style": "Daywear"
+    },
+    "image146.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Daywear"
+    },
+    "image147.jpeg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Light gray",
+        "style": "Luxe Loungewear"
+    },
+    "image147.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Officewear"
+    },
+    "image148.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Espresso brown",
+        "style": "Smart Casual"
+    },
+    "image149.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark green",
+        "style": "Tailored"
+    },
+    "image149.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image150.jpg": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Cerulean",
+        "style": "Refined"
+    },
+    "image151.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Navy",
+        "style": "Athletic Luxe"
+    },
+    "image152.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Oxblood",
+        "style": "Officewear"
+    },
+    "image153.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Jet black",
+        "style": "Tailored Casual"
+    },
+    "image153.png": {
+        "type": "Sandals",
+        "gender": "Men",
+        "color": "Jet black",
+        "style": "Pret-a-porter"
+    },
+    "image154.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Jet black",
+        "style": "Luxe Loungewear"
+    },
+    "image154.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Officewear"
+    },
+    "image155.jpg": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Dark blue",
+        "style": "Nightwear"
+    },
+    "image156.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Tailored Casual"
+    },
+    "image157.jpeg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Workwear"
+    },
+    "image157.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Officewear"
+    },
+    "image158.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Black",
+        "style": "Luxe Loungewear"
+    },
+    "image159.jpeg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Espresso brown",
+        "style": "Bespoke"
+    },
+    "image159.jpg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Officewear"
+    },
+    "image160.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Pastel lavender",
+        "style": "Partywear"
+    },
+    "image161.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Olive drab",
+        "style": "Smart Casual"
+    },
+    "image162.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Nautical"
+    },
+    "image163.jpg": {
+        "type": "Wide-leg pants",
+        "gender": "Women",
+        "color": "Navy",
+        "style": "Capsule Wardrobe"
+    },
+    "image164.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Navy",
+        "style": "Athletic Luxe"
+    },
+    "image165.jpg": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Powder blue",
+        "style": "Nightwear"
+    },
+    "image166.jpg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Taupe",
+        "style": "Luxe Loungewear"
+    },
+    "image167.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Luxe Loungewear"
+    },
+    "image167.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Dark blue",
+        "style": "Capsule Wardrobe"
+    },
+    "image168.jpg": {
+        "type": "Culottes",
+        "gender": "Women",
+        "color": "Powder blue",
+        "style": "Luxe Loungewear"
+    },
+    "image169.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Ivory white",
+        "style": "Officewear"
+    },
+    "image170.jpg": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Military"
+    },
+    "image21.jpeg": {
+        "type": "Oxfords",
+        "gender": "Both",
+        "color": "Powder blue",
+        "style": "Athletic Luxe"
+    },
+    "image33.jpeg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Athletic Luxe"
+    },
+    "image33.png": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Pastel lavender",
+        "style": "Occasionwear"
+    },
+    "image37.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Formalwear"
+    },
+    "image42.png": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Powder blue",
+        "style": "Athleisure"
+    },
+    "image48.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Tailored"
+    },
+    "image49.jpeg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Bright white",
+        "style": "Daywear"
+    },
+    "image49.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Tailored"
+    },
+    "image50.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Tailored"
+    },
+    "image50.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Tailored"
+    },
+    "image51.jpeg": {
+        "type": "Boat shoes",
+        "gender": "Both",
+        "color": "Navy",
+        "style": "Athletic Luxe"
+    },
+    "image51.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Nightwear"
+    },
+    "image51.png": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Dark green",
+        "style": "Retro-futuristic"
+    },
+    "image52.jpeg": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Pastel pink",
+        "style": "Occasionwear"
+    },
+    "image52.jpg": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Powder blue",
+        "style": "Occasionwear"
+    },
+    "image53.jpeg": {
+        "type": "Undershirt",
+        "gender": "Men",
+        "color": "White",
+        "style": "Daywear"
+    },
+    "image53.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Distressed"
+    },
+    "image54.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Rockabilly"
+    },
+    "image55.jpg": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Pale yellow",
+        "style": "Boho-chic"
+    },
+    "image56.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Tailored"
+    },
+    "image57.jpg": {
+        "type": "Espadrilles",
+        "gender": "Women",
+        "color": "Jet black",
+        "style": "Athletic Luxe"
+    },
+    "image58.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Officewear"
+    },
+    "image58.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Officewear"
+    },
+    "image59.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image60.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Daywear"
+    },
+    "image61.jpeg": {
+        "type": "Culottes",
+        "gender": "Women",
+        "color": "Khaki",
+        "style": "Luxe Loungewear"
+    },
+    "image61.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image62.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Cool gray",
+        "style": "Tailored Casual"
+    },
+    "image63.jpg": {
+        "type": "Long sleeve shirt",
+        "gender": "Women",
+        "color": "Powder blue",
+        "style": "Occasionwear"
+    },
+    "image64.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Oxblood",
+        "style": "Daywear"
+    },
+    "image65.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Maroon",
+        "style": "Officewear"
+    },
+    "image66.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image67.jpeg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Daywear"
+    },
+    "image67.jpg": {
+        "type": "Long sleeve shirt",
+        "gender": "Women",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image68.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image69.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image70.jpeg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image70.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Daywear"
+    },
+    "image71.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Daywear"
+    },
+    "image72.jpg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Smart Casual"
+    },
+    "image73.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Black",
+        "style": "Luxe Loungewear"
+    },
+    "image73.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "Peacock blue",
+        "style": "Daywear"
+    },
+    "image74.jpg": {
+        "type": "Long sleeve shirt",
+        "gender": "Women",
+        "color": "Bright red",
+        "style": "Daywear"
+    },
+    "image75.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Black",
+        "style": "Luxe Loungewear"
+    },
+    "image75.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Maroon",
+        "style": "Officewear"
+    },
+    "image76.jpg": {
+        "type": "Long sleeve shirt",
+        "gender": "Women",
+        "color": "Cranberry",
+        "style": "Daywear"
+    },
+    "image77.jpeg": {
+        "type": "Derby shoes",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Sportswear"
+    },
+    "image77.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Mauve",
+        "style": "Smart Casual"
+    },
+    "image78.jpg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Denim",
+        "style": "Denim"
+    },
+    "image79.jpg": {
+        "type": "Dress shirt",
+        "gender": "Men",
+        "color": "White",
+        "style": "Nightwear"
+    },
+    "image80.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Black",
+        "style": "Techwear"
+    },
+    "image80.jpg": {
+        "type": "Long sleeve shirt",
+        "gender": "Women",
+        "color": "Off-white",
+        "style": "Daywear"
+    },
+    "image81.jpg": {
+        "type": "Blouse",
+        "gender": "Women",
+        "color": "Powder blue",
+        "style": "Nightwear"
+    },
+    "image82.jpeg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Unisex"
+    },
+    "image82.jpg": {
+        "type": "Graphic tee",
+        "gender": "Men",
+        "color": "Off-white",
+        "style": "Avant-Garde Streetwear"
+    },
+    "image83.jpg": {
+        "type": "Graphic tee",
+        "gender": "Men",
+        "color": "Dark gray",
+        "style": "Avant-Garde Streetwear"
+    },
+    "image84.jpg": {
+        "type": "Culottes",
+        "gender": "Women",
+        "color": "Navy",
+        "style": "Luxe Loungewear"
+    },
+    "image85.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Retro Sportswear"
+    },
+    "image86.jpeg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Daywear"
+    },
+    "image86.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Blush pink",
+        "style": "Occasionwear"
+    },
+    "image87.jpg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Taupe",
+        "style": "Luxe Loungewear"
+    },
+    "image88.jpeg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Light gray",
+        "style": "Tailored"
+    },
+    "image88.jpg": {
+        "type": "Platform shoes",
+        "gender": "Women",
+        "color": "Ivory white",
+        "style": "Occasionwear"
+    },
+    "image89.jpg": {
+        "type": "Stilettos",
+        "gender": "Women",
+        "color": "Hot pink",
+        "style": "Occasionwear"
+    },
+    "image90.jpg": {
+        "type": "Ankle boots",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Gothic Chic"
+    },
+    "image91.jpg": {
+        "type": "Henley shirt",
+        "gender": "Men",
+        "color": "Green",
+        "style": "Capsule Wardrobe"
+    },
+    "image92.jpg": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Dark gray",
+        "style": "Unisex"
+    },
+    "image93.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Powder blue",
+        "style": "Tailored"
+    },
+    "image94.jpg": {
+        "type": "Palazzo pants",
+        "gender": "Women",
+        "color": "Taupe",
+        "style": "Luxe Loungewear"
+    },
+    "image95.jpeg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Denim"
+    },
+    "image95.jpg": {
+        "type": "Sneakers",
+        "gender": "Both",
+        "color": "Jet black",
+        "style": "Retro Revival"
+    },
+    "image96.jpg": {
+        "type": "Suit jacket",
+        "gender": "Men",
+        "color": "Dark purple",
+        "style": "Formalwear"
+    },
+    "image97.jpeg": {
+        "type": "Jeans",
+        "gender": "Men",
+        "color": "Navy",
+        "style": "Denim"
+    },
+    "image97.jpg": {
+        "type": "Dress pants",
+        "gender": "Men",
+        "color": "Jet black",
+        "style": "Luxe Loungewear"
+    },
+    "image98.jpg": {
+        "type": "Moccasins",
+        "gender": "Both",
+        "color": "Mulberry",
+        "style": "Athletic Luxe"
+    },
+    "image99.jpeg": {
+        "type": "Monk strap shoes",
+        "gender": "Both",
+        "color": "Espresso brown",
+        "style": "Bespoke"
+    },
+    "image99.jpg": {
+        "type": "Ballet flats",
+        "gender": "Women",
+        "color": "Jet black",
+        "style": "Occasionwear"
     }
 }

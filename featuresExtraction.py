@@ -50,6 +50,61 @@ clothing_items = [
     "Nurse's uniform", "Pilot's uniform", "Military uniform", "Priest's robe", "Nun's habit"
 ]
 
+men_clothing_items = [
+    "Polo shirt", "Dress shirt", "Henley shirt", "Graphic tee", "Rugby shirt", 
+    "Suit jacket", "Jeans", "Chinos", "Dress pants", "Cargo pants", "Shorts", 
+    "Sweatpants", "Tracksuit", "Blazer", "Coat", "Overcoat", "Bomber jacket", 
+    "Denim jacket", "Leather jacket", "Vest", "Peacoat", "Raincoat", "Tie", 
+    "Bow tie", "Suspenders", "Watch", "Bracelet", "Cufflinks", "Pocket square", 
+    "Briefcase", "Wallet", "Swim trunks", "Board shorts", "Swim briefs", 
+    "Boxer shorts", "Boxer briefs", "Undershirt", "Thermal underwear", 
+    "Long johns", "Socks", "Compression socks", "Work boots"
+]
+
+women_clothing_items = [
+    "Blouse", "Dress shirt", "Sweater", "Cardigan", "Crop top", "Tube top", 
+    "Long sleeve shirt", "Tunic", "Peplum top", "Wrap top", "Bodysuit", 
+    "Camisole", "Sweatshirt", "Pullover", "Dress", "Evening gown", 
+    "Cocktail dress", "Sundress", "Wrap dress", "Maxi dress", "Midi dress", 
+    "Mini dress", "Sheath dress", "Shift dress", "A-line dress", 
+    "Peplum dress", "Ball gown", "Bodycon dress", "Tunic dress", 
+    "T-shirt dress", "Skater dress", "Shirt dress", "Sweater dress", 
+    "Slip dress", "Off-the-shoulder dress", "Pinafore dress", "Blazer dress", 
+    "Mini skirt", "Maxi skirt", "Pencil skirt", "A-line skirt", 
+    "Pleated skirt", "Wrap skirt", "Culottes", "Leggings", "Palazzo pants", 
+    "Wide-leg pants", "Romper", "Dungarees", "Skort", "Coat", 
+    "Trench coat", "Cape", "Poncho", "Duster coat", "Anorak", 
+    "Gilet", "High heels", "Wedges", "Flats", "Espadrilles", "Mules", 
+    "Clogs", "Ballet flats", "Platform shoes", "Stilettos", 
+    "Kitten heels", "Handbag", "Purse", "Clutch", "Tote bag", 
+    "Bangle", "Brooch", "Hairband", "Headscarf", "Fascinator", 
+    "Bikini", "One-piece swimsuit", "Tankini", "Cover-up", 
+    "Nightgown", "Slip", "Lingerie", "Stockings", "Tights", "Hijab", 
+    "Burqa", "Kaftan", "Sari", "Abaya", "Cheongsam", "Hanbok", 
+    "Dirndl", "Chef's coat", "Apron", "Nurse's uniform", 
+    "Pilot's uniform", "Nun's habit"
+]
+
+both_clothing_items = [
+    "T-shirt", "Hoodie", "Tank top", "Sweater", "Sweatshirt", "Pullover", 
+    "Jeans", "Joggers", "Cargo pants", "Shorts", "Overalls", "Coat", 
+    "Raincoat", "Denim jacket", "Cardigan", "Blazer", "Bomber jacket", 
+    "Windbreaker", "Parka", "Down jacket", "Shacket", "Sweatpants", 
+    "Dungarees", "Bike shorts", "Flip flops", "Sneakers", "Loafers", 
+    "Oxfords", "Boots", "Ankle boots", "Knee-high boots", "Chelsea boots", 
+    "Combat boots", "Cowboy boots", "Wellington boots", "Riding boots", 
+    "Brogues", "Slippers", "Moccasins", "Derby shoes", "Monk strap shoes", 
+    "Boat shoes", "Scarf", "Hat", "Beanie", "Cap", "Gloves", 
+    "Sunglasses", "Backpack", "Duffel bag", "Belt", "Bandana", 
+    "Visor", "Bathing suit", "Robe", "Bathrobe", "Pajamas", 
+    "Lounge pants", "Sweatshirt", "Hoodie", "Sleep shorts", "Sleep mask", 
+    "House shoes", "Housecoat", "Socks", "Kimono", "Scrubs", 
+    "Jersey", "Team uniform", "Coveralls", "Chef's hat", "Priest's robe", 
+    "Lab coat", "Academic robe", "Military uniform", "Gown", "Toga", 
+    "Apron", "Sarong"
+]
+
+
 clothing_colors = [
     "Black", "White", "Gray", "Silver", "Charcoal", "Ivory", "Beige", "Tan", "Khaki", 
     "Brown", "Chocolate", "Espresso", "Navy", "Blue", "Sky blue", "Baby blue", "Royal blue", 
@@ -114,9 +169,7 @@ clothing_styles = [
 
 clothing_genders = ["Men", "Women", "Both"]
 
-seasons = ["Winter", "Summer", "Fall", "Spring"]
 
-# Get a list of all image files in the folder
 image_files = [f for f in os.listdir(image_folder) if f.endswith(('.jpg', '.jpeg', '.png'))]
 
 # Dictionary to hold the classification results
@@ -141,14 +194,20 @@ def process_images():
         style_result = classify_image(image_path, clothing_styles)
         color_result = classify_image(image_path, clothing_colors)
         item_result = classify_image(image_path, clothing_items)
-        season_result = classify_image(image_path, seasons)
         
+        # Determine gender based on the classified item
+        if item_result in men_clothing_items:
+            gender_result = "Men"
+        elif item_result in women_clothing_items:
+            gender_result = "Women"
+        elif item_result in both_clothing_items:
+            gender_result = "Both"
+
         # Store the result in the dictionary
         classification_results[image_file] = {
             "type": item_result,
             "gender": gender_result,
             "color": color_result,
-            "season": season_result,
             "style": style_result
         }
         

@@ -42,22 +42,30 @@ class StyleViewerApp:
         style_key = list(self.styles.keys())[self.current_style_index]
         style_data = self.styles[style_key]
 
-        # Display the image filename
+        # Display the style name
         Label(self.style_frame, text=style_key).pack()
 
-        # Create a frame for the image and its properties
-        item_frame = Frame(self.style_frame)
-        item_frame.pack(pady=10)
+        # Iterate over each part of the style (top, bottom, shoes)
+        for part, attributes in style_data.items():
+            self.display_style_part(part, attributes)
+
+    def display_style_part(self, part, attributes):
+        # Create a frame for each part of the style
+        part_frame = Frame(self.style_frame)
+        part_frame.pack(pady=10)
+
+        # Display the part name
+        Label(part_frame, text=part.capitalize()).pack()
 
         # Load and display the image
-        image_path = os.path.join(self.folder_path, style_key)
-        image_label = Label(item_frame)
+        image_path = os.path.join(self.folder_path, attributes['image'])
+        image_label = Label(part_frame)
         self.update_label_image(image_label, image_path)
         image_label.pack()
 
-        # Display the style properties
-        properties_text = f"Type: {style_data['type']}\nGender: {style_data['gender']}\nColor: {style_data['color']}\nSeason: {style_data['season']}\nStyle: {style_data['style']}"
-        properties_label = Label(item_frame, text=properties_text, justify="left")
+        # Display the part's properties
+        properties_text = f"Type: {attributes['type']}\nGender: {attributes['gender']}\nColor: {attributes['color']}\nStyle: {attributes['style']}"
+        properties_label = Label(part_frame, text=properties_text, justify="left")
         properties_label.pack()
 
     def update_label_image(self, label, image_path):
