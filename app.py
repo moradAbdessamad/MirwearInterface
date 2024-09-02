@@ -1,4 +1,4 @@
-from flask import Flask, Response, render_template, url_for, redirect, session, jsonify
+from flask import Flask, Response, render_template, url_for, redirect, session, jsonify, send_file
 import threading
 from flask_socketio import SocketIO, emit
 import cv2
@@ -9,6 +9,9 @@ from groq import Groq
 import json
 import datetime
 import re
+import qrcode
+import io
+
 
 app = Flask(__name__)
 socketio = SocketIO(app)
@@ -351,7 +354,52 @@ def gen_frames_for_recommandation():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            
 
+qr_buttons = {
+    'qr_button1': {'top_left': (100, 100), 'bottom_right': (200, 200)},
+    'qr_button2': {'top_left': (300, 300), 'bottom_right': (400, 400)},
+}
+
+def check_qrcode_button_hover(finger_tip_coords):
+    # Example of how to check for hover
+    for button, coords in qr_buttons.items():
+        if (coords['top_left'][0] <= finger_tip_coords['x'] <= coords['bottom_right'][0] and
+            coords['top_left'][1] <= finger_tip_coords['y'] <= coords['bottom_right'][1]):
+            print(f"Hovering over {button}")
+
+def gen_qrcode_frames():
+    camera = cv2.VideoCapture(0)
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            frame = cv2.flip(frame, 1)
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            for button, coords in qr_buttons.items():
+                cv2.rectangle(frame,
+                            coords['top_left'],
+                            coords['bottom_right'],
+                            (255, 255, 255))
+                   
+            results = hands.process(frame_rgb)
+            finger_tip_coords = None
+
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                    h, w, _ = frame.shape
+                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
+                    finger_tip_coords = {'x': cx, 'y': cy}
+                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
+                    check_qrcode_button_hover(finger_tip_coords)
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
 @app.route('/video_feed_outline')
@@ -381,6 +429,39 @@ def video_feed_recommandation():
 def recommandation():
     return render_template('recommandation.html')
 
+@app.route('/qrPage')
+def qr_page():
+    return render_template('qrPage.html')
+
+@app.route('/video_feed_qr_code')
+def video_feed_qr_code():
+    return Response(gen_qrcode_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/generate_qr')
+def generate_qr():
+    # Data to encode
+    data = "Hello from the Here"
+
+    # Generate QR code
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    # Create an image from the QR code instance
+    img = qr.make_image(fill='black', back_color='white')
+
+    # Save the image to a bytes buffer
+    img_io = io.BytesIO()
+    img.save(img_io, 'PNG')
+    img_io.seek(0)
+
+    # Send the image as a response
+    return send_file(img_io, mimetype='image/png')
 
 @app.route('/static/JSONstyles/itemsByType.json')
 def serve_json():

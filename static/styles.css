@@ -402,3 +402,28 @@ body, html {
     transform: translateY(20px);
     animation: dropdownContentAnimation 0.5s forwards;
 }
+
+
+/* The qr code page style */
+
+.qr-containee {
+    border: solid 2px #f5ac72;
+    position: relative;
+    width: 60%;
+}
+
+#qrcode {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 110px;
+    right: 245px;
+}
+
+#qrimage {
+    width: 200px; 
+    height: 200px;
+    border-radius: 15px;
+}
+
