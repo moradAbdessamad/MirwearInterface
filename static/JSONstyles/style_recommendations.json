@@ -1,7 +1,33 @@
 {
     "style_1": {
         "top": {
-            "image": "image100.jpg",
+            "image": "image33.png",
+            "type": "Blouse",
+            "gender": "Men",
+            "color": "Pastel lavender",
+            "season": null,
+            "style": "Occasionwear"
+        },
+        "bottom": {
+            "image": "image143.jpg",
+            "type": "Palazzo pants",
+            "gender": "Men",
+            "color": "Khaki",
+            "season": null,
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image148.jpg",
+            "type": "Derby shoes",
+            "gender": "Men",
+            "color": "Espresso brown",
+            "season": null,
+            "style": "Smart Casual"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "image146.jpg",
             "type": "Dress shirt",
             "gender": "Men",
             "color": "Light gray",
@@ -17,38 +43,12 @@
             "style": "Denim"
         },
         "shoes": {
-            "image": "image102.jpg",
-            "type": "Espadrilles",
-            "gender": "Men",
-            "color": "Navy",
-            "season": null,
-            "style": "Athleisure"
-        }
-    },
-    "style_2": {
-        "top": {
-            "image": "image112.jpeg",
-            "type": "Henley shirt",
-            "gender": "Men",
-            "color": "Peacock blue",
-            "season": null,
-            "style": "Smart Casual"
-        },
-        "bottom": {
-            "image": "image153.jpg",
-            "type": "Dress pants",
+            "image": "image137.jpg",
+            "type": "Monk strap shoes",
             "gender": "Men",
             "color": "Jet black",
             "season": null,
-            "style": "Tailored Casual"
-        },
-        "shoes": {
-            "image": "image148.jpg",
-            "type": "Derby shoes",
-            "gender": "Men",
-            "color": "Espresso brown",
-            "season": null,
-            "style": "Smart Casual"
+            "style": "Officewear"
         }
     },
     "style_3": {
@@ -61,12 +61,12 @@
             "style": "Daywear"
         },
         "bottom": {
-            "image": "image134.jpg",
-            "type": "Palazzo pants",
+            "image": "image153.jpg",
+            "type": "Dress pants",
             "gender": "Men",
-            "color": "Taupe",
+            "color": "Jet black",
             "season": null,
-            "style": "Luxe Loungewear"
+            "style": "Tailored Casual"
         },
         "shoes": {
             "image": "image132.jpg",
@@ -75,58 +75,6 @@
             "color": "Aubergine",
             "season": null,
             "style": "Bespoke"
-        }
-    },
-    "style_4": {
-        "top": {
-            "image": "image109.jpg",
-            "type": "Camisole",
-            "gender": "Women",
-            "color": "Taupe",
-            "season": null,
-            "style": "Luxe Loungewear"
-        },
-        "bottom": {
-            "image": "image125.jpg",
-            "type": "Culottes",
-            "gender": "Women",
-            "color": "Peacock blue",
-            "season": null,
-            "style": "Luxe Loungewear"
-        },
-        "shoes": {
-            "image": "image88.jpg",
-            "type": "Platform shoes",
-            "gender": "Women",
-            "color": "Ivory white",
-            "season": null,
-            "style": "Occasionwear"
-        }
-    },
-    "style_5": {
-        "top": {
-            "image": "image122.jpg",
-            "type": "Camisole",
-            "gender": "Women",
-            "color": "Ivory",
-            "season": null,
-            "style": "Luxe Loungewear"
-        },
-        "bottom": {
-            "image": "image168.jpg",
-            "type": "Culottes",
-            "gender": "Men",
-            "color": "Powder blue",
-            "season": null,
-            "style": "Luxe Loungewear"
-        },
-        "shoes": {
-            "image": "image117.jpg",
-            "type": "Sneakers",
-            "gender": "Both",
-            "color": "Bright white",
-            "season": null,
-            "style": "Athleisure"
         }
     }
 }

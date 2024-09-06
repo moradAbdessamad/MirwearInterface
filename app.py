@@ -15,12 +15,19 @@ from gradio_client import Client, handle_file
 from PIL import Image
 import shutil
 import os
+import asyncio
+from gradio_client import Client, handle_file
 import base64
+from dotenv import load_dotenv
 
 
 app = Flask(__name__)
 socketio = SocketIO(app)
 size_capture_done = False
+
+load_dotenv()
+
+hf_token = os.getenv("HF_TOKEN")
 
 # Initialize the Groq client with your API key
 client = Groq(
@@ -44,6 +51,9 @@ hover_duration = 1  # Duration to hover in seconds
 
 current_category = None
 current_items = None
+request_in_progress = None
+
+output_folder = r'D:\OSC\MirwearInterface\static\output'
 
 def check_user_in_outline_v1():
     cap = cv2.VideoCapture(camera_index)
@@ -108,10 +118,12 @@ buttons = {
     'option1_3': {'top_left': (545, 303), 'bottom_right': (617, 385)},
 }
 
+
 def check_button_hover(finger_tip_coords):
     global hover_start_time
     global current_category
     global current_items
+    global request_in_progress
 
     if finger_tip_coords:
         for button, coords in buttons.items():
@@ -128,18 +140,88 @@ def check_button_hover(finger_tip_coords):
                             print("The selected items : ")
                             print(selected_item)
 
-                            if selected_item:
-                                message = {'button': button, 'selected_item': selected_item}
-                                print(f"Emitting selected item: {message}")
+                            if selected_item and not request_in_progress:
+                                request_in_progress = True
+                                # Use threading to run the request asynchronously
+                                threading.Thread(target=send_request, args=(button, selected_item)).start()
                     else:
                         message = {'button': button}
                         print(f"Emitting message: {message}")
                         socketio.emit('button_hover', message)
                     hover_start_time.pop(button)
-                    return
             else:
                 if button in hover_start_time:
                     hover_start_time.pop(button)
+
+def send_request(button, selected_item):
+    global request_in_progress
+    try:
+        # Define the paths and parameters based on the selected_item
+        vton_img_path = r'D:\OSC\MirwearInterface\static\models\model.jpg'  
+        garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
+        output_folder = r'D:\OSC\MirwearInterface\static\output'  
+        category = 'Upper-body'  
+
+        print(f"Sending request for {button} with item: {selected_item}")
+        
+        # Run the send_request_and_save function
+        send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
+        
+        print("Request completed")
+        
+        # Emit a message to inform the client that the image is ready
+        socketio.emit('image_ready', {'status': 'complete', 'path': os.path.join(output_folder, 'generated_image.webp')})
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        socketio.emit('image_ready', {'status': 'error', 'message': str(e)})
+    
+    finally:
+        request_in_progress = False
+
+def send_request_and_save(vton_img_path, garm_img_path, output_folder, category):
+    client = Client("levihsu/OOTDiffusion", hf_token=hf_token)
+
+    # Start time before the prediction
+    start_time = time.time()
+
+    # Run the prediction
+    result = client.predict(
+        vton_img=handle_file(vton_img_path),
+        garm_img=handle_file(garm_img_path),
+        n_samples=1,
+        n_steps=10,
+        image_scale=2,
+        seed=-1,
+        # category=category,  # Pass the category to the API
+        api_name="/process_hd"
+    )
+
+    # End time after the prediction
+    end_time = time.time()
+
+    # Calculate the time taken
+    time_taken = end_time - start_time
+    print(f"Time taken for the request: {time_taken:.2f} seconds")
+
+    # Check if the result is a list and contains a dictionary with the image path
+    if isinstance(result, list) and len(result) > 0 and 'image' in result[0]:
+        image_path = result[0]['image']  # Access the image path
+        output_file_path = os.path.join(output_folder, 'generated_image.webp')  # Define the path to save the image
+
+        # Check if the source image file exists
+        if os.path.exists(image_path):
+            # Copy the image to the output folder
+            shutil.copy(image_path, output_file_path)
+            print(f"Image successfully saved at: {output_file_path}")
+
+            # Open and display the image using PIL (optional)
+            image = Image.open(output_file_path)
+            image.show()
+        else:
+            print(f"File not found: {image_path}")
+    else:
+        print(f"Unexpected result format: {result}")
 
 def gen_frames():
     camera = cv2.VideoCapture(camera_index)
@@ -428,14 +510,6 @@ def gen_qrcode_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
-def get_latest_image(folder_path):
-    files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
-    if not files:
-        return None
-    latest_file = max(files, key=lambda f: os.path.getmtime(os.path.join(folder_path, f)))
-    return os.path.join(folder_path, latest_file)
-
-
 def select_item_by_option(items, option):
     # Define a mapping between options and their respective indices in the items list
     option_mapping = {
@@ -459,6 +533,75 @@ def select_item_by_option(items, option):
         return None
 
 
+# Define the function
+def send_request_and_save_test(vton_img_path, garm_img_path, output_folder, category):
+    client = Client("levihsu/OOTDiffusion", hf_token="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")
+
+    # Start time before the prediction
+    start_time = time.time()
+
+    # Run the prediction
+    result = client.predict(
+        vton_img=handle_file(vton_img_path),
+        garm_img=handle_file(garm_img_path),
+        n_samples=1,
+        n_steps=20,
+        image_scale=2,
+        seed=-1,
+        category=category,  # Pass the category to the API
+        api_name="/process_hd"
+    )
+
+    # End time after the prediction
+    end_time = time.time()
+
+    # Calculate the time taken
+    time_taken = end_time - start_time
+    print(f"Time taken for the request: {time_taken:.2f} seconds")
+
+    # Check if the result is a list and contains a dictionary with the image path
+    if isinstance(result, list) and len(result) > 0 and 'image' in result[0]:
+        image_path = result[0]['image']  # Access the image path
+        output_file_path = os.path.join(output_folder, 'generated_image.webp')  # Define the path to save the image
+
+        # Check if the source image file exists
+        if os.path.exists(image_path):
+            # Copy the image to the output folder
+            shutil.copy(image_path, output_file_path)
+            print(f"Image successfully saved at: {output_file_path}")
+
+            # Open and display the image using PIL (optional)
+            image = Image.open(output_file_path)
+            image.show()
+        else:
+            print(f"File not found: {image_path}")
+    else:
+        print(f"Unexpected result format: {result}")
+
+
+# the image send the last image in the folder to the web socket and handle this in js 
+def get_latest_image(folder_path):
+    files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+    if files:
+        latest_file = max(files, key=lambda f: os.path.getmtime(os.path.join(folder_path, f)))
+        return os.path.join(folder_path, latest_file)
+    return None
+
+
+def monitor_folder(folder_path):
+    last_modified = 0
+    while True:
+        latest_image = get_latest_image(folder_path)
+        if latest_image:
+            current_modified = os.path.getmtime(latest_image)
+            if current_modified > last_modified:
+                last_modified = current_modified
+                print("The new message is emited : ")
+                print(latest_image)
+                socketio.emit('try_on_result', {'path': latest_image})
+        time.sleep(1)  # Check every second
+
+
 @app.route('/video_feed_outline')
 def video_feed_outline():
     return Response(gen_frames_for_outline(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -472,28 +615,18 @@ def outline():
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
+
+# Monitor the folder path
+folder_path = r"D:\OSC\MirwearInterface\static\output"
+
+@socketio.on('connect')
+def handle_connect():
+    threading.Thread(target=monitor_folder, args=(folder_path,), daemon=True).start()
+
 @app.route('/')
 def index():
-    folder_path = r"D:\OSC\MirwearInterface\static\output"
-    image_path = get_latest_image(folder_path)
-    
-    image_data = None
-    mime_type = None
-    
-    if image_path:
-        with open(image_path, "rb") as image_file:
-            image_data = base64.b64encode(image_file.read()).decode('utf-8')
-        
-        # Determine the MIME type based on the file extension
-        file_extension = os.path.splitext(image_path)[1].lower()
-        mime_type = {
-            '.png': 'image/png',
-            '.jpg': 'image/jpeg',
-            '.jpeg': 'image/jpeg',
-            '.webp': 'image/webp'
-        }.get(file_extension, 'image/webp')  # Default to webp if unknown
+    return render_template('index.html')
 
-    return render_template('index.html', image_data=image_data, mime_type=mime_type)
 
 
 @app.route('/video_feed_recommandation')
@@ -607,11 +740,8 @@ def handle_displayed_items(data):
     global current_items
     current_category = data['category']
     current_items = data['items']
-    print("this happend when the websockets is triggered : ")
-    print(current_category)
-    print(current_items)
+    print("this happend when the websockets is triggered")
     print(f"Received update for {current_category}: {current_items}")
-    print("the finale of the web sockect trigger")
     
 
 wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
