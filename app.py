@@ -11,6 +11,11 @@ import datetime
 import re
 import qrcode
 import io
+from gradio_client import Client, handle_file
+from PIL import Image
+import shutil
+import os
+import base64
 
 
 app = Flask(__name__)
@@ -29,24 +34,19 @@ mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 mp_drawing = mp.solutions.drawing_utils
 
-buttons = {
-    'Top': {'top_left': (13, 156), 'bottom_right': (60, 210)},
-    'Bottom': {'top_left': (13, 200), 'bottom_right': (60, 286)},
-    'Foot': {'top_left': (13, 280), 'bottom_right': (60, 333)},
+# Add camera_index variable
+camera_index = 0  # Default to first camera, change as needed
 
-
-    'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
-    'Changedown': {'top_left': (567, 395), 'bottom_right': (607, 435)},
-    'ChangeUp': {'top_left': (559, 55), 'bottom_right': (599, 95)},
-}
-
-
+selected_items = {'option1_1': None, 'option1_2': None, 'option1_3': None}
 
 hover_start_time = {}
 hover_duration = 1  # Duration to hover in seconds
 
+current_category = None
+current_items = None
+
 def check_user_in_outline_v1():
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(camera_index)
     start_time = None
     capturing = False
     outline_image = cv2.imread('static/Cloths/image.png', -1)
@@ -96,9 +96,22 @@ def check_user_in_outline_v1():
         size_capture_done = True
         socketio.emit('size_capture_done', {'status': 'completed'})
     
+buttons = {
+    'Top': {'top_left': (13, 156), 'bottom_right': (60, 210)},
+    'Bottom': {'top_left': (13, 200), 'bottom_right': (60, 286)},
+    'Foot': {'top_left': (13, 280), 'bottom_right': (60, 333)},
+    'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
+    'Changedown': {'top_left': (567, 395), 'bottom_right': (607, 435)},
+    'ChangeUp': {'top_left': (559, 55), 'bottom_right': (599, 95)},
+    'option1_1': {'top_left': (545, 129), 'bottom_right': (617, 205)},
+    'option1_2': {'top_left': (545, 216), 'bottom_right': (617, 295)},
+    'option1_3': {'top_left': (545, 303), 'bottom_right': (617, 385)},
+}
 
 def check_button_hover(finger_tip_coords):
     global hover_start_time
+    global current_category
+    global current_items
 
     if finger_tip_coords:
         for button, coords in buttons.items():
@@ -108,9 +121,20 @@ def check_button_hover(finger_tip_coords):
                 if button not in hover_start_time:
                     hover_start_time[button] = time.time()
                 elif time.time() - hover_start_time[button] >= hover_duration:
-                    message = {'button': button}
-                    print(f"Emitting message: {message}")
-                    socketio.emit('button_hover', message)
+                    if button in ['option1_1', 'option1_2', 'option1_3']:
+                        print(f"{button} is hovered")
+                        if current_category and current_items:
+                            selected_item = select_item_by_option(current_items, button)
+                            print("The selected items : ")
+                            print(selected_item)
+
+                            if selected_item:
+                                message = {'button': button, 'selected_item': selected_item}
+                                print(f"Emitting selected item: {message}")
+                    else:
+                        message = {'button': button}
+                        print(f"Emitting message: {message}")
+                        socketio.emit('button_hover', message)
                     hover_start_time.pop(button)
                     return
             else:
@@ -118,7 +142,7 @@ def check_button_hover(finger_tip_coords):
                     hover_start_time.pop(button)
 
 def gen_frames():
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(camera_index)
     while True:
         success, frame = camera.read()
         if not success:
@@ -159,7 +183,7 @@ def is_within_circle(point_x, point_y, circle_x, circle_y, radius=20):
     return (point_x - circle_x) ** 2 + (point_y - circle_y) ** 2 <= radius ** 2
 
 def gen_frames_for_outline():
-    cam = cv2.VideoCapture(0)
+    cam = cv2.VideoCapture(camera_index)
     
     if not cam.isOpened():
         print("Error: Could not open video source.")
@@ -325,19 +349,19 @@ def gen_frames_for_recommandation():
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # Draw rectangles based on the received positions
-            if current_recommand_mode == 'buttons':
-                for button, coords in buttons_recommand.items():
-                    cv2.rectangle(frame, 
-                                coords['top_left'], 
-                                coords['bottom_right'], 
-                                (255, 255, 255), 1)  # Green rectangle with thickness of 2
+            # if current_recommand_mode == 'buttons':
+            #     for button, coords in buttons_recommand.items():
+            #         cv2.rectangle(frame, 
+            #                     coords['top_left'], 
+            #                     coords['bottom_right'], 
+            #                     (255, 255, 255), 1)  # Green rectangle with thickness of 2
 
-            if current_recommand_mode == 'arrows':
-                for button, coords in arrow_recommand.items():
-                    cv2.rectangle(frame,
-                                coords['top_left'],
-                                coords['bottom_right'],
-                                (255, 255, 255), 1)      
+            # if current_recommand_mode == 'arrows':
+            #     for button, coords in arrow_recommand.items():
+            #         cv2.rectangle(frame,
+            #                     coords['top_left'],
+            #                     coords['bottom_right'],
+            #                     (255, 255, 255), 1)      
                 
             results = hands.process(frame_rgb)
             finger_tip_coords = None
@@ -404,6 +428,37 @@ def gen_qrcode_frames():
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
 
 
+def get_latest_image(folder_path):
+    files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
+    if not files:
+        return None
+    latest_file = max(files, key=lambda f: os.path.getmtime(os.path.join(folder_path, f)))
+    return os.path.join(folder_path, latest_file)
+
+
+def select_item_by_option(items, option):
+    # Define a mapping between options and their respective indices in the items list
+    option_mapping = {
+        'option1_1': 0,  # Select the first item
+        'option1_2': 1,  # Select the second item
+        'option1_3': 2   # Select the third item
+    }
+
+    # Check if the option is valid and there is a corresponding index in the items list
+    if option in option_mapping:
+        index = option_mapping[option]
+        if index < len(items):
+            selected_item = items[index]
+            print(f"Selected item for {option}: {selected_item}")
+            return selected_item
+        else:
+            print(f"No item available for {option}")
+            return None
+    else:
+        print(f"Invalid option: {option}")
+        return None
+
+
 @app.route('/video_feed_outline')
 def video_feed_outline():
     return Response(gen_frames_for_outline(), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -419,7 +474,26 @@ def video_feed():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    folder_path = r"D:\OSC\MirwearInterface\static\output"
+    image_path = get_latest_image(folder_path)
+    
+    image_data = None
+    mime_type = None
+    
+    if image_path:
+        with open(image_path, "rb") as image_file:
+            image_data = base64.b64encode(image_file.read()).decode('utf-8')
+        
+        # Determine the MIME type based on the file extension
+        file_extension = os.path.splitext(image_path)[1].lower()
+        mime_type = {
+            '.png': 'image/png',
+            '.jpg': 'image/jpeg',
+            '.jpeg': 'image/jpeg',
+            '.webp': 'image/webp'
+        }.get(file_extension, 'image/webp')  # Default to webp if unknown
+
+    return render_template('index.html', image_data=image_data, mime_type=mime_type)
 
 
 @app.route('/video_feed_recommandation')
@@ -465,6 +539,48 @@ def generate_qr():
     # Send the image as a response
     return send_file(img_io, mimetype='image/png')
 
+
+
+@app.route('/generate_cloths')
+def generate_cloths():
+        client = Client("levihsu/OOTDiffusion")
+
+        # Run the prediction
+        result = client.predict(
+            vton_img=handle_file(r'D:\OSC\APIOOTD\00034_00.jpg'),
+            garm_img=handle_file(r'D:\OSC\APIOOTD\00069_00.jpg'),
+            n_samples=1,
+            n_steps=20,
+            image_scale=2,
+            seed=-1,
+            api_name="/process_hd"
+        )
+
+        # Check if the result is a list and contains a dictionary with the image path
+        if isinstance(result, list) and len(result) > 0 and 'image' in result[0]:
+            image_path = result[0]['image']  # Access the image path
+            static_folder_path = os.path.join('static', 'images')  # Define static folder for images
+            output_file_path = os.path.join(static_folder_path, 'generated_image.webp')  # Save in static/images folder
+            
+            # Create the folder if it doesn't exist
+            if not os.path.exists(static_folder_path):
+                os.makedirs(static_folder_path)
+            
+            # Check if the source image file exists
+            if os.path.exists(image_path):
+                # Copy the image to the static folder
+                shutil.copy(image_path, output_file_path)
+                print(f"Image successfully saved at: {output_file_path}")
+                
+                # Pass the image path to the template
+                return render_template('display_image.html', image_file='images/generated_image.webp')
+            else:
+                return "File not found", 404
+        else:
+            return "Unexpected result format", 500
+
+
+
 @app.route('/static/JSONstyles/itemsByType.json')
 def serve_json():
     with open('static/JSONstyles/itemsByType.json') as json_file:
@@ -485,6 +601,18 @@ def handle_ui_update(data):
         print("Switched to arrows mode.")
 
 
+@socketio.on('update_displayed_items')
+def handle_displayed_items(data):
+    global current_category
+    global current_items
+    current_category = data['category']
+    current_items = data['items']
+    print("this happend when the websockets is triggered : ")
+    print(current_category)
+    print(current_items)
+    print(f"Received update for {current_category}: {current_items}")
+    print("the finale of the web sockect trigger")
+    
 
 wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
 processing_in_progress = False  # Flag to track if processing is in progress
@@ -666,7 +794,6 @@ def extract_and_save_json(response_content, file_path):
 def load_wardrobe_data(file_path):
     with open(file_path, 'r') as json_file:
         return json.load(json_file)
-
 
 
 

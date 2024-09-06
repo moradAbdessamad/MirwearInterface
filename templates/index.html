@@ -48,6 +48,14 @@
 
         <img id="video" src="{{ url_for('video_feed') }}" />
 
+        <div class="image-clothings">
+          {% if image_data %}
+            <img src="data:{{ mime_type }};base64,{{ image_data }}" alt="Generated Image">
+          {% else %}
+            <p>No image available</p>
+          {% endif %}
+        </div>
+
         <div class="buttonsCon">
           <div id="buttonContainer">
             <div class="image-container">
@@ -85,7 +93,7 @@
             ></i>
 
             <div class="image-container-rights">
-              <img id="option1_1" class="cloth-image" src="" alt="Top Image" />
+              <img id="option1_1" class="cloth-image" src="" />
             </div>
 
             <div class="image-container-rights">
@@ -93,12 +101,11 @@
                 id="option1_2"
                 class="cloth-image"
                 src=""
-                alt="Bottom Image"
               />
             </div>
 
             <div class="image-container-rights">
-              <img id="option1_3" class="cloth-image" src="" alt="Foot Image" />
+              <img id="option1_3" class="cloth-image" src="" />
             </div>
 
             <i
@@ -170,7 +177,24 @@
           // Toggle arrow visibility
           document.getElementById("up-arrow").style.display = (currentIndex[category] > 0) ? "block" : "none";
           document.getElementById("down-arrow").style.display = (currentIndex[category] + itemsPerPage < Object.keys(jsonData[category]).length) ? "block" : "none";
-      }         
+
+          sendCurrentItemsToServer(category);
+        } 
+        
+        function sendCurrentItemsToServer(category) {
+          const image1 = document.getElementById("option1_1");
+          const image2 = document.getElementById("option1_2");
+          const image3 = document.getElementById("option1_3");
+
+          const displayedItems = [image1.src, image2.src, image3.src]
+            .filter(src => src !== "")
+            .map(src => src.split('/').pop());
+
+          socket.emit('update_displayed_items', {
+            category: category,
+            items: displayedItems
+          });
+        }
     
         socket.on("button_hover", function (data) {
             var rightsImages = document.querySelector("#rights_button");
@@ -204,7 +228,6 @@
             }
         });
     });
-          
     </script>
   </body>
 </html>
