@@ -69,6 +69,8 @@ def check_user_in_outline_v1():
 
         if results.pose_landmarks:
             nose = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE]
+            print("the landamrsk");
+            print("The landmarks of the nose ")
             left_shoulder = results.pose_landmarks.landmark[mp_pose.PoseLandmark.LEFT_SHOULDER]
             right_shoulder = results.pose_landmarks.landmark[mp_pose.PoseLandmark.RIGHT_SHOULDER]
 
@@ -80,7 +82,7 @@ def check_user_in_outline_v1():
                     if elapsed_time >= 5:
                         capturing = True
                         break
-        
+
             else:
                 start_time = None
 

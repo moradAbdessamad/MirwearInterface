@@ -1,70 +1,70 @@
 {
     "style_1": {
         "top": {
-            "image": "image140.jpg",
+            "image": "image146.jpg",
             "type": "Dress shirt",
             "gender": "Men",
-            "color": "Navy",
-            "style": "Smart Casual"
+            "color": "Light gray",
+            "style": "Daywear"
         },
         "bottom": {
-            "image": "image107.jpeg",
+            "image": "image104.jpg",
             "type": "Jeans",
             "gender": "Men",
-            "color": "Navy",
+            "color": "Dark blue",
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image117.jpg",
+            "type": "Sneakers",
+            "gender": "Both",
+            "color": "Bright white",
+            "style": "Athleisure"
+        }
+    },
+    "style_2": {
+        "top": {
+            "image": "image157.jpeg",
+            "type": "Henley shirt",
+            "gender": "Men",
+            "color": "Powder blue",
+            "style": "Workwear"
+        },
+        "bottom": {
+            "image": "image116.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Denim",
             "style": "Denim"
+        },
+        "shoes": {
+            "image": "image148.jpg",
+            "type": "Derby shoes",
+            "gender": "Men",
+            "color": "Espresso brown",
+            "style": "Smart Casual"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "image74.jpg",
+            "type": "Long sleeve shirt",
+            "gender": "Men",
+            "color": "Bright red",
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image134.jpg",
+            "type": "Palazzo pants",
+            "gender": "Men",
+            "color": "Taupe",
+            "style": "Luxe Loungewear"
         },
         "shoes": {
             "image": "image164.jpg",
             "type": "Sneakers",
             "gender": "Men",
             "color": "Navy",
-            "style": "Athletic Luxe"
-        }
-    },
-    "style_2": {
-        "top": {
-            "image": "image144.jpg",
-            "type": "Henley shirt",
-            "gender": "Men",
-            "color": "Powder blue",
-            "style": "Nightwear"
-        },
-        "bottom": {
-            "image": "image121.jpg",
-            "type": "Jeans",
-            "gender": "Men",
-            "color": "Dark blue",
-            "style": "Capsule Wardrobe"
-        },
-        "shoes": {
-            "image": "image42.png",
-            "type": "Sneakers",
-            "gender": "Both",
-            "color": "Powder blue",
-            "style": "Athleisure"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "image73.jpg",
-            "type": "Dress shirt",
-            "gender": "Men",
-            "color": "Peacock blue",
-            "style": "Daywear"
-        },
-        "bottom": {
-            "image": "image129.jpg",
-            "type": "Jeans",
-            "gender": "Men",
-            "color": "Dark blue",
-            "style": "Capsule Wardrobe"
-        },
-        "shoes": {
-            "image": "image21.jpeg",
-            "type": "Oxfords",
-            "gender": "Both",
-            "color": "Powder blue",
             "style": "Athletic Luxe"
         }
     }
