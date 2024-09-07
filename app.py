@@ -153,6 +153,7 @@ def check_button_hover(finger_tip_coords):
                 if button in hover_start_time:
                     hover_start_time.pop(button)
 
+                    
 def send_request(button, selected_item):
     global request_in_progress
     try:
@@ -164,17 +165,20 @@ def send_request(button, selected_item):
 
         print(f"Sending request for {button} with item: {selected_item}")
         
+        # Emit a message to inform the client that the request is being sent
+        socketio.emit('outfit_image_ready', {'status': 'sending', 'message': 'Request is being sent'})
+        
         # Run the send_request_and_save function
         send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
         
         print("Request completed")
         
         # Emit a message to inform the client that the image is ready
-        socketio.emit('image_ready', {'status': 'complete', 'path': os.path.join(output_folder, 'generated_image.webp')})
+        socketio.emit('outfit_image_ready', {'status': 'complete', 'path': os.path.join(output_folder, 'generated_image.webp')})
     
     except Exception as e:
         print(f"An error occurred: {e}")
-        socketio.emit('image_ready', {'status': 'error', 'message': str(e)})
+        socketio.emit('outfit_image_ready', {'status': 'error', 'message': str(e)})
     
     finally:
         request_in_progress = False
@@ -580,6 +584,7 @@ def send_request_and_save_test(vton_img_path, garm_img_path, output_folder, cate
 
 
 # the image send the last image in the folder to the web socket and handle this in js 
+# also don't forget that the emit message in websokects to when the process is complete or no
 def get_latest_image(folder_path):
     files = [f for f in os.listdir(folder_path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.webp'))]
     if files:

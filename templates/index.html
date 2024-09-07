@@ -46,14 +46,14 @@
           Please hover with your index fingertip for 1 second to click
         </h1>
 
+        <h1 class="title-layout-generating" style="display: none;">
+          select the item to get dress
+        </h1>
+
         <img id="video" src="{{ url_for('video_feed') }}" />
 
-        <div class="image-clothings">
-          {% if image_data %}
-            <img src="data:{{ mime_type }};base64,{{ image_data }}" alt="Generated Image">
-          {% else %}
-            <p>No image available</p>
-          {% endif %}
+        <div class="image-clothings" style="display: none;">
+            <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image" id="thetryonImage">
         </div>
 
         <div class="buttonsCon">
@@ -129,7 +129,10 @@
         var currentIndex = { "top": 0, "bottom": 0, "foot": 0 };
         const itemsPerPage = 3;
         var lastCategory = null;
-    
+        var thetryonImage = document.getElementById('thetryonImage');
+        var generatingTitle = document.querySelector('.title-layout-generating');
+        var imageClothings = document.querySelector('.image-clothings');
+
         // Load the JSON file
         fetch("/static/JSONstyles/itemsByType.json")
         .then((response) => response.json())
@@ -195,7 +198,20 @@
             items: displayedItems
           });
         }
-    
+
+        function showGeneratingMessage(message) {
+            generatingTitle.textContent = message;
+            generatingTitle.style.display = 'block';
+        }
+
+        function hideGeneratingMessage() {
+            generatingTitle.style.display = 'none';
+        }
+
+        function showImageClothings() {
+            imageClothings.style.display = 'block';
+        }
+
         socket.on("button_hover", function (data) {
             var rightsImages = document.querySelector("#rights_button");
             rightsImages.style.display = "flex";
@@ -226,6 +242,36 @@
                 }
                 updateImages(lastCategory);
             }
+        });
+
+        socket.on('outfit_image_ready', function(data) {
+          console.log('Received outfit_image_ready:', data);
+
+          if (data.status === 'sending') {
+              showGeneratingMessage("Generating outfit...");
+              imageClothings.style.display = 'none';
+          } else if (data.status === 'complete' && data.path) {
+              // Extract the filename from the full path
+              var filename = data.path.split('\\').pop();
+              
+              // Construct the relative URL
+              var imageUrl = '/static/output/' + filename;
+              
+              // Update the image source
+              thetryonImage.src = imageUrl + '?t=' + new Date().getTime();
+
+              showImageClothings();
+
+              showGeneratingMessage("Outfit generated!");
+
+              setTimeout(function() {
+                  hideGeneratingMessage();
+              }, 5000);
+          } else if (data.status === 'error') {
+              console.error('Error generating image:', data.message);
+              showGeneratingMessage("Error generating outfit. Please try again.");
+              imageClothings.style.display = 'none';
+          }
         });
     });
     </script>
