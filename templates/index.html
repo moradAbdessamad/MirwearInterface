@@ -132,6 +132,7 @@
         var thetryonImage = document.getElementById('thetryonImage');
         var generatingTitle = document.querySelector('.title-layout-generating');
         var imageClothings = document.querySelector('.image-clothings');
+        var titleElement = document.querySelector('.title');
 
         // Load the JSON file
         fetch("/static/JSONstyles/itemsByType.json")
@@ -273,6 +274,40 @@
               imageClothings.style.display = 'none';
           }
         });
+
+          socket.on('user_status', function(data) {
+          console.log('Received user_status:', data);
+          
+          switch(data.status) {
+              case 'upper_body_visible':
+                  updateTitleElement("Great! You're standing correctly.", 'green');
+                  break;
+              case 'upper_body_not_fully_visible':
+                  updateTitleElement("Please adjust your position. Upper body not fully visible.", 'orange');
+                  break;
+              case 'no_pose_detected':
+                  updateTitleElement("No person detected. Please stand in front of the camera.", 'red');
+                  break;
+              default:
+                  updateTitleElement("Please stand in front of the camera.", 'white');
+          }
+          });
+
+          function updateTitleElement(message, color) {
+              titleElement.textContent = message;
+              titleElement.style.color = color;
+              
+              // Clear any existing timeout
+              if (window.titleUpdateTimeout) {
+                  clearTimeout(window.titleUpdateTimeout);
+              }
+              
+              // Set a new timeout to reset the title after 3 seconds
+              window.titleUpdateTimeout = setTimeout(function() {
+                  titleElement.textContent = "Please stand in front of the camera.";
+                  titleElement.style.color = 'white';
+              }, 3000);
+          }
     });
     </script>
   </body>

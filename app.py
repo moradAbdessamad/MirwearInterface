@@ -158,12 +158,25 @@ def send_request(button, selected_item):
     global request_in_progress
     try:
         # Define the paths and parameters based on the selected_item
-        vton_img_path = r'D:\OSC\MirwearInterface\static\models\model.jpg'  
+        models_folder = r'D:\OSC\MirwearInterface\static\models'
+        vton_img_path = max([os.path.join(models_folder, f) for f in os.listdir(models_folder) if f.endswith('.jpg')], key=os.path.getmtime)
         garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
         output_folder = r'D:\OSC\MirwearInterface\static\output'  
-        category = 'Upper-body'  
 
-        print(f"Sending request for {button} with item: {selected_item}")
+        # Determine the category based on the selected item
+        with open(r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json', 'r') as f:
+            items_by_type = json.load(f)
+        
+        if selected_item in items_by_type.get('top', {}):
+            category = 'Upper-body'
+        elif selected_item in items_by_type.get('bottom', {}):
+            category = 'Lower-body'
+        elif selected_item in items_by_type.get('foot', {}):
+            category = 'Dress'
+        else:
+            category = 'Upper-body'  
+
+        print(f"Sending request for {button} with item: {selected_item}, category: {category}")
         
         # Emit a message to inform the client that the request is being sent
         socketio.emit('outfit_image_ready', {'status': 'sending', 'message': 'Request is being sent'})
@@ -193,12 +206,12 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
     result = client.predict(
         vton_img=handle_file(vton_img_path),
         garm_img=handle_file(garm_img_path),
+        category=category,  # Use the determined category
         n_samples=1,
-        n_steps=10,
+        n_steps=20,
         image_scale=2,
         seed=-1,
-        # category=category,  # Pass the category to the API
-        api_name="/process_hd"
+        api_name="/process_dc"
     )
 
     # End time after the prediction
@@ -228,7 +241,13 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
         print(f"Unexpected result format: {result}")
 
 def gen_frames():
+    global camera
     camera = cv2.VideoCapture(camera_index)
+    
+    # Start the continuous capture in a separate thread
+    capture_thread = threading.Thread(target=continuous_capture, daemon=True)
+    capture_thread.start()
+    
     while True:
         success, frame = camera.read()
         if not success:
@@ -252,99 +271,79 @@ def gen_frames():
                     h, w, c = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                     finger_tip_coords = {'x': cx, 'y': cy}
-                    # print("The coord of finger : ", (cx, cy))
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover(finger_tip_coords)
+
+            # Check if user's upper body is visible
+            pose_results = pose.process(frame_rgb)
+            if pose_results.pose_landmarks:
+                h, w, c = frame.shape
+                upper_body_landmarks = [
+                    mp_pose.PoseLandmark.NOSE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW
+                ]
+                
+                upper_body_visible = all(
+                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
+                )
+                
+                if upper_body_visible:
+                    socketio.emit('user_status', {'status': 'upper_body_visible'})
+                    capture_and_save_image(frame)
+                else:
+                    socketio.emit('user_status', {'status': 'upper_body_not_fully_visible'})
+            else:
+                socketio.emit('user_status', {'status': 'no_pose_detected'})
 
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
             
-outline_points = {
-    'nose': {'x': 300, 'y': 200, 'threshold': 50},
-}
+    camera.release()
 
-def is_within_circle(point_x, point_y, circle_x, circle_y, radius=20):
-    return (point_x - circle_x) ** 2 + (point_y - circle_y) ** 2 <= radius ** 2
+# Add these global variables at the top of your file
+last_capture_time = 0
+capture_interval = 5  # Capture an image every 5 seconds
+capture_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
 
-def gen_frames_for_outline():
-    cam = cv2.VideoCapture(camera_index)
-    
-    if not cam.isOpened():
-        print("Error: Could not open video source.")
-        yield b''
-        return
+def capture_and_save_image(frame):
+    global last_capture_time
+    current_time = time.time()
+    if current_time - last_capture_time >= capture_interval:
+        filename = 'capture.jpg'  # Always use the same filename to override
+        filepath = os.path.join(capture_folder, filename)
+        cv2.imwrite(filepath, frame)
+        print(f"Captured image: {filepath}")
+        last_capture_time = current_time
+        socketio.emit('image_captured', {'filepath': filepath})
 
+def continuous_capture():
+    global camera
     while True:
-        ret, frame = cam.read()
-        if not ret:
-            print("Error: Failed to grab frame.")
-            break
-        
-        frame = cv2.flip(frame, 1)
-        frame_h, frame_w, _ = frame.shape
-        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        success, frame = camera.read()
+        if success:
+            pose_results = pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
+            if pose_results.pose_landmarks:
+                upper_body_landmarks = [
+                    mp_pose.PoseLandmark.NOSE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW
+                ]
+                
+                upper_body_visible = all(
+                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
+                )
+                
+                if upper_body_visible:
+                    capture_and_save_image(frame)
+        time.sleep(0.1)  # Small delay to prevent excessive CPU usage
 
-        results = pose.process(frame_rgb)
-
-        if results.pose_landmarks:
-            mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
-            nose = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE]
-            nose_x, nose_y = int(nose.x * frame_w), int(nose.y * frame_h)
-            nose_check = is_within_circle(nose_x, nose_y, outline_points['nose']['x'], outline_points['nose']['y'], outline_points['nose']['threshold'])
-            if nose_check:
-                print("User is standing correctly in the outline.")
-                socketio.emit('user_status', {'status': 'standing_still'})
-            else:
-                print("User is not standing still in the outline.")
-                socketio.emit('user_status', {'status': 'not_standing_still'})
-        else:
-            print("Pose landmarks not detected.")
-            socketio.emit('user_status', {'status': 'no_landmarks'})
-        
-        ret, buffer = cv2.imencode('.jpg', frame)
-        frame = buffer.tobytes()
-
-        yield (b'--frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    
-    cam.release()
-    cv2.destroyAllWindows()
-    yield b''
-
-
-
-# buttons_recommand = {
-#     'Season': {'top_left': (102, 167), 'bottom_right': (186, 203)},
-#     'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
-#     'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
-#     'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
-
-#     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
-#     'summer': {'top_left': (130, 265), 'bottom_right': (200, 295)},
-#     'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
-#     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
-
-#     'male': {'top_left': (234, 226), 'bottom_right': (304, 251)},
-#     'female': {'top_left': (234, 265), 'bottom_right': (304, 295)},
-#     'unisex': {'top_left': (234, 310), 'bottom_right': (304, 336)},
-#     'kids': {'top_left': (234, 352), 'bottom_right': (304, 376)},
-
-#     'red': {'top_left': (334, 226), 'bottom_right': (412, 251)},
-#     'blue': {'top_left': (334, 265), 'bottom_right': (412, 295)},
-#     'green': {'top_left': (334, 310), 'bottom_right': (412, 336)},
-#     'yellow': {'top_left': (334, 352), 'bottom_right': (412, 376)},
-
-#     'casual': {'top_left': (442, 226), 'bottom_right': (512, 251)},
-#     'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
-#     'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
-#     'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
-
-#     'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
-
-#     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
-# }
 
 button_season = {
     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
@@ -466,7 +465,101 @@ def gen_frames_for_recommandation():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+
+
+
+
+
+
+
+outline_points = {
+    'nose': {'x': 300, 'y': 200, 'threshold': 50},
+}
+
+def is_within_circle(point_x, point_y, circle_x, circle_y, radius=20):
+    return (point_x - circle_x) ** 2 + (point_y - circle_y) ** 2 <= radius ** 2
+
+def gen_frames_for_outline():
+    cam = cv2.VideoCapture(camera_index)
+    
+    if not cam.isOpened():
+        print("Error: Could not open video source.")
+        yield b''
+        return
+
+    while True:
+        ret, frame = cam.read()
+        if not ret:
+            print("Error: Failed to grab frame.")
+            break
+        
+        frame = cv2.flip(frame, 1)
+        frame_h, frame_w, _ = frame.shape
+        frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+        results = pose.process(frame_rgb)
+
+        if results.pose_landmarks:
+            mp_drawing.draw_landmarks(frame, results.pose_landmarks, mp_pose.POSE_CONNECTIONS)
+            nose = results.pose_landmarks.landmark[mp_pose.PoseLandmark.NOSE]
+            nose_x, nose_y = int(nose.x * frame_w), int(nose.y * frame_h)
+            nose_check = is_within_circle(nose_x, nose_y, outline_points['nose']['x'], outline_points['nose']['y'], outline_points['nose']['threshold'])
+            if nose_check:
+                print("User is standing correctly in the outline.")
+                socketio.emit('user_status', {'status': 'standing_still'})
+            else:
+                print("User is not standing still in the outline.")
+                socketio.emit('user_status', {'status': 'not_standing_still'})
+        else:
+            print("Pose landmarks not detected.")
+            socketio.emit('user_status', {'status': 'no_landmarks'})
+        
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+    
+    cam.release()
+    cv2.destroyAllWindows()
+    yield b''
+
+
+
+# buttons_recommand = {
+#     'Season': {'top_left': (102, 167), 'bottom_right': (186, 203)},
+#     'Gender': {'top_left': (226, 160), 'bottom_right': (305, 198)},
+#     'Color': {'top_left': (345, 160), 'bottom_right': (419, 203)},
+#     'Style': {'top_left': (460, 161), 'bottom_right': (535, 204)},
+
+#     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
+#     'summer': {'top_left': (130, 265), 'bottom_right': (200, 295)},
+#     'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
+#     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
+
+#     'male': {'top_left': (234, 226), 'bottom_right': (304, 251)},
+#     'female': {'top_left': (234, 265), 'bottom_right': (304, 295)},
+#     'unisex': {'top_left': (234, 310), 'bottom_right': (304, 336)},
+#     'kids': {'top_left': (234, 352), 'bottom_right': (304, 376)},
+
+#     'red': {'top_left': (334, 226), 'bottom_right': (412, 251)},
+#     'blue': {'top_left': (334, 265), 'bottom_right': (412, 295)},
+#     'green': {'top_left': (334, 310), 'bottom_right': (412, 336)},
+#     'yellow': {'top_left': (334, 352), 'bottom_right': (412, 376)},
+
+#     'casual': {'top_left': (442, 226), 'bottom_right': (512, 251)},
+#     'formal': {'top_left': (442, 265), 'bottom_right': (512, 295)},
+#     'sport': {'top_left': (442, 310), 'bottom_right': (512, 336)},
+#     'vintage': {'top_left': (442, 352), 'bottom_right': (512, 376)},
+
+#     'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
+
+#     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
+# }
             
+
+
 
 qr_buttons = {
     'qr_button1': {'top_left': (100, 100), 'bottom_right': (200, 200)},
