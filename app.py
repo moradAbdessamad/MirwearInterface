@@ -54,6 +54,8 @@ current_items = None
 request_in_progress = None
 
 output_folder = r'D:\OSC\MirwearInterface\static\output'
+folder_path = r"D:\OSC\MirwearInterface\static\output"
+
 
 def check_user_in_outline_v1():
     cap = cv2.VideoCapture(camera_index)
@@ -393,17 +395,27 @@ arrow_recommand = {
     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)},
 
     'refresh': {'top_left': (274, 431), 'bottom_right': (362, 460)},
+
+    'topRecommandItem': {'top_left': (530, 100), 'bottom_right': (609, 175)},
+    'bottomRecommandItem': {'top_left':  (530, 185), 'bottom_right': (609, 260)},
+    'footRecommandItem': {'top_left': (530, 270), 'bottom_right': (609, 345)},
+
 }
 
 hover_start_time_recommand = {}
 hover_duration = 0.5  # 1 second hover duration
 current_recommand_mode = 'buttons'
+selected_recommanded_items = {'item': None}
+request_in_progress = False
+
 
 def check_button_hover_recommand(finger_tip_coords):
     global hover_start_time_recommand
     global current_recommand_mode
+    global selected_recommanded_items
+    global displayed_images
+    global request_in_progress
 
-    # Determine which set of coordinates to use
     coords_to_check = buttons_recommand if current_recommand_mode == 'buttons' else arrow_recommand
 
     if finger_tip_coords:
@@ -418,12 +430,26 @@ def check_button_hover_recommand(finger_tip_coords):
                     print(f"Emitting message: {message}")
                     socketio.emit('button_hover_recommand', message)
                     hover_start_time_recommand.pop(button)
+                    
+                    if button in ['topRecommandItem', 'bottomRecommandItem', 'footRecommandItem']:
+                        index = ['topRecommandItem', 'bottomRecommandItem', 'footRecommandItem'].index(button)
+                        if index < len(displayed_images):
+                            selected_recommanded_items['item'] = os.path.basename(displayed_images[index])
+                            print(f"Selected item: {selected_recommanded_items['item']}")
+                            
+                            # Send the request asynchronously
+                            if not request_in_progress:
+                                request_in_progress = True
+                                threading.Thread(target=send_request_recommand, args=(button, selected_recommanded_items['item'])).start()
+                    
                     return
             else:
                 if button in hover_start_time_recommand:
                     hover_start_time_recommand.pop(button)
 
+
 def gen_frames_for_recommandation():
+    global selected_recommanded_items
     camera = cv2.VideoCapture(0)
     while True:
         success, frame = camera.read()
@@ -433,20 +459,44 @@ def gen_frames_for_recommandation():
             frame = cv2.flip(frame, 1)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
-            # Draw rectangles based on the received positions
-            # if current_recommand_mode == 'buttons':
-            #     for button, coords in buttons_recommand.items():
-            #         cv2.rectangle(frame, 
-            #                     coords['top_left'], 
-            #                     coords['bottom_right'], 
-            #                     (255, 255, 255), 1)  # Green rectangle with thickness of 2
+            # Check if user's upper body is visible
+            pose_results = pose.process(frame_rgb)
+            if pose_results.pose_landmarks:
+                h, w, c = frame.shape
+                upper_body_landmarks = [
+                    mp_pose.PoseLandmark.NOSE,
+                    mp_pose.PoseLandmark.LEFT_SHOULDER,
+                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
+                    mp_pose.PoseLandmark.LEFT_ELBOW,
+                    mp_pose.PoseLandmark.RIGHT_ELBOW
+                ]
+                
+                upper_body_visible = all(
+                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
+                )
+                
+                if upper_body_visible:
+                    socketio.emit('user_status', {'status': 'upper_body_visible'})
+                    capture_and_save_image(frame)
+                else:
+                    socketio.emit('user_status', {'status': 'upper_body_not_fully_visible'})
+            else:
+                socketio.emit('user_status', {'status': 'no_pose_detected'})
 
-            # if current_recommand_mode == 'arrows':
-            #     for button, coords in arrow_recommand.items():
-            #         cv2.rectangle(frame,
-            #                     coords['top_left'],
-            #                     coords['bottom_right'],
-            #                     (255, 255, 255), 1)      
+            # Draw rectangles based on the received positions
+            if current_recommand_mode == 'buttons':
+                for button, coords in buttons_recommand.items():
+                    cv2.rectangle(frame, 
+                                coords['top_left'], 
+                                coords['bottom_right'], 
+                                (255, 255, 255), 1)  # White rectangle with thickness of 1
+
+            if current_recommand_mode == 'arrows':
+                for button, coords in arrow_recommand.items():
+                    cv2.rectangle(frame,
+                                coords['top_left'],
+                                coords['bottom_right'],
+                                (255, 255, 255), 1)      
                 
             results = hands.process(frame_rgb)
             finger_tip_coords = None
@@ -456,7 +506,6 @@ def gen_frames_for_recommandation():
                     index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                     h, w, _ = frame.shape
                     cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    # print("The fingertip index:", (cx, cy))
                     finger_tip_coords = {'x': cx, 'y': cy}
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
@@ -465,11 +514,85 @@ def gen_frames_for_recommandation():
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            
+            
+def send_request_recommand(button, selected_item):
+    global request_in_progress
+    print(f"send_request_recommand called with button: {button}, selected_item: {selected_item}")
+    try:
+        # Define the paths and parameters based on the selected_item
+        models_folder = r'D:\OSC\MirwearInterface\static\models'
+        vton_img_path = max([os.path.join(models_folder, f) for f in os.listdir(models_folder) if f.endswith('.jpg')], key=os.path.getmtime)
+        garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
+        output_folder = r'D:\OSC\MirwearInterface\static\output'  
+
+        print(f"vton_img_path: {vton_img_path}")
+        print(f"garm_img_path: {garm_img_path}")
+        print(f"output_folder: {output_folder}")
+
+        # Determine the category based on the selected item
+        with open(r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json', 'r') as f:
+            items_by_type = json.load(f)
+        
+        if selected_item in items_by_type.get('top', {}):
+            category = 'Upper-body'
+        elif selected_item in items_by_type.get('bottom', {}):
+            category = 'Lower-body'
+        elif selected_item in items_by_type.get('foot', {}):
+            category = 'Dress'
+        else:
+            category = 'Upper-body'  
+
+        print(f"Sending request for {button} with item: {selected_item}, category: {category}")
+        
+        # Emit a message to inform the client that the request is being sent
+        socketio.emit('outfit_image_ready_recommand', {'status': 'sending', 'message': 'Request is being sent'})
+        
+        # Run the send_request_and_save function
+        send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
+        
+        print("Request completed")
+        
+        output_file_path = os.path.join(output_folder, 'generated_image.webp')
+        if os.path.exists(output_file_path):
+            print(f"Generated image found at: {output_file_path}")
+            # Emit a message to inform the client that the image is ready
+            socketio.emit('outfit_image_ready_recommand', {'status': 'complete', 'path': output_file_path})
+            
+            # Call monitor_folder function to emit the new image
+            monitor_folder(output_folder)
+        else:
+            print(f"Generated image not found at: {output_file_path}")
+            socketio.emit('outfit_image_ready_recommand', {'status': 'error', 'message': 'Generated image not found'})
+    
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
+        socketio.emit('outfit_image_ready_recommand', {'status': 'error', 'message': str(e)})
+    
+    finally:
+        request_in_progress = False
 
 
-
-
-
+@socketio.on('displayed_images')
+def handle_displayed_images(images):
+    global displayed_images
+    global selected_recommanded_items
+    print(f"Currently displayed images: {images}")
+    
+    # Update the global displayed_images list with the new images
+    displayed_images = images
+    print(f"Updated displayed images: {displayed_images}")
+    
+    # Check if any of the recommendation items are being hovered
+    for button, category in [('topRecommandItem', 'top'), ('bottomRecommandItem', 'bottom'), ('footRecommandItem', 'foot')]:
+        if button in hover_start_time_recommand:
+            index = ['top', 'bottom', 'foot'].index(category)
+            selected_recommanded_items['item'] = os.path.basename(displayed_images[index])  # Store only the item name
+            
+            print(f"Selected {button}: {selected_recommanded_items['item']}")
+            break  # Exit after processing one hover to avoid multiple selections
 
 
 
@@ -694,15 +817,23 @@ def monitor_folder(folder_path):
             current_modified = os.path.getmtime(latest_image)
             if current_modified > last_modified:
                 last_modified = current_modified
+                relative_path = os.path.relpath(latest_image, start=os.path.dirname(__file__))
                 print("The new message is emited : ")
-                print(latest_image)
-                socketio.emit('try_on_result', {'path': latest_image})
+                print(relative_path)
+                socketio.emit('try_on_result', {'path': relative_path})
         time.sleep(1)  # Check every second
+
+
+# # Monitor the folder path
+# @socketio.on('connect')
+# def handle_connect():
+#     threading.Thread(target=monitor_folder, args=(folder_path,), daemon=True).start()
 
 
 @app.route('/video_feed_outline')
 def video_feed_outline():
     return Response(gen_frames_for_outline(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
 
 @app.route('/outline')
 def outline():
@@ -714,17 +845,9 @@ def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
-# Monitor the folder path
-folder_path = r"D:\OSC\MirwearInterface\static\output"
-
-@socketio.on('connect')
-def handle_connect():
-    threading.Thread(target=monitor_folder, args=(folder_path,), daemon=True).start()
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 
 @app.route('/video_feed_recommandation')

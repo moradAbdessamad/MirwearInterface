@@ -1,80 +1,117 @@
 {
     "style_1": {
         "top": {
-            "image": "image146.jpg",
+            "image": "image100.jpg",
             "type": "Dress shirt",
             "gender": "Men",
             "color": "Light gray",
-            "season": "Fall",
             "style": "Daywear"
         },
         "bottom": {
-            "image": "image103.jpg",
-            "type": "Palazzo pants",
+            "image": "image103.jpeg",
+            "type": "Jeans",
             "gender": "Men",
-            "color": "Warm gray",
-            "season": "Fall",
-            "style": "Loungewear"
+            "color": "Dark gray",
+            "style": "Denim"
         },
         "shoes": {
             "image": "image102.jpg",
             "type": "Espadrilles",
             "gender": "Men",
             "color": "Navy",
-            "season": "Fall",
             "style": "Athleisure"
         }
     },
     "style_2": {
         "top": {
-            "image": "image136.jpg",
+            "image": "image119.jpg",
             "type": "Henley shirt",
-            "gender": "Men",
-            "color": "Light gray",
-            "season": "Fall",
+            "gender": "Women",
+            "color": "Beige",
             "style": "Capsule Wardrobe"
         },
         "bottom": {
-            "image": "image115.jpg",
+            "image": "image125.jpg",
+            "type": "Culottes",
+            "gender": "Women",
+            "color": "Peacock blue",
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image88.jpg",
+            "type": "Platform shoes",
+            "gender": "Women",
+            "color": "Ivory white",
+            "style": "Occasionwear"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "image146.jpg",
+            "type": "Dress shirt",
+            "gender": "Men",
+            "color": "Light gray",
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image154.jpeg",
             "type": "Dress pants",
             "gender": "Men",
-            "color": "Navy",
-            "season": "Fall",
-            "style": "Unisex"
+            "color": "Jet black",
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image138.jpg",
+            "type": "Monk strap shoes",
+            "gender": "Men",
+            "color": "Dark gray",
+            "style": "Officewear"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image122.jpg",
+            "type": "Camisole",
+            "gender": "Women",
+            "color": "Ivory",
+            "style": "Luxe Loungewear"
+        },
+        "bottom": {
+            "image": "image134.jpg",
+            "type": "Palazzo pants",
+            "gender": "Men",
+            "color": "Taupe",
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image117.jpg",
+            "type": "Sneakers",
+            "gender": "Both",
+            "color": "Bright white",
+            "style": "Athleisure"
+        }
+    },
+    "style_5": {
+        "top": {
+            "image": "image67.jpg",
+            "type": "Long sleeve shirt",
+            "gender": "Men",
+            "color": "Cranberry",
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image121.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Dark blue",
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
             "image": "image148.jpg",
             "type": "Derby shoes",
             "gender": "Men",
             "color": "Espresso brown",
-            "season": "Fall",
             "style": "Smart Casual"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "image75.jpg",
-            "type": "Henley shirt",
-            "gender": "Men",
-            "color": "Maroon",
-            "season": "Fall",
-            "style": "Officewear"
-        },
-        "bottom": {
-            "image": "image143.jpg",
-            "type": "Palazzo pants",
-            "gender": "Men",
-            "color": "Khaki",
-            "season": "Fall",
-            "style": "Luxe Loungewear"
-        },
-        "shoes": {
-            "image": "image137.jpg",
-            "type": "Monk strap shoes",
-            "gender": "Men",
-            "color": "Jet black",
-            "season": "Fall",
-            "style": "Officewear"
         }
     }
 }
