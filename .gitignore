@@ -3,4 +3,6 @@
 /static/Item
 /rec_venv
 /static/output
-.env 
+.env
+yolov8n.pt
+yolov8x.pt

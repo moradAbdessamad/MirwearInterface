@@ -41,9 +41,9 @@
       <img src="{{ url_for('video_feed_recommandation') }}" style="width: 100%" id="video-recommandation" />
 
 
-      <div class="image-clothings-recommand" style="display: none;">
+      <div class="image-clothings-recommand">
         <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image"
-          id="thetryonImageRecommand">
+          id="thetryonImageRecommand" style="display: none;">
       </div>
 
       <div class="recommandation-buttons-container">
@@ -150,7 +150,8 @@
       spinIcones = document.querySelector('#spin-icones')
       spinIconeSecond = document.querySelector('#spin-icone-second')
       shuffleIcone = document.querySelector('#shuffle-icone')
-
+      var titleElement = document.querySelector('.title-recommandatio-clothings');
+      var tryOnImage = document.getElementById('thetryonImageRecommand');
 
       titleRecommandation.style.display = 'block'
 
@@ -480,6 +481,7 @@
           case 'sending':
             titleElement.textContent = "Generating outfit...";
             titleElement.style.color = 'orange';
+            tryOnImage.style.display = 'none';
             break;
           case 'complete':
             titleElement.textContent = "Outfit generation completed!";
@@ -495,24 +497,42 @@
         }
       });
 
-      socket.on('try_on_result', function (data) {
-        console.log('Received try_on_result:', data);
+      socket.on('outfit_image_ready_in_request', function(data) {
+        console.log('Received outfit_image_ready_in_request:', data);
+        if (data.status === 'complete') {
+            var tryOnImage = document.getElementById('thetryonImageRecommand'); // Use correct ID
+            // Add a timestamp to prevent caching
+            tryOnImage.src = data.path + '?t=' + new Date().getTime();
+            tryOnImage.style.display = 'block';
+            
+            console.log('Image path:', data.path); // Log the image path
+
+            // Add an onload event to check if the image loads successfully
+            tryOnImage.onload = function() {
+                console.log('Image loaded successfully');
+                titleElement.textContent = "Try-on completed!";
+                titleElement.style.color = 'green';
+            };
+            
+            tryOnImage.onerror = function() {
+                console.error('Error loading image');
+                titleElement.textContent = "Error in try-on process";
+                titleElement.style.color = 'red';
+                tryOnImage.style.display = 'none';
+            };
+        } else {
+            titleElement.textContent = "Error in try-on process";
+            titleElement.style.color = 'red';
+            document.getElementById('thetryonImageRecommand').style.display = 'none'; // Use correct ID
+        }
+      });
+
+      socket.on('pose_adjustment_needed', function (data) {
+        console.log('Received pose_adjustment_needed:', data);
 
         var titleElement = document.querySelector('.title-recommandatio-clothings');
-        var tryOnImage = document.getElementById('thetryonImageRecommand');
-
-        if (data.path) {
-          titleElement.textContent = "Try-on completed!";
-          titleElement.style.color = 'green';
-          // Convert backslashes to forward slashes for proper URL formatting
-          var formattedPath = data.path.replace(/\\/g, '/');
-          tryOnImage.src = '/' + formattedPath;
-          tryOnImage.style.display = 'block';
-        } else {
-          titleElement.textContent = "Error in try-on process";
-          titleElement.style.color = 'red';
-          tryOnImage.style.display = 'none';
-        }
+        titleElement.textContent = data.message;
+        titleElement.style.color = 'orange';
       });
 
 

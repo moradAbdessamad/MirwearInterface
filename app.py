@@ -19,6 +19,8 @@ import asyncio
 from gradio_client import Client, handle_file
 import base64
 from dotenv import load_dotenv
+import torch
+from ultralytics import YOLO
 
 
 app = Flask(__name__)
@@ -108,6 +110,9 @@ def check_user_in_outline_v1():
         size_capture_done = True
         socketio.emit('size_capture_done', {'status': 'completed'})
     
+
+
+
 buttons = {
     'Top': {'top_left': (13, 156), 'bottom_right': (60, 210)},
     'Bottom': {'top_left': (13, 200), 'bottom_right': (60, 286)},
@@ -120,12 +125,16 @@ buttons = {
     'option1_3': {'top_left': (545, 303), 'bottom_right': (617, 385)},
 }
 
+request_in_progress_flag = None
+capture_requested_send = False
+CAPTURED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\imagesformcam\latest_capture.jpg'
+CROPPED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\models\cropped_person_image.jpg'
 
 def check_button_hover(finger_tip_coords):
     global hover_start_time
     global current_category
     global current_items
-    global request_in_progress
+    global request_in_progress_flag
 
     if finger_tip_coords:
         for button, coords in buttons.items():
@@ -142,9 +151,9 @@ def check_button_hover(finger_tip_coords):
                             print("The selected items : ")
                             print(selected_item)
 
-                            if selected_item and not request_in_progress:
-                                request_in_progress = True
-                                # Use threading to run the request asynchronously
+                            if selected_item and not request_in_progress_flag:
+                                request_in_progress_flag = True
+                                # Use threading to run the send_request function asynchronously
                                 threading.Thread(target=send_request, args=(button, selected_item)).start()
                     else:
                         message = {'button': button}
@@ -155,15 +164,140 @@ def check_button_hover(finger_tip_coords):
                 if button in hover_start_time:
                     hover_start_time.pop(button)
 
-                    
+capture_requested_recommand = False
+
+def gen_frames():
+    global camera
+    global capture_requested_recommand
+    camera = cv2.VideoCapture(camera_index)
+    
+    while True:
+        success, frame = camera.read()
+        if not success:
+            break
+        else:
+            frame = cv2.flip(frame, 1)
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
+            for button, coords in buttons.items():
+                cv2.rectangle(frame,
+                            coords['top_left'],
+                            coords['bottom_right'],
+                            (255, 255, 255))
+                   
+            results = hands.process(frame_rgb)
+            finger_tip_coords = None
+
+            if results.multi_hand_landmarks:
+                for hand_landmarks in results.multi_hand_landmarks:
+                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                    h, w, c = frame.shape
+                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
+                    finger_tip_coords = {'x': cx, 'y': cy}
+                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
+                    check_button_hover(finger_tip_coords)
+
+            if capture_requested_recommand:
+                input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+                os.makedirs(input_folder, exist_ok=True)
+                capture_path = os.path.join(input_folder, 'latest_capture.jpg')
+                cv2.imwrite(capture_path, frame)
+                print(f"Image captured and saved to {capture_path}")
+                capture_requested_recommand = False
+                socketio.emit('image_captured', {'message': 'Image captured successfully'})
+
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+            
+    camera.release()
+
+
+capture_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+
+def capture_and_crop_image_for_send():
+    global capture_requested_send, camera
+    # Emit a message to ask the user to adjust their pose
+    socketio.emit('pose_adjustment_needed_send', {'message': 'Please adjust your pose for better capture'})
+    
+    # Wait for 3 seconds
+    time.sleep(3)
+    
+    # Capture the image
+    success, frame = camera.read()
+    if success:
+        cv2.imwrite(CAPTURED_IMAGE_PATH, frame)
+        print(f"Image captured and saved to {CAPTURED_IMAGE_PATH}")
+    else:
+        print("Failed to capture image")
+        return
+    
+    # Crop the image
+    crop_person_for_send(CAPTURED_IMAGE_PATH, CROPPED_IMAGE_PATH)
+
+def crop_person_for_send(input_path, output_path):
+    # Set the device to CPU
+    device = torch.device('cpu')
+
+    # Load the YOLOv8 model and run it on CPU
+    model = YOLO('yolov8n.pt').to(device)
+
+    # Load the image
+    image = cv2.imread(input_path)
+
+    if image is None:
+        print(f"Error: Could not load image from {input_path}")
+        return
+
+    # Get image dimensions
+    image_height, image_width, _ = image.shape
+
+    # Run YOLOv8 inference on the CPU
+    results = model(image)
+
+    # Process the results
+    for result in results:
+        for box in result.boxes:
+            # Class ID 0 is 'person' in YOLO models
+            if int(box.cls) == 0:
+                # Get the bounding box coordinates
+                x_min, y_min, x_max, y_max = map(int, box.xyxy[0])
+
+                # Apply padding (40 pixels) and ensure coordinates stay within image boundaries
+                padding = 40
+                x_min = max(x_min - padding, 0)
+                y_min = max(y_min - padding, 0)
+                x_max = min(x_max + padding, image_width)
+                y_max = min(y_max + padding, image_height)
+
+                # Crop the image to the detected person with padding
+                cropped_image = image[y_min:y_max, x_min:x_max]
+
+                # Save the cropped image
+                cv2.imwrite(output_path, cropped_image)
+                print(f"Cropped image saved to {output_path}")
+
+                # We only need to process the first person detected, so we can break here
+                break
+
+    print("Person cropping completed.")
+
 def send_request(button, selected_item):
-    global request_in_progress
+    global request_in_progress_send
+    print(f"send_request called with button: {button}, selected_item: {selected_item}")
     try:
+        # Run the capture and crop process
+        capture_and_crop_image_for_send()
+        
         # Define the paths and parameters based on the selected_item
-        models_folder = r'D:\OSC\MirwearInterface\static\models'
-        vton_img_path = max([os.path.join(models_folder, f) for f in os.listdir(models_folder) if f.endswith('.jpg')], key=os.path.getmtime)
+        vton_img_path = CROPPED_IMAGE_PATH
         garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
         output_folder = r'D:\OSC\MirwearInterface\static\output'  
+
+        print(f"vton_img_path: {vton_img_path}")
+        print(f"garm_img_path: {garm_img_path}")
+        print(f"output_folder: {output_folder}")
 
         # Determine the category based on the selected item
         with open(r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json', 'r') as f:
@@ -188,18 +322,31 @@ def send_request(button, selected_item):
         
         print("Request completed")
         
-        # Emit a message to inform the client that the image is ready
-        socketio.emit('outfit_image_ready', {'status': 'complete', 'path': os.path.join(output_folder, 'generated_image.webp')})
+        output_file_path = os.path.join(output_folder, 'generated_image.webp')
+        if os.path.exists(output_file_path):
+            print(f"Generated image found at: {output_file_path}")
+            # Emit a message to inform the client that the image is ready
+            socketio.emit('outfit_image_ready', {'status': 'complete', 'path': output_file_path})
+            
+            # Call monitor_folder function to emit the new image
+            monitor_folder(output_folder)
+        else:
+            print(f"Generated image not found at: {output_file_path}")
+            socketio.emit('outfit_image_ready', {'status': 'error', 'message': 'Generated image not found'})
     
     except Exception as e:
         print(f"An error occurred: {e}")
+        import traceback
+        traceback.print_exc()
         socketio.emit('outfit_image_ready', {'status': 'error', 'message': str(e)})
     
     finally:
-        request_in_progress = False
+        request_in_progress_send = False
+        request_in_progress_flag = None
+
 
 def send_request_and_save(vton_img_path, garm_img_path, output_folder, category):
-    client = Client("levihsu/OOTDiffusion", hf_token=hf_token)
+    client = Client("Nouhaila-B1/MirrWearOOTD", hf_token=hf_token)
 
     # Start time before the prediction
     start_time = time.time()
@@ -235,116 +382,25 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
             print(f"Image successfully saved at: {output_file_path}")
 
             # Open and display the image using PIL (optional)
-            image = Image.open(output_file_path)
-            image.show()
+            # image = Image.open(output_file_path)
+            # image.show()
+
+            # Wait for 1 second
+            time.sleep(1)
+
+            # Emit a message in the websocket with the relative image path
+            relative_path = os.path.relpath(output_file_path, start=os.getcwd())
+            socketio.emit('outfit_image_ready_in_request', {'status': 'complete', 'path': relative_path})
+            print('The relative path : ')
+            print(relative_path)
         else:
             print(f"File not found: {image_path}")
+            socketio.emit('outfit_image_ready_in_request', {'status': 'error', 'message': 'Generated image not found'})
     else:
         print(f"Unexpected result format: {result}")
+        socketio.emit('outfit_image_ready_in_request', {'status': 'error', 'message': 'Unexpected result format'})
 
-def gen_frames():
-    global camera
-    camera = cv2.VideoCapture(camera_index)
-    
-    # Start the continuous capture in a separate thread
-    capture_thread = threading.Thread(target=continuous_capture, daemon=True)
-    capture_thread.start()
-    
-    while True:
-        success, frame = camera.read()
-        if not success:
-            break
-        else:
-            frame = cv2.flip(frame, 1)
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-            for button, coords in buttons.items():
-                cv2.rectangle(frame,
-                            coords['top_left'],
-                            coords['bottom_right'],
-                            (255, 255, 255))
-                   
-            results = hands.process(frame_rgb)
-            finger_tip_coords = None
-
-            if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-                    h, w, c = frame.shape
-                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    finger_tip_coords = {'x': cx, 'y': cy}
-                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
-                    check_button_hover(finger_tip_coords)
-
-            # Check if user's upper body is visible
-            pose_results = pose.process(frame_rgb)
-            if pose_results.pose_landmarks:
-                h, w, c = frame.shape
-                upper_body_landmarks = [
-                    mp_pose.PoseLandmark.NOSE,
-                    mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW
-                ]
-                
-                upper_body_visible = all(
-                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
-                )
-                
-                if upper_body_visible:
-                    socketio.emit('user_status', {'status': 'upper_body_visible'})
-                    capture_and_save_image(frame)
-                else:
-                    socketio.emit('user_status', {'status': 'upper_body_not_fully_visible'})
-            else:
-                socketio.emit('user_status', {'status': 'no_pose_detected'})
-
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
-            yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
-    camera.release()
-
-# Add these global variables at the top of your file
-last_capture_time = 0
-capture_interval = 5  # Capture an image every 5 seconds
-capture_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
-
-def capture_and_save_image(frame):
-    global last_capture_time
-    current_time = time.time()
-    if current_time - last_capture_time >= capture_interval:
-        filename = 'capture.jpg'  # Always use the same filename to override
-        filepath = os.path.join(capture_folder, filename)
-        cv2.imwrite(filepath, frame)
-        print(f"Captured image: {filepath}")
-        last_capture_time = current_time
-        socketio.emit('image_captured', {'filepath': filepath})
-
-def continuous_capture():
-    global camera
-    while True:
-        success, frame = camera.read()
-        if success:
-            pose_results = pose.process(cv2.cvtColor(frame, cv2.COLOR_BGR2RGB))
-            if pose_results.pose_landmarks:
-                upper_body_landmarks = [
-                    mp_pose.PoseLandmark.NOSE,
-                    mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW
-                ]
-                
-                upper_body_visible = all(
-                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
-                )
-                
-                if upper_body_visible:
-                    capture_and_save_image(frame)
-        time.sleep(0.1)  # Small delay to prevent excessive CPU usage
+        
 
 
 button_season = {
@@ -402,11 +458,13 @@ arrow_recommand = {
 
 }
 
+
 hover_start_time_recommand = {}
 hover_duration = 0.5  # 1 second hover duration
 current_recommand_mode = 'buttons'
 selected_recommanded_items = {'item': None}
 request_in_progress = False
+capture_requested = False
 
 
 def check_button_hover_recommand(finger_tip_coords):
@@ -449,8 +507,10 @@ def check_button_hover_recommand(finger_tip_coords):
 
 
 def gen_frames_for_recommandation():
-    global selected_recommanded_items
+    global camera_recommand
+    global selected_recommanded_items, capture_requested
     camera = cv2.VideoCapture(0)
+    camera_recommand = camera
     while True:
         success, frame = camera.read()
         if not success:
@@ -458,30 +518,6 @@ def gen_frames_for_recommandation():
         else:
             frame = cv2.flip(frame, 1)
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-            # Check if user's upper body is visible
-            pose_results = pose.process(frame_rgb)
-            if pose_results.pose_landmarks:
-                h, w, c = frame.shape
-                upper_body_landmarks = [
-                    mp_pose.PoseLandmark.NOSE,
-                    mp_pose.PoseLandmark.LEFT_SHOULDER,
-                    mp_pose.PoseLandmark.RIGHT_SHOULDER,
-                    mp_pose.PoseLandmark.LEFT_ELBOW,
-                    mp_pose.PoseLandmark.RIGHT_ELBOW
-                ]
-                
-                upper_body_visible = all(
-                    0 < pose_results.pose_landmarks.landmark[lm].y < 1 for lm in upper_body_landmarks
-                )
-                
-                if upper_body_visible:
-                    socketio.emit('user_status', {'status': 'upper_body_visible'})
-                    capture_and_save_image(frame)
-                else:
-                    socketio.emit('user_status', {'status': 'upper_body_not_fully_visible'})
-            else:
-                socketio.emit('user_status', {'status': 'no_pose_detected'})
 
             # Draw rectangles based on the received positions
             if current_recommand_mode == 'buttons':
@@ -510,16 +546,56 @@ def gen_frames_for_recommandation():
                     cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                     check_button_hover_recommand(finger_tip_coords)
 
+            if capture_requested:
+                input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+                os.makedirs(input_folder, exist_ok=True)
+                capture_path = os.path.join(input_folder, 'latest_capture.jpg')
+                cv2.imwrite(capture_path, frame)
+                print(f"Image captured and saved to {capture_path}")
+                capture_requested = False
+                socketio.emit('image_captured', {'message': 'Image captured successfully'})
+
             ret, buffer = cv2.imencode('.jpg', frame)
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
-            
+
+    camera.release()
+
+camera_recommand = None
+CAPTURED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\imagesformcam\latest_capture.jpg'
+CROPPED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\models\cropped_person_image.jpg'
+
+async def capture_and_crop_image():
+    global camera_recommand
+    # Emit a message to ask the user to adjust their pose
+    socketio.emit('pose_adjustment_needed', {'message': 'Please adjust your pose for better capture'})
+    
+    # Wait for 3 seconds
+    await asyncio.sleep(3)
+    
+    # Capture the image
+    success, frame = camera_recommand.read()
+    if success:
+        # Save the captured frame to the specified path
+        cv2.imwrite(CAPTURED_IMAGE_PATH, frame)
+        print(f"Image captured and saved to {CAPTURED_IMAGE_PATH}")
+    else:
+        print("Failed to capture image")
+        return
+
+    # Crop the captured image asynchronously
+    await asyncio.to_thread(crop_person_from_image)
+
+
+
 def send_request_recommand(button, selected_item):
     global request_in_progress
     print(f"send_request_recommand called with button: {button}, selected_item: {selected_item}")
     try:
+        # Run the capture and crop process asynchronously
+        asyncio.run(capture_and_crop_image())
+        
         # Define the paths and parameters based on the selected_item
         models_folder = r'D:\OSC\MirwearInterface\static\models'
         vton_img_path = max([os.path.join(models_folder, f) for f in os.listdir(models_folder) if f.endswith('.jpg')], key=os.path.getmtime)
@@ -573,6 +649,68 @@ def send_request_recommand(button, selected_item):
     
     finally:
         request_in_progress = False
+
+
+def crop_person_from_image():
+    # Set the device to CPU
+    device = torch.device('cpu')
+
+    # Load the YOLOv8 model and run it on CPU
+    model = YOLO('yolov8n.pt').to(device)
+
+    # Define input and output folders
+    input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+    output_folder = r'D:\OSC\MirwearInterface\static\models'
+
+    # Get the latest image from the input folder
+    latest_image = max([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.endswith('.jpg')], key=os.path.getmtime)
+
+    # Load the image
+    image = cv2.imread(latest_image)
+
+    if image is None:
+        print(f"Error: Could not load image from {latest_image}")
+        return
+
+    # Get image dimensions
+    image_height, image_width, _ = image.shape
+
+    # Run YOLOv8 inference on the CPU
+    results = model(image)
+
+    # Process the results
+    for result in results:
+        for box in result.boxes:
+            # Class ID 0 is 'person' in YOLO models
+            if int(box.cls) == 0:
+                # Get the bounding box coordinates
+                x_min, y_min, x_max, y_max = map(int, box.xyxy[0])
+
+                # Apply padding (20 pixels) and ensure coordinates stay within image boundaries
+                padding = 40
+                x_min = max(x_min - padding, 0)
+                y_min = max(y_min - padding, 0)
+                x_max = min(x_max + padding, image_width)
+                y_max = min(y_max + padding, image_height)
+
+                # Crop the image to the detected person with padding
+                cropped_image = image[y_min:y_max, x_min:x_max]
+
+                # Create the output folder if it doesn't exist
+                os.makedirs(output_folder, exist_ok=True)
+
+                # Define the output path for the cropped image
+                save_path = os.path.join(output_folder, 'cropped_person_image.jpg')
+
+                # Save the cropped image
+                cv2.imwrite(save_path, cropped_image)
+                print(f"Cropped image saved to {save_path}")
+
+                # We only need to process the first person detected, so we can break here
+                break
+
+    print("Person cropping completed.")
+
 
 
 @socketio.on('displayed_images')

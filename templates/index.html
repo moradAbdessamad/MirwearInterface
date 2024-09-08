@@ -46,14 +46,14 @@
           Please hover with your index fingertip for 1 second to click
         </h1>
 
-        <h1 class="title-layout-generating" style="display: none;">
+        <h1 class="title-layout-generating">
           select the item to get dress
         </h1>
 
         <img id="video" src="{{ url_for('video_feed') }}" />
 
-        <div class="image-clothings" style="display: none;">
-            <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image" id="thetryonImage">
+        <div class="image-clothings">
+            <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image" id="thetryonImage" style="display: none;">
         </div>
 
         <div class="buttonsCon">
@@ -133,6 +133,7 @@
         var generatingTitle = document.querySelector('.title-layout-generating');
         var imageClothings = document.querySelector('.image-clothings');
         var titleElement = document.querySelector('.title');
+
 
         // Load the JSON file
         fetch("/static/JSONstyles/itemsByType.json")
@@ -244,70 +245,44 @@
                 updateImages(lastCategory);
             }
         });
+        
+        socket.on('pose_adjustment_needed_send', function (data) {
+          console.log('Received pose_adjustment_needed_send:', data);
+          generatingTitle.textContent = data.message;
+          generatingTitle.style.display = 'block';
+          thetryonImage.style.display = 'none';
+        });
 
         socket.on('outfit_image_ready', function(data) {
-          console.log('Received outfit_image_ready:', data);
+            if (data.status === 'sending') {
+                generatingTitle.textContent = 'Generating the outfit...';
+            } else if (data.status === 'complete') {
+                generatingTitle.textContent = 'Outfit is generated';
+            } else if (data.status === 'error') {
+                generatingTitle.textContent = 'Error: ' + data.message;
+            }
+        });
 
-          if (data.status === 'sending') {
-              showGeneratingMessage("Generating outfit...");
-              imageClothings.style.display = 'none';
-          } else if (data.status === 'complete' && data.path) {
-              // Extract the filename from the full path
-              var filename = data.path.split('\\').pop();
+        socket.on('outfit_image_ready_in_request', function(data) {
+          if (data.status === 'complete') {
+              var thetryonImage = document.getElementById('thetryonImage');
+              // Add a timestamp to prevent caching
+              thetryonImage.src = data.path + '?t=' + new Date().getTime();
+              thetryonImage.style.display = 'block';
               
-              // Construct the relative URL
-              var imageUrl = '/static/output/' + filename;
+              console.log('Image path:', data.path); // Log the image path
+
+              // Add an onload event to check if the image loads successfully
+              thetryonImage.onload = function() {
+                  console.log('Image loaded successfully');
+              };
               
-              // Update the image source
-              thetryonImage.src = imageUrl + '?t=' + new Date().getTime();
-
-              showImageClothings();
-
-              showGeneratingMessage("Outfit generated!");
-
-              setTimeout(function() {
-                  hideGeneratingMessage();
-              }, 5000);
-          } else if (data.status === 'error') {
-              console.error('Error generating image:', data.message);
-              showGeneratingMessage("Error generating outfit. Please try again.");
-              imageClothings.style.display = 'none';
+              thetryonImage.onerror = function() {
+                  console.error('Error loading image');
+              };
           }
         });
 
-          socket.on('user_status', function(data) {
-          console.log('Received user_status:', data);
-          
-          switch(data.status) {
-              case 'upper_body_visible':
-                  updateTitleElement("Great! You're standing correctly.", 'green');
-                  break;
-              case 'upper_body_not_fully_visible':
-                  updateTitleElement("Please adjust your position. Upper body not fully visible.", 'orange');
-                  break;
-              case 'no_pose_detected':
-                  updateTitleElement("No person detected. Please stand in front of the camera.", 'red');
-                  break;
-              default:
-                  updateTitleElement("Please stand in front of the camera.", 'white');
-          }
-          });
-
-          function updateTitleElement(message, color) {
-              titleElement.textContent = message;
-              titleElement.style.color = color;
-              
-              // Clear any existing timeout
-              if (window.titleUpdateTimeout) {
-                  clearTimeout(window.titleUpdateTimeout);
-              }
-              
-              // Set a new timeout to reset the title after 3 seconds
-              window.titleUpdateTimeout = setTimeout(function() {
-                  titleElement.textContent = "Please stand in front of the camera.";
-                  titleElement.style.color = 'white';
-              }, 3000);
-          }
     });
     </script>
   </body>
