@@ -166,10 +166,13 @@ def check_button_hover(finger_tip_coords):
 
 capture_requested_recommand = False
 
+
 def gen_frames():
     global camera
     global capture_requested_recommand
     camera = cv2.VideoCapture(camera_index)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     
     while True:
         success, frame = camera.read()
@@ -189,13 +192,14 @@ def gen_frames():
             finger_tip_coords = None
 
             if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-                    h, w, c = frame.shape
-                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    finger_tip_coords = {'x': cx, 'y': cy}
-                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
-                    check_button_hover(finger_tip_coords)
+                # Process only the first detected hand
+                hand_landmarks = results.multi_hand_landmarks[0]
+                index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                h, w, c = frame.shape
+                cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
+                finger_tip_coords = {'x': cx, 'y': cy}
+                cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
+                check_button_hover(finger_tip_coords)
 
             if capture_requested_recommand:
                 input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
@@ -357,7 +361,7 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
         garm_img=handle_file(garm_img_path),
         category=category,  # Use the determined category
         n_samples=1,
-        n_steps=20,
+        n_steps=30,
         image_scale=2,
         seed=-1,
         api_name="/process_dc"
@@ -538,13 +542,14 @@ def gen_frames_for_recommandation():
             finger_tip_coords = None
 
             if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-                    h, w, _ = frame.shape
-                    cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                    finger_tip_coords = {'x': cx, 'y': cy}
-                    cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
-                    check_button_hover_recommand(finger_tip_coords)
+                # Process only the first detected hand
+                hand_landmarks = results.multi_hand_landmarks[0]
+                index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
+                h, w, _ = frame.shape
+                cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
+                finger_tip_coords = {'x': cx, 'y': cy}
+                cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
+                check_button_hover_recommand(finger_tip_coords)
 
             if capture_requested:
                 input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
@@ -893,7 +898,7 @@ def select_item_by_option(items, option):
 
 # Define the function
 def send_request_and_save_test(vton_img_path, garm_img_path, output_folder, category):
-    client = Client("levihsu/OOTDiffusion", hf_token="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")
+    client = Client("Nouhaila-B1/MirrWearOOTD", hf_token="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")
 
     # Start time before the prediction
     start_time = time.time()
