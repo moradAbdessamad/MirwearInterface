@@ -146,15 +146,18 @@ def check_button_hover(finger_tip_coords):
                 elif time.time() - hover_start_time[button] >= hover_duration:
                     if button in ['option1_1', 'option1_2', 'option1_3']:
                         print(f"{button} is hovered")
+                        print(f"current_category: {current_category}, current_items: {current_items}")
                         if current_category and current_items:
                             selected_item = select_item_by_option(current_items, button)
-                            print("The selected items : ")
-                            print(selected_item)
-
+                            print(f"Selected item: {selected_item}")
+                            print(f"request_in_progress_flag: {request_in_progress_flag}")
                             if selected_item and not request_in_progress_flag:
                                 request_in_progress_flag = True
-                                # Use threading to run the send_request function asynchronously
                                 threading.Thread(target=send_request, args=(button, selected_item)).start()
+                            else:
+                                print("Not sending request. Selected item or request_in_progress_flag condition not met.")
+                        else:
+                            print("Not sending request. current_category or current_items is None.")
                     else:
                         message = {'button': button}
                         print(f"Emitting message: {message}")
@@ -346,7 +349,7 @@ def send_request(button, selected_item):
     
     finally:
         request_in_progress_send = False
-        request_in_progress_flag = None
+        request_in_progress_flag = False  # Change this to False instead of None
 
 
 def send_request_and_save(vton_img_path, garm_img_path, output_folder, category):
@@ -503,6 +506,10 @@ def check_button_hover_recommand(finger_tip_coords):
                             if not request_in_progress:
                                 request_in_progress = True
                                 threading.Thread(target=send_request_recommand, args=(button, selected_recommanded_items['item'])).start()
+                            else:
+                                print("Not sending request. request_in_progress is True.")
+                        else:
+                            print(f"Index {index} is out of range for displayed_images: {displayed_images}")
                     
                     return
             else:
