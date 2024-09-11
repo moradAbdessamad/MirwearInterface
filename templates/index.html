@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Main Page</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" type="text/css" href="../static/styles.css" />
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+      body.loaded #loading-screen {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading-screen">
+      <div class="spinner">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="videoContainer" id="videoContainer">
+        <div class="logo">
+          <svg
+            width="183"
+            height="68"
+            viewBox="0 0 183 68"
+            fill="white"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g clip-path="url(#clip0_162_2)">
+              <path
+                d="M2.79003 67.3276C1.10003 66.4376 0.260028 65.3776 0.260028 64.1376L2.78285e-05 8.05757C2.78285e-05 8.05757 -0.0299722 5.86757 1.88003 4.45757C3.79003 3.04757 7.28003 2.03757 11.2 5.57757L57.07 45.0276L105.45 0.00756836L106.56 13.2776C106.69 14.7776 106.13 16.2576 105.05 17.3076L64.8 56.1876C64.17 56.7276 63.2 57.2476 61.88 57.7476C60.56 58.2476 59.14 58.4976 57.59 58.4976C54.27 58.4976 51.73 57.7776 49.96 56.3276L12.15 23.7376L12.41 64.0976V64.1376C12.41 65.3776 11.57 66.4376 9.88003 67.3276C8.19003 68.2176 4.48003 68.2176 2.79003 67.3276Z"
+                fill="#fff"
+              />
+              <path
+                d="M179.779 0.6775C181.469 1.5675 182.309 2.6275 182.309 3.8675L182.569 59.9475C182.569 59.9475 182.599 62.1375 180.689 63.5475C178.779 64.9575 175.289 65.9675 171.369 62.4275L125.499 22.9775L77.1285 67.9975L76.0185 54.7275C75.8885 53.2275 76.4485 51.7475 77.5285 50.6975L117.779 11.8175C118.409 11.2775 119.379 10.7575 120.699 10.2575C122.019 9.7575 123.439 9.5075 124.989 9.5075C128.309 9.5075 130.849 10.2275 132.619 11.6775L170.429 44.2575L170.169 3.8975V3.8575C170.169 2.6175 171.009 1.5575 172.699 0.6675C174.389 -0.2225 178.099 -0.2225 179.789 0.6675L179.779 0.6775Z"
+                fill="#fff"
+              />
+            </g>
+            <defs>
+              <clipPath id="clip0_162_2">
+                <rect width="182.66" height="67.99" fill="white" />
+              </clipPath>
+            </defs>
+          </svg>
+        </div>
+
+        <h1 class="title">
+          Please hover with your index fingertip for 1 second to click
+        </h1>
+
+        <h1 class="title-layout-generating">select the item to get dress</h1>
+
+        <img id="video" src="{{ url_for('video_feed') }}" />
+
+        <div class="image-clothings">
+          <img
+            src="../static/output/image (1).webp"
+            alt="Generated Image"
+            id="thetryonImage"
+            style="display: none"
+          />
+        </div>
+
+        <div class="buttonsCon">
+          <div id="buttonContainer">
+            <div class="image-container">
+              <img
+                id="button1"
+                class="cloth-image"
+                src="../static/ClothsImageTest/image16.jpg"
+                style="display: inline"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="button2"
+                class="cloth-image"
+                src="../static/ClothsImageTest/image146.jpg"
+                style="display: inline"
+              />
+            </div>
+
+            <div class="image-container">
+              <img
+                id="button3"
+                class="cloth-image"
+                src="../static/ClothsImageTest/image131.jpg"
+                style="display: inline"
+              />
+            </div>
+          </div>
+
+          <div class="rights_button" id="rights_button" style="display: none">
+            <i class="fa-solid fa-circle-arrow-up" id="down-arrow"></i>
+
+            <div class="image-container-rights">
+              <img id="option1_1" class="cloth-image" src="" />
+            </div>
+
+            <div class="image-container-rights">
+              <img id="option1_2" class="cloth-image" src="" />
+            </div>
+
+            <div class="image-container-rights">
+              <img id="option1_3" class="cloth-image" src="" />
+            </div>
+
+            <i class="fa-solid fa-circle-arrow-down" id="up-arrow"></i>
+          </div>
+        </div>
+
+        <button id="recommend" class="recommend-button">Recommend</button>
+      </div>
+    </div>
+    <script
+      src="https://kit.fontawesome.com/5fce5f9bd9.js"
+      crossorigin="anonymous"
+    ></script>
+    <script>
+      window.addEventListener("load", function () {
+        document.body.classList.add("loaded");
+        sendButtonPositions();
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        var socket = io();
+        var jsonData = null;
+        var currentIndex = { top: 0, bottom: 0, foot: 0 };
+        const itemsPerPage = 3;
+        var lastCategory = null;
+        var thetryonImage = document.getElementById("thetryonImage");
+        var generatingTitle = document.querySelector(
+          ".title-layout-generating"
+        );
+        var imageClothings = document.querySelector(".image-clothings");
+        var titleElement = document.querySelector(".title");
+
+        // Load the JSON file
+        fetch("/static/JSONstyles/itemsByType.json")
+          .then((response) => response.json())
+          .then((data) => {
+            jsonData = data;
+            console.log("JSON data loaded:", jsonData);
+          })
+          .catch((error) => console.error("Error loading JSON:", error));
+
+        function updateImages(category) {
+          if (!jsonData) {
+            console.error("JSON data not loaded yet");
+            return;
+          }
+
+          var image1 = document.getElementById("option1_1");
+          var image2 = document.getElementById("option1_2");
+          var image3 = document.getElementById("option1_3");
+
+          // Calculate the remaining items
+          const remainingItems =
+            Object.keys(jsonData[category]).length - currentIndex[category];
+
+          // If there are not enough items left to display, reset the index to 0
+          if (remainingItems < itemsPerPage) {
+            currentIndex[category] = 0;
+          }
+
+          // Get the images from JSON starting at currentIndex[category]
+          const images = Object.keys(jsonData[category]).slice(
+            currentIndex[category],
+            currentIndex[category] + itemsPerPage
+          );
+
+          console.log(
+            `Displaying items ${currentIndex[category] + 1} to ${
+              currentIndex[category] + images.length
+            } for category: ${category}`
+          );
+
+          // Update the src attributes of the images, only if the images exist
+          image1.src = images[0] ? `static/ClothsImageTest/${images[0]}` : "";
+          image2.src = images[1] ? `static/ClothsImageTest/${images[1]}` : "";
+          image3.src = images[2] ? `static/ClothsImageTest/${images[2]}` : "";
+
+          // Optionally, hide the image elements if they have no valid src
+          image1.style.display = images[0] ? "block" : "none";
+          image2.style.display = images[1] ? "block" : "none";
+          image3.style.display = images[2] ? "block" : "none";
+
+          // Toggle arrow visibility
+          document.getElementById("up-arrow").style.display =
+            currentIndex[category] > 0 ? "block" : "none";
+          document.getElementById("down-arrow").style.display =
+            currentIndex[category] + itemsPerPage <
+            Object.keys(jsonData[category]).length
+              ? "block"
+              : "none";
+
+          sendCurrentItemsToServer(category);
+        }
+
+        function sendCurrentItemsToServer(category) {
+          const image1 = document.getElementById("option1_1");
+          const image2 = document.getElementById("option1_2");
+          const image3 = document.getElementById("option1_3");
+
+          const displayedItems = [image1.src, image2.src, image3.src]
+            .filter((src) => src !== "")
+            .map((src) => src.split("/").pop());
+
+          socket.emit("update_displayed_items", {
+            category: category,
+            items: displayedItems,
+          });
+        }
+
+        function showGeneratingMessage(message) {
+          generatingTitle.textContent = message;
+          generatingTitle.style.display = "block";
+        }
+
+        function hideGeneratingMessage() {
+          generatingTitle.style.display = "none";
+        }
+
+        function showImageClothings() {
+          imageClothings.style.display = "block";
+        }
+
+        socket.on("button_hover", function (data) {
+          sendButtonPositions();
+          var rightsImages = document.querySelector("#rights_button");
+          rightsImages.style.display = "flex";
+
+          if (data.button == "button1") {
+            lastCategory = "top";
+            updateImages("top");
+          } else if (data.button == "button2") {
+            lastCategory = "bottom";
+            updateImages("bottom");
+          } else if (data.button == "button3") {
+            lastCategory = "foot";
+            updateImages("foot");
+          } else if (data.button == "recommend") {
+            window.location.href = "/recommandation";
+          } else if (data.button == "up-arrow" && lastCategory) {
+            currentIndex[lastCategory] += itemsPerPage;
+            if (
+              currentIndex[lastCategory] >=
+              Object.keys(jsonData[lastCategory]).length
+            ) {
+              currentIndex[lastCategory] = 0; // Reset to 0 if the end is reached
+            }
+            updateImages(lastCategory);
+          } else if (data.button == "down-arrow" && lastCategory) {
+            if (currentIndex[lastCategory] > 0) {
+              currentIndex[lastCategory] -= itemsPerPage;
+            } else {
+              // Wrap around to the last page if ChangeDown is pressed on the first page
+              currentIndex[lastCategory] = Math.max(
+                0,
+                Object.keys(jsonData[lastCategory]).length - itemsPerPage
+              );
+            }
+            updateImages(lastCategory);
+          }
+        });
+
+        socket.on("pose_adjustment_needed_send", function (data) {
+          console.log("Received pose_adjustment_needed_send:", data);
+          generatingTitle.textContent = data.message;
+          generatingTitle.style.display = "block";
+          thetryonImage.style.display = "none";
+        });
+
+        socket.on("outfit_image_ready", function (data) {
+          if (data.status === "sending") {
+            generatingTitle.textContent = "Generating the outfit...";
+          } else if (data.status === "complete") {
+            generatingTitle.textContent = "Outfit is generated";
+          } else if (data.status === "error") {
+            generatingTitle.textContent = "Error: " + data.message;
+          }
+        });
+
+        socket.on("outfit_image_ready_in_request", function (data) {
+          if (data.status === "complete") {
+            var thetryonImage = document.getElementById("thetryonImage");
+            // Add a timestamp to prevent caching
+            thetryonImage.src = data.path + "?t=" + new Date().getTime();
+            thetryonImage.style.display = "block";
+
+            console.log("Image path:", data.path); // Log the image path
+
+            // Add an onload event to check if the image loads successfully
+            thetryonImage.onload = function () {
+              console.log("Image loaded successfully");
+            };
+
+            thetryonImage.onerror = function () {
+              console.error("Error loading image");
+            };
+          }
+        });
+        function sendButtonPositions() {
+          let buttons = [
+            document.getElementById("button1"),
+            document.getElementById("button2"),
+            document.getElementById("button3"),
+            document.getElementById("recommend"),
+            document.getElementById("up-arrow"),
+            document.getElementById("down-arrow"),
+            document.getElementById("option1_1"),
+            document.getElementById("option1_2"),
+            document.getElementById("option1_3"),
+          ];
+
+          let buttonPositions = buttons.map((button) => {
+            let rect = button.getBoundingClientRect();
+            return {
+              name: button.id,
+              top_left: { x: rect.left, y: rect.top },
+              bottom_right: { x: rect.right, y: rect.bottom },
+            };
+          });
+          console.log("Button positions:", buttonPositions);
+          // Emit button positions to the backend (Python)
+          socket.emit("update_button_positions", buttonPositions);
+        }
+        document.getElementById("option1_1").onload = sendButtonPositions;
+        document.getElementById("option1_2").onload = sendButtonPositions;
+        document.getElementById("option1_3").onload = sendButtonPositions;
+        // Send button positions when the page loads
+        window.onload = sendButtonPositions;
+
+        // Resend positions if window resizes
+        window.onresize = sendButtonPositions;
+      });
+    </script>
+  </body>
+</html>

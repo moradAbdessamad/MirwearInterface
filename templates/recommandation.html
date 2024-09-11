@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}" />
+  <title>Recommandation Page</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet">
+  <style>
+    body.loaded #loading-screen {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loading-screen">
+    <div class="spinner">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="recommandation_outline">
+      <div class="logo" id="logo-outline">
+        <svg width="183" height="68" viewBox="0 0 183 68" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <g clip-path="url(#clip0_162_2)">
+            <path
+              d="M2.79003 67.3276C1.10003 66.4376 0.260028 65.3776 0.260028 64.1376L2.78285e-05 8.05757C2.78285e-05 8.05757 -0.0299722 5.86757 1.88003 4.45757C3.79003 3.04757 7.28003 2.03757 11.2 5.57757L57.07 45.0276L105.45 0.00756836L106.56 13.2776C106.69 14.7776 106.13 16.2576 105.05 17.3076L64.8 56.1876C64.17 56.7276 63.2 57.2476 61.88 57.7476C60.56 58.2476 59.14 58.4976 57.59 58.4976C54.27 58.4976 51.73 57.7776 49.96 56.3276L12.15 23.7376L12.41 64.0976V64.1376C12.41 65.3776 11.57 66.4376 9.88003 67.3276C8.19003 68.2176 4.48003 68.2176 2.79003 67.3276Z"
+              fill="#fff" />
+            <path
+              d="M179.779 0.6775C181.469 1.5675 182.309 2.6275 182.309 3.8675L182.569 59.9475C182.569 59.9475 182.599 62.1375 180.689 63.5475C178.779 64.9575 175.289 65.9675 171.369 62.4275L125.499 22.9775L77.1285 67.9975L76.0185 54.7275C75.8885 53.2275 76.4485 51.7475 77.5285 50.6975L117.779 11.8175C118.409 11.2775 119.379 10.7575 120.699 10.2575C122.019 9.7575 123.439 9.5075 124.989 9.5075C128.309 9.5075 130.849 10.2275 132.619 11.6775L170.429 44.2575L170.169 3.8975V3.8575C170.169 2.6175 171.009 1.5575 172.699 0.6675C174.389 -0.2225 178.099 -0.2225 179.789 0.6675L179.779 0.6775Z"
+              fill="#fff" />
+          </g>
+          <defs>
+            <clipPath id="clip0_162_2">
+              <rect width="182.66" height="67.99" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+      </div>
+      <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;"></h1> 
+
+      <h1 class="title title-recommandatio-clothings" id="title-recommandatio-clothings" style="display: none;"></h1>
+
+      <i class="fa-solid fa-spinner fa-spin-pulse" id="spin-icones"></i>
+      <img src="{{ url_for('video_feed_recommandation') }}" style="width: 100%" id="video-recommandation" />
+
+
+      <div class="image-clothings-recommand">
+        <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image"
+          id="thetryonImageRecommand" style="display: none;">
+      </div>
+
+      <div class="recommandation-buttons-container">
+        <div class="dropdown" id="seasonDropdown">
+          <div class="dropbtn">Season</div>
+          <div class="dropdown-content">
+            <div>Winter</div>
+            <div>Summer</div>
+            <div>Spring</div>
+            <div>Fall</div>
+          </div>
+        </div>
+        <div class="dropdown" id="genderDropdown">
+          <div class="dropbtn">Gender</div>
+          <div class="dropdown-content">
+            <div>Male</div>
+            <div>Female</div>
+            <div>Unisex</div>
+            <div>Kids</div>
+          </div>
+        </div>
+        <div class="dropdown" id="colorDropdown">
+          <div class="dropbtn">Color</div>
+          <div class="dropdown-content">
+            <div>Red</div>
+            <div>Blue</div>
+            <div>Green</div>
+            <div>Yellow</div>
+          </div>
+        </div>
+        <div class="dropdown" id="styleDropdown">
+          <div class="dropbtn">Style</div>
+          <div class="dropdown-content">
+            <div>Casual</div>
+            <div>Formal</div>
+            <div>Sport</div>
+            <div>Vintage</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="arrow-container">
+        <dir class="top-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left arrow-icone"  id="topLeft"></i>
+          <i class="fa-solid fa-circle-arrow-right arrow-icone"  id="topright"></i>
+        </dir>
+
+        <dir class="bottom-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left arrow-icone"  id="bottomLeft"></i>
+          <i class="fa-solid fa-circle-arrow-right arrow-icone"  id="bottomRight"></i>
+        </dir>
+
+        <dir class="shoes-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left arrow-icone"  id="shoesLeft"></i>
+          <i class="fa-solid fa-circle-arrow-right arrow-icone"  id="shoesRight"></i>
+        </dir>
+
+      </div>
+
+      <div class="recommanded-images">
+        <div class="recommanded-image-container">
+          <img id="recommanded-top" class="cloth-image-recommand"
+            src="{{ url_for('static', filename='Cloths/option1_1.png') }}" />
+        </div>
+
+        <div class="recommanded-image-container">
+          <img id="recommanded-bottom" class="cloth-image-recommand"
+            src="{{ url_for('static', filename='Cloths/option1_2.png') }}" />
+        </div>
+
+        <div class="recommanded-image-container">
+          <img id="recommanded-foot" class="cloth-image-recommand"
+            src="{{ url_for('static', filename='Cloths/option1_3.png') }}" />
+        </div>
+
+        <i class="fa-solid fa-shuffle" id="shuffle-icone"></i>
+        <i class="fa-solid fa-circle-notch fa-spin" id="spin-icone-second"></i>
+
+      </div>
+
+
+      <button id="recommend-recommand" class="recommend-button-recommand">Recommend</button>
+
+      <i class="fa-solid fa-rotate-right" id="refresh"></i>
+
+    </div>
+  </div>
+  </div>
+  <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+  <script src="https://kit.fontawesome.com/5fce5f9bd9.js" crossorigin="anonymous"></script>
+  <script>
+    
+    window.addEventListener('load', function () {
+        document.body.classList.add('loaded');
+
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // Establish a connection to the WebSocket
+      var socket = io.connect(window.location.protocol + '//' + window.location.host);
+      socket.on('connect', function () {
+        console.log('Connected to server');
+      });
+      socket.on('disconnect', function () {
+        console.log('Disconnected from server');
+      });
+
+      titleRecommandation = document.getElementById('title_recommandation')
+      spinIcones = document.querySelector('#spin-icones')
+      spinIconeSecond = document.querySelector('#spin-icone-second')
+      shuffleIcone = document.querySelector('#shuffle-icone')
+      var titleElement = document.querySelector('.title-recommandatio-clothings');
+      var tryOnImage = document.getElementById('thetryonImageRecommand');
+
+      // titleRecommandation.style.display = 'block'
+
+      socket.on('process_status', function (status) {
+        if (status.status === 'in_progress') {
+          console.log("Recommendation process is in progress...");
+          // Update the UI to indicate that processing is in progress
+
+          spinIcones.style.display = 'block'
+        } else if (status.status === 'complete') {
+          console.log("Recommendation process is complete.");
+          // Update the UI to indicate that processing is complete
+
+          spinIcones.style.display = 'none'
+
+          var recommandedImages = document.querySelector('.recommanded-images');
+          recommandedImages.style.display = 'flex';
+        }
+      });
+
+      let topIndex = 0;
+      let bottomIndex = 0;
+      let shoesIndex = 0;
+
+      const items = {
+        top: [],
+        bottom: [],
+        foot: []
+      };
+
+      socket.emit('ui_update', { element: 'recommandationButtonsContainer' });
+
+      // Load the JSON file containing the items
+      fetch("{{ url_for('static', filename='JSONstyles/itemsByType.json') }}")
+        .then(response => response.json())
+        .then(data => {
+          items.top = Object.keys(data.top);
+          items.bottom = Object.keys(data.bottom);
+          items.foot = Object.keys(data.foot);
+        })
+        .catch(error => console.error('Error loading JSON:', error));
+
+
+      var selectedItems = {
+        'Season': null,
+        'Gender': null,
+        'Color': null,
+        'Style': null
+      };
+
+      let currentStyleIndex = 1;  // Start with style_1
+      let stylesData = null;      // To store the styles data
+
+      // Listen for the 'button_hover_recommand' event from the server
+      socket.on('button_hover_recommand', function (message) {
+        console.log("Received button_hover_recommand:", message);
+        var buttonName = message.button_recommand;
+
+        if (buttonName === 'recommand') {
+
+          handleRecommendButtonClick();
+        } else if (buttonName === 'shoffle') {
+          // Hide the shuffle icon and display the spin icon
+          shuffleIcone.style.display = 'none';
+          spinIconeSecond.style.display = 'block';
+
+          // Set a timeout to shuffle the images and then revert the icons
+          setTimeout(function () {
+            shuffleImages(); // Call your shuffleImages function
+
+            // After shuffling, display the shuffle icon and hide the spin icon
+            shuffleIcone.style.display = 'block';
+            spinIconeSecond.style.display = 'none';
+          }, 2000); // 2-second delay
+        } else {
+          handleButtonRecommand(buttonName);
+        }
+
+        if (buttonName == 'refresh') {
+          window.location.href = "/recommandation";
+        }
+
+        if (buttonName == 'topright' || buttonName == 'topLeft') {
+          updateImageForArrow('top')
+        } else if (buttonName == 'bottomLeft' || buttonName == 'bottomRight') {
+          updateImageForArrow('bottom')
+        } else if (buttonName == 'shoesLeft' || buttonName == 'shoesRight') {
+          updateImageForArrow('foot')
+        }
+      });
+
+      // Listen for the 'style_recommendations' event from the server
+      socket.on('style_recommendations', function (data) {
+        console.log("Received style recommendations:", data);
+        stylesData = data; // Update the stylesData with the received data
+        currentStyleIndex = 1; // Reset to the first style after receiving new recommendations
+        updateImages(stylesData[`style_${currentStyleIndex}`]);
+      });
+
+      function handleButtonRecommand(buttonName) {
+        // Hide all dropdown contents first
+        var dropdownContents = document.querySelectorAll('.dropdown-content');
+        dropdownContents.forEach(function (content) {
+          content.style.display = 'none';
+        });
+
+        // Determine which category the button corresponds to
+        var category = null;
+        var dropdown = null;
+
+        switch (buttonName.toLowerCase()) {
+          case 'season':
+            dropdown = document.querySelector('#seasonDropdown .dropdown-content');
+            category = 'Season';
+            break;
+          case 'winter':
+          case 'summer':
+          case 'spring':
+          case 'fall':
+            category = 'Season';
+            break;
+          case 'gender':
+            dropdown = document.querySelector('#genderDropdown .dropdown-content');
+            category = 'Gender';
+            break;
+          case 'male':
+          case 'female':
+          case 'unisex':
+          case 'kids':
+            category = 'Gender';
+            break;
+          case 'color':
+            dropdown = document.querySelector('#colorDropdown .dropdown-content');
+            category = 'Color';
+            break;
+          case 'red':
+          case 'blue':
+          case 'green':
+          case 'yellow':
+            category = 'Color';
+            break;
+          case 'style':
+            dropdown = document.querySelector('#styleDropdown .dropdown-content');
+            category = 'Style';
+            break;
+          case 'casual':
+          case 'formal':
+          case 'sport':
+          case 'vintage':
+            category = 'Style';
+            break;
+        }
+
+        if (dropdown) {
+          // Display the relevant dropdown content                
+          if (dropdown.style.display == 'none') {
+            dropdown.style.display = 'flex'
+
+            setTimeout(() => {
+              dropdown.classList.add('animationdropdownContentClass')
+            }, 10)
+          } else {
+            dropdown.classList.remove('animationdropdownContentClass')
+          }
+        }
+
+        if (category && buttonName.toLowerCase() !== category.toLowerCase()) {
+          // If the button name is a specific selection (e.g., "Winter"), update the selectedItems
+          selectedItems[category] = buttonName.charAt(0).toUpperCase() + buttonName.slice(1).toLowerCase();
+          console.log(`Selected ${category}: ${selectedItems[category]}`);
+
+          updateTitleRecommandation();
+        }
+      }
+
+      function handleRecommendButtonClick() {
+        console.log("Recommendation clicked with selections:", selectedItems);
+
+        socket.emit('recommendation_selected', selectedItems);
+
+        titleRecommandation.style.display = 'none'
+
+        updateTitleRecommandation();
+
+        // Reset the selectedItems object after sending
+        selectedItems = {
+          'Season': null,
+          'Gender': null,
+          'Color': null,
+          'Style': null
+        };
+        console.log("Selections reset:", selectedItems);
+
+        // Hide all dropdown contents
+        var dropdownContents = document.querySelectorAll('.dropdown-content');
+        dropdownContents.forEach(function (content) {
+          content.style.display = 'none';
+        });
+
+        // Hide all dropbtn elements
+        var dropbtns = document.querySelectorAll('.dropbtn');
+        dropbtns.forEach(function (btn) {
+          btn.style.display = 'none';
+        });
+
+        var recommandationButtonsContainer = document.querySelector('.recommandation-buttons-container')
+        recommandationButtonsContainer.style.display = "none"
+
+        var recommendButtonRecommand = document.querySelector('.recommend-button-recommand')
+        recommendButtonRecommand.style.display = 'none'
+
+        var refresh = document.querySelector('#refresh')
+        refresh.style.display = "inline "
+
+        arrowIcones = document.querySelector('.arrow-container')
+        arrowIcones.style.display = 'flex'
+
+        //emit a message back to know wich element is displayed the arrow contaoner or the recomandation factors elements
+        if (checkDisplay(recommandationButtonsContainer) == 'flex') {
+          socket.emit('ui_update', { element: 'recommandationButtonsContainer' });
+        } else if (checkDisplay(recommandationButtonsContainer) == 'none') {
+          socket.emit('ui_update', { element: 'arrowIcones' });
+       
+        }
+        sendButtonPositions();
+      }
+
+      function shuffleImages() {
+        // Increment the style index, and loop back to 1 if it exceeds the number of styles
+        if (stylesData) {
+          currentStyleIndex = (currentStyleIndex % Object.keys(stylesData).length) + 1;  // Loop through available styles
+          updateImages(stylesData[`style_${currentStyleIndex}`]);
+        }
+      }
+
+      function updateImages(style) {
+        if (style) {
+          var recommandTop = document.getElementById('recommanded-top');
+          var recommandBottom = document.getElementById('recommanded-bottom');
+          var recommandFoot = document.getElementById('recommanded-foot');
+
+          recommandTop.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.top.image;
+          recommandBottom.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.bottom.image;
+          recommandFoot.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + style.shoes.image;
+
+          // Emit the displayed images
+          emitDisplayedImages();
+        }
+      }
+
+      function checkDisplay(element) {
+        var style = window.getComputedStyle(element);
+        if (style.display === 'flex') {
+          console.log('The element is displayed as flex.');
+          return 'flex';
+        } else if (style.display === 'none') {
+          console.log('The element is hidden (display: none).');
+          return 'none';
+        } else {
+          console.log('The element has a different display style:', style.display);
+          return style.display; // Returning the actual display style if it's something else
+        }
+      }
+
+      function updateImageForArrow(category) {
+        let index;
+        let element;
+
+        switch (category) {
+          case 'top':
+            index = topIndex;
+            element = document.getElementById('recommanded-top');
+            topIndex = (topIndex + 1) % items.top.length;
+            break;
+          case 'bottom':
+            index = bottomIndex;
+            element = document.getElementById('recommanded-bottom');
+            bottomIndex = (bottomIndex + 1) % items.bottom.length;
+            break;
+          case 'foot':
+            index = shoesIndex;
+            element = document.getElementById('recommanded-foot');
+            shoesIndex = (shoesIndex + 1) % items.foot.length;
+            break;
+        }
+
+        const itemName = items[category][index];
+        element.src = "{{ url_for('static', filename='ClothsImageTest/' ) }}" + itemName;
+
+        // Emit the displayed images
+        emitDisplayedImages();
+      }
+
+      function updateTitleRecommandation() {
+        let titleText = 'Selected: ';
+
+        // Loop through each selected item and add it to the title if it's not null
+        for (const [key, value] of Object.entries(selectedItems)) {
+          if (value) { // Only include if the value is not null
+            titleText += `${key}: ${value}, `;
+          }
+        }
+
+        // Remove the trailing comma and space, if any
+        titleText = titleText.trim().replace(/,$/, '');
+
+        // If no items are selected, provide a default message
+        if (titleText === 'Selected:') {
+          titleText = 'No selections made.';
+        }
+
+        // Update the title element with the new text
+        titleRecommandation.textContent = titleText;
+        titleRecommandation.style.display = 'block';
+      }
+
+      // Add this function at the beginning of your script
+      function emitDisplayedImages() {
+        var topImage = document.getElementById('recommanded-top').src.split('/').pop();
+        var bottomImage = document.getElementById('recommanded-bottom').src.split('/').pop();
+        var footImage = document.getElementById('recommanded-foot').src.split('/').pop();
+
+        socket.emit('displayed_images', [topImage, bottomImage, footImage]);
+      }
+
+      socket.on('outfit_image_ready_recommand', function (data) {
+        console.log('Received outfit_image_ready_recommand:', data);
+
+        var titleElement = document.querySelector('.title-recommandatio-clothings');
+
+        switch (data.status) {
+          case 'sending':
+            titleElement.textContent = "Generating outfit...";
+            titleElement.style.color = 'orange';
+            tryOnImage.style.display = 'none';
+            break;
+          case 'complete':
+            titleElement.textContent = "Outfit generation completed!";
+            titleElement.style.color = 'green';
+            break;
+          case 'error':
+            titleElement.textContent = "Error generating outfit: " + data.message;
+            titleElement.style.color = 'red';
+            break;
+          default:
+            titleElement.textContent = "Waiting for outfit generation...";
+            titleElement.style.color = 'white';
+        }
+      });
+
+      socket.on('outfit_image_ready_in_request', function(data) {
+        console.log('Received outfit_image_ready_in_request:', data);
+        if (data.status === 'complete') {
+            var tryOnImage = document.getElementById('thetryonImageRecommand'); // Use correct ID
+            // Add a timestamp to prevent caching
+            tryOnImage.src = data.path + '?t=' + new Date().getTime();
+            tryOnImage.style.display = 'block';
+            
+            console.log('Image path:', data.path); // Log the image path
+
+            // Add an onload event to check if the image loads successfully
+            tryOnImage.onload = function() {
+                console.log('Image loaded successfully');
+                titleElement.textContent = "Try-on completed!";
+                titleElement.style.color = 'green';
+            };
+            
+            tryOnImage.onerror = function() {
+                console.error('Error loading image');
+                titleElement.textContent = "Error in try-on process";
+                titleElement.style.color = 'red';
+                tryOnImage.style.display = 'none';
+            };
+        } else {
+            titleElement.textContent = "Error in try-on process";
+            titleElement.style.color = 'red';
+            document.getElementById('thetryonImageRecommand').style.display = 'none'; // Use correct ID
+        }
+      });
+
+      socket.on('pose_adjustment_needed', function (data) {
+        console.log('Received pose_adjustment_needed:', data);
+
+        var titleElement = document.querySelector('.title-recommandatio-clothings');
+        titleElement.textContent = data.message;
+        titleElement.style.color = 'orange';
+      });
+
+      function sendButtonPositions() {
+          let buttons = [
+            document.getElementById("topLeft"),
+            document.getElementById("topright"),
+            document.getElementById("bottomLeft"),
+            document.getElementById("bottomRight"),
+            document.getElementById("shoesLeft"),
+            document.getElementById("shoesRight"),
+          ];
+          console.log("Buttons:", buttons);
+          let buttonPositions = buttons.map((button) => {
+            let rect = button.getBoundingClientRect();
+            return {
+              name: button.id,
+              top_left: { x: rect.left - 200, y: rect.top },
+              bottom_right: { x: rect.right - 200, y: rect.bottom },
+            };
+          });
+          console.log("Button positions:", buttonPositions);
+          // Emit button positions to the backend (Python)
+          socket.emit("update_recommand_button_positions", buttonPositions);
+        }
+        document.getElementById("option1_1").onload = sendButtonPositions;
+        document.getElementById("option1_2").onload = sendButtonPositions;
+        document.getElementById("option1_3").onload = sendButtonPositions;
+        // Send button positions when the page loads
+        window.onload = sendButtonPositions;
+
+        // Resend positions if window resizes
+        window.onresize = sendButtonPositions;
+    });    
+  </script>
+</body>
+
+</html>
