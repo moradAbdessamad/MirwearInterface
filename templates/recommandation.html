@@ -48,7 +48,7 @@
           </defs>
         </svg>
       </div>
-      <h1 class="title" class="title_recommandation" id="title_recommandation">Hello world</h1>
+      <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;">Hello world gggg </h1>
 
       <h1 class="title title-recommandatio-clothings" id="title-recommandatio-clothings">Hello world</h1>
 
@@ -227,6 +227,7 @@
 
       // Listen for the 'button_hover_recommand' event from the server
       socket.on('button_hover_recommand', function (message) {
+
         var buttonName = message.button_recommand;
 
         if (buttonName === 'recommand') {
@@ -554,8 +555,6 @@
         titleElement.textContent = data.message;
         titleElement.style.color = 'orange';
       });
-
-
     });    
   </script>
 </body>

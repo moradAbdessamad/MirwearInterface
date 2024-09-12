@@ -1,132 +1,132 @@
 {
     "style_1": {
         "top": {
-            "image": "image100.jpg",
-            "type": "Dress shirt",
-            "gender": "Men",
-            "color": "Light gray",
+            "image": "image1.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Rose",
             "season": null,
-            "style": "Daywear"
+            "style": "Athletic Luxe"
         },
         "bottom": {
-            "image": "image116.jpg",
+            "image": "image101.jpg",
             "type": "Jeans",
             "gender": "Men",
-            "color": "Denim",
+            "color": "Dark blue",
             "season": null,
-            "style": "Denim"
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image102.jpg",
-            "type": "Espadrilles",
-            "gender": "Men",
-            "color": "Navy",
+            "image": "image100.jpg",
+            "type": "Sneakers",
+            "gender": "Both",
+            "color": "Pastel blue",
             "season": null,
-            "style": "Athleisure"
+            "style": "Sportswear"
         }
     },
     "style_2": {
         "top": {
-            "image": "image119.jpg",
-            "type": "Henley shirt",
-            "gender": "Women",
-            "color": "Beige",
+            "image": "image111.jpg",
+            "type": "Suit jacket",
+            "gender": "Men",
+            "color": "Burgundy",
             "season": null,
-            "style": "Capsule Wardrobe"
+            "style": "Formalwear"
         },
         "bottom": {
-            "image": "image125.jpg",
-            "type": "Culottes",
-            "gender": "Women",
-            "color": "Peacock blue",
+            "image": "image103.jpg",
+            "type": "Dress pants",
+            "gender": "Men",
+            "color": "Dark gray",
             "season": null,
             "style": "Luxe Loungewear"
         },
         "shoes": {
-            "image": "image89.jpg",
-            "type": "Stilettos",
-            "gender": "Women",
-            "color": "Hot pink",
-            "season": null,
-            "style": "Occasionwear"
-        }
-    },
-    "style_3": {
-        "top": {
-            "image": "image150.jpg",
-            "type": "T-shirt",
-            "gender": "Men",
-            "color": "Cerulean",
-            "season": null,
-            "style": "Refined"
-        },
-        "bottom": {
-            "image": "image153.jpg",
-            "type": "Dress pants",
-            "gender": "Men",
-            "color": "Jet black",
-            "season": null,
-            "style": "Tailored Casual"
-        },
-        "shoes": {
-            "image": "image141.jpg",
+            "image": "image121.jpg",
             "type": "Derby shoes",
-            "gender": "Men",
+            "gender": "Both",
             "color": "Jet black",
             "season": null,
             "style": "Bespoke"
         }
     },
-    "style_4": {
+    "style_3": {
         "top": {
-            "image": "image146.jpg",
-            "type": "Dress shirt",
-            "gender": "Men",
-            "color": "Light gray",
-            "season": null,
-            "style": "Daywear"
-        },
-        "bottom": {
-            "image": "image63.jpg",
-            "type": "Long sleeve shirt",
+            "image": "image110.png",
+            "type": "Blouse",
             "gender": "Women",
-            "color": "Powder blue",
+            "color": "Pastel lavender",
             "season": null,
             "style": "Occasionwear"
         },
-        "shoes": {
-            "image": "image42.png",
-            "type": "Sneakers",
-            "gender": "Both",
-            "color": "Powder blue",
-            "season": null,
-            "style": "Athleisure"
-        }
-    },
-    "style_5": {
-        "top": {
-            "image": "image51.jpeg",
-            "type": "T-shirt",
-            "gender": "Men",
-            "color": "Dark green",
-            "season": null,
-            "style": "Retro-futuristic"
-        },
         "bottom": {
-            "image": "image134.jpg",
+            "image": "image189.jpg",
             "type": "Palazzo pants",
-            "gender": "Men",
+            "gender": "Women",
             "color": "Taupe",
             "season": null,
             "style": "Luxe Loungewear"
         },
         "shoes": {
-            "image": "image132.jpg",
-            "type": "Monk strap shoes",
-            "gender": "Men",
-            "color": "Aubergine",
+            "image": "image201.jpg",
+            "type": "Ballet flats",
+            "gender": "Women",
+            "color": "Jet black",
             "season": null,
-            "style": "Bespoke"
+            "style": "Occasionwear"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image15.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Navy",
+            "season": null,
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image143.jpg",
+            "type": "Wide-leg pants",
+            "gender": "Women",
+            "color": "Navy",
+            "season": null,
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image160.jpg",
+            "type": "Espadrilles",
+            "gender": "Women",
+            "color": "Jet black",
+            "season": null,
+            "style": "Athletic Luxe"
+        }
+    },
+    "style_5": {
+        "top": {
+            "image": "image13.jpg",
+            "type": "Polo shirt",
+            "gender": "Men",
+            "color": "Navy",
+            "season": null,
+            "style": "Preppy"
+        },
+        "bottom": {
+            "image": "image109.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Dark blue",
+            "season": null,
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image131.jpg",
+            "type": "Sneakers",
+            "gender": "Both",
+            "color": "Navy",
+            "season": null,
+            "style": "Athletic Luxe"
         }
     }
 }

@@ -15,6 +15,7 @@ body, html {
 
 .container {
     width: 100%;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,7 +30,8 @@ body, html {
     align-items: center;
     justify-content: center;
     position: relative;
-    width: 60%;
+    width: 100%;
+    height: 100%;
     /* border: solid 1px gray; */
 }
 
@@ -47,7 +49,7 @@ body, html {
 
 .title {
     position: absolute;
-    top: 65px;
+    top: 150px;
     background-color: #2b212f;
     border-radius: 10px;
     padding: 10px;
@@ -58,8 +60,9 @@ body, html {
 }
 
 #video {
-    width: 100%;
-    height: 100%;
+    width: 100vw; /* Full viewport width */
+    height: 100vh;
+    object-fit: cover;
 }
 
 .buttonsCon {
@@ -113,7 +116,7 @@ body, html {
 .recommend-button, .recommend-button-recommand {
     display: block;
     position: absolute;
-    bottom: 20px;
+    bottom: 100px;
     background-color: #f5ac72;
     padding: 10px;
     border-radius: 10px;
@@ -210,7 +213,7 @@ body, html {
     display: block;
     z-index: 1;
     position: absolute;
-    top: 17px;
+    top: 100px;
     background-color: #2b212f;
     border-radius: 10px;
     padding: 10px;
@@ -292,13 +295,26 @@ body, html {
     justify-content: center;
     align-items: center;
     position: relative;
-    width: 60%;
+    width: 100%;
+    height: 100%;
 }
+
+#video-recommandation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; /* Full viewport width */
+    height: 100%; /* Full viewport height */
+    object-fit: fill; /* Ensure video covers the area without distortion */
+    z-index: -1; /* Place it behind other elements */
+  }
+  
 
 .title_recommandation {
     border: solid 2px green;
-    
 }
+
+
 
 #title_recommandation {
     top: 100px;
@@ -307,7 +323,7 @@ body, html {
 .recommandation-buttons-container {
     display: flex;
     position: absolute;
-    top: 216px;
+    top: 449px;
     /* background-color: #f5ac72; */
     /* border-radius: 11px; */
     color: #fff;
@@ -420,7 +436,7 @@ body, html {
     padding: 10px;
     position: absolute;
     border-radius: 20px;
-    bottom: 20px;
+    bottom: 100px;
     display: none;
 }
 
@@ -547,3 +563,15 @@ body, html {
        transform: rotate(360deg) translateY(-200%);
     }
  }
+
+ #application {
+    /* border: solid 1px red; */
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    font-size: 20px;
+    background-color: #F5AC72;
+    padding: 10px;
+    border-radius: 10px;
+    color: #fff;
+}

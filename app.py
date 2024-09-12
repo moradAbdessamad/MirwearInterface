@@ -112,18 +112,18 @@ def check_user_in_outline_v1():
     
 
 
-
 buttons = {
-    'Top': {'top_left': (13, 156), 'bottom_right': (60, 210)},
-    'Bottom': {'top_left': (13, 200), 'bottom_right': (60, 286)},
-    'Foot': {'top_left': (13, 280), 'bottom_right': (60, 333)},
-    'Recommend': {'top_left': (267, 419), 'bottom_right': (385, 462)},
-    'Changedown': {'top_left': (567, 395), 'bottom_right': (607, 435)},
-    'ChangeUp': {'top_left': (559, 55), 'bottom_right': (599, 95)},
-    'option1_1': {'top_left': (545, 129), 'bottom_right': (617, 205)},
-    'option1_2': {'top_left': (545, 216), 'bottom_right': (617, 295)},
-    'option1_3': {'top_left': (545, 303), 'bottom_right': (617, 385)},
+    'Top': {'top_left': (657, 462), 'bottom_right': (723, 505)},
+    'Bottom': {'top_left': (657, 515), 'bottom_right': (723, 558)},
+    'Foot': {'top_left':  (657, 568), 'bottom_right':(723, 611)},
+    'Recommend': {'top_left': (925, 1051), 'bottom_right': (1061, 1097)},
+    'Changedown': {'top_left': (1194, 669), 'bottom_right': (1229, 706)},
+    'ChangeUp': {'top_left': (1194, 388), 'bottom_right':  (1229, 425)},
+    'option1_1': {'top_left': (1175, 429), 'bottom_right': (1244, 501)},
+    'option1_2': {'top_left': (1175, 511), 'bottom_right': (1244, 583)},
+    'option1_3': {'top_left': (1175, 593), 'bottom_right': (1244, 665)},
 }
+
 
 request_in_progress_flag = None
 capture_requested_send = False
@@ -174,8 +174,10 @@ def gen_frames():
     global camera
     global capture_requested_recommand
     camera = cv2.VideoCapture(camera_index)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Changed from 1480 to 1080
+    
+    mp_hands = mp.solutions.hands
     
     while True:
         success, frame = camera.read()
@@ -195,12 +197,13 @@ def gen_frames():
             finger_tip_coords = None
 
             if results.multi_hand_landmarks:
-                # Process only the first detected hand
+                # Process only the first detected hand for finger tip
                 hand_landmarks = results.multi_hand_landmarks[0]
                 index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
                 h, w, c = frame.shape
                 cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                 finger_tip_coords = {'x': cx, 'y': cy}
+                # print((cx, cy))
                 cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                 check_button_hover(finger_tip_coords)
 
@@ -324,8 +327,13 @@ def send_request(button, selected_item):
         # Emit a message to inform the client that the request is being sent
         socketio.emit('outfit_image_ready', {'status': 'sending', 'message': 'Request is being sent'})
         
-        # Run the send_request_and_save function
-        send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
+        # Run the appropriate function based on the category
+        if category == 'Lower-body':
+            print("Sending request with send_request_and_save function")
+            send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
+        else:
+            print("Sending request with send_request_and_save_for_upperbody function")
+            send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_folder)
         
         print("Request completed")
         
@@ -364,7 +372,7 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
         garm_img=handle_file(garm_img_path),
         category=category,  # Use the determined category
         n_samples=1,
-        n_steps=30,
+        n_steps=20,
         image_scale=2,
         seed=-1,
         api_name="/process_dc"
@@ -407,62 +415,111 @@ def send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
         print(f"Unexpected result format: {result}")
         socketio.emit('outfit_image_ready_in_request', {'status': 'error', 'message': 'Unexpected result format'})
 
+
+
+def send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_folder):
+    client = Client("Nouhaila-B1/MirrWearOOTD", hf_token=hf_token)
+
+    # Start time before the prediction
+    start_time = time.time()
+
+    # Run the prediction
+    result = client.predict(
+        vton_img=handle_file(vton_img_path),
+        garm_img=handle_file(garm_img_path),
+        n_samples=1,
+        n_steps=20,
+        image_scale=2,
+        seed=-1,
+        api_name="/process_hd"
+    )
+
+    # End time after the prediction
+    end_time = time.time()
+
+    # Calculate the time taken
+    time_taken = end_time - start_time
+    print(f"Time taken for the request: {time_taken:.2f} seconds")
+
+    # Check if the result is a list and contains a dictionary with the image path
+    if isinstance(result, list) and len(result) > 0 and 'image' in result[0]:
+        image_path = result[0]['image']  # Access the image path
+        output_file_path = os.path.join(output_folder, 'generated_image.webp')  # Define the path to save the image
+
+        # Check if the source image file exists
+        if os.path.exists(image_path):
+            # Copy the image to the output folder
+            shutil.copy(image_path, output_file_path)
+            print(f"Image successfully saved at: {output_file_path}")
+
+            # Wait for 1 second
+            time.sleep(1)
+
+            # Emit a message in the websocket with the relative image path
+            relative_path = os.path.relpath(output_file_path, start=os.getcwd())
+            socketio.emit('outfit_image_ready_in_request', {'status': 'complete', 'path': relative_path})
+            print('The relative path : ')
+            print(relative_path)
+        else:
+            print(f"File not found: {image_path}")
+            socketio.emit('outfit_image_ready_in_request', {'status': 'error', 'message': 'Generated image not found'})
+    else:
+        print(f"Unexpected result format: {result}")
+        socketio.emit('outfit_image_ready_in_request', {'status': 'error', 'message': 'Unexpected result format'})
+
+# button_season = {
+#     'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
+#     'summer': {'top_left': (130, 226), 'bottom_right': (200, 295)},
+#     'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
+#     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
+# }
         
-
-
-button_season = {
-    'winter': {'top_left': (130, 225), 'bottom_right': (200, 251)},
-    'summer': {'top_left': (130, 226), 'bottom_right': (200, 295)},
-    'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
-    'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
-}
-
 buttons_recommand = {
-    'Season': {'top_left': (150, 156), 'bottom_right': (221, 185)},
-    'Gender': {'top_left': (240, 156), 'bottom_right': (315, 185)},
-    'Color': {'top_left': (330, 156), 'bottom_right': (409, 185)},
-    'Style': {'top_left': (420, 156), 'bottom_right': (493, 185)},
+    'Season': {'top_left': (175, 114), 'bottom_right': (233, 126)},
+    'winter': {'top_left': (175, 132), 'bottom_right': (233, 137)},
+    'summer': {'top_left': (175, 142), 'bottom_right': (233, 147)},
+    'spring': {'top_left': (175, 152), 'bottom_right': (233, 157)},
+    'fall': {'top_left': (175, 162), 'bottom_right': (233, 167)},
 
-    'winter': {'top_left': (150, 200), 'bottom_right': (223, 222)},
-    'summer': {'top_left': (150, 237), 'bottom_right': (223, 263)},
-    'spring': {'top_left': (150, 274), 'bottom_right': (223, 304)},
-    'fall': {'top_left': (150, 311), 'bottom_right': (223, 345)},
+    'Gender': {'top_left':  (252, 114), 'bottom_right': (308, 126)},
+    'male': {'top_left': (252, 132), 'bottom_right': (308, 137)},
+    'female': {'top_left': (252, 142), 'bottom_right': (308, 147)},
+    'unisex': {'top_left': (252, 152), 'bottom_right': (308, 157)},
+    'kids': {'top_left': (252, 162), 'bottom_right': (308, 167)},
 
-    'male': {'top_left': (246, 200), 'bottom_right': (314, 222)},
-    'female': {'top_left': (246, 237), 'bottom_right': (314, 260)},
-    'unisex': {'top_left': (246, 274), 'bottom_right': (314, 298)},
-    'kids': {'top_left': (246, 311), 'bottom_right': (314, 336)},
+    'Color': {'top_left': (329, 114), 'bottom_right': (383, 126)},
+    'red': {'top_left': (329, 132), 'bottom_right': (383, 137)},
+    'blue': {'top_left': (329, 142), 'bottom_right': (383, 147)},
+    'green': {'top_left': (329, 152), 'bottom_right': (383, 157)},
+    'yellow': {'top_left': (329, 162), 'bottom_right': (383, 167)},
 
-    'red': {'top_left': (338, 200), 'bottom_right': (407, 222)},
-    'blue': {'top_left': (338, 237), 'bottom_right': (407, 260)},
-    'green': {'top_left': (338, 274), 'bottom_right': (407, 298)},
-    'yellow': {'top_left': (338, 311), 'bottom_right': (407, 336)},
+    'Style': {'top_left':  (406, 114), 'bottom_right': (458, 126)},
+    'casual': {'top_left': (406, 132), 'bottom_right': (458, 137)},
+    'formal': {'top_left': (406, 142), 'bottom_right': (458, 147)},
+    'sport': {'top_left': (406, 152), 'bottom_right': (458, 157)},
+    'vintage': {'top_left': (406, 162), 'bottom_right': (458, 167)},
 
-    'casual': {'top_left': (430, 200), 'bottom_right': (493, 222)},
-    'formal': {'top_left': (430, 237), 'bottom_right': (493, 260)},
-    'sport': {'top_left': (430, 274), 'bottom_right': (493, 298)},
-    'vintage': {'top_left': (430, 311), 'bottom_right': (493, 336)},
-
-    'recommand': {'top_left': (274, 431), 'bottom_right': (362, 460)},
-
-    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
+    'recommand': {'top_left': (152, 431), 'bottom_right': (362, 460)},
 }
 
 arrow_recommand = {
-    'topLeft': {'top_left': (490, 150), 'bottom_right': (520, 180)},
-    'topright': {'top_left': (123, 147), 'bottom_right': (153, 177)},
+    'topLeft': {'top_left': (118, 191), 'bottom_right': (155, 228)},
+    'topright': {'top_left': (481, 188), 'bottom_right': (518, 225)},
+
     'bottomLeft': {'top_left': (483, 226), 'bottom_right': (513, 256)},
     'bottomRight': {'top_left': (130, 225), 'bottom_right': (160, 255)},
-    'shoesLeft': {'top_left': (486, 303), 'bottom_right': (516, 333)},
-    'shoesRight': {'top_left': (118, 301), 'bottom_right': (148, 331)},
-    'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)},
+    
+    'shoesLeft': {'top_left': (121, 255), 'bottom_right': (158, 292)},
+    'shoesRight': {'top_left': (479, 258), 'bottom_right': (516, 295)},
+  
+    'shoffle': {'top_left': (574, 288), 'bottom_right': (594, 308)},
 
     'refresh': {'top_left': (274, 431), 'bottom_right': (362, 460)},
-
-    'topRecommandItem': {'top_left': (530, 100), 'bottom_right': (609, 175)},
-    'bottomRecommandItem': {'top_left':  (530, 185), 'bottom_right': (609, 260)},
-    'footRecommandItem': {'top_left': (530, 270), 'bottom_right': (609, 345)},
-
+    
+    # (552, 191) (620, 217)
+    'topRecommandItem': {'top_left': (552, 191), 'bottom_right': (620, 217)}, 
+    'bottomRecommandItem': {'top_left':  (552, 223), 'bottom_right': (624, 251)},
+    'footRecommandItem': {'top_left': (552, 260), 'bottom_right': (622, 283)},
 }
 
 
@@ -536,7 +593,7 @@ def gen_frames_for_recommandation():
                     cv2.rectangle(frame, 
                                 coords['top_left'], 
                                 coords['bottom_right'], 
-                                (255, 255, 255), 1)  # White rectangle with thickness of 1
+                                (0, 0, 0), 2)  # White rectangle with thickness of 1
 
             if current_recommand_mode == 'arrows':
                 for button, coords in arrow_recommand.items():
@@ -544,6 +601,8 @@ def gen_frames_for_recommandation():
                                 coords['top_left'],
                                 coords['bottom_right'],
                                 (255, 255, 255), 1)      
+                    
+            # print("The frame has been finish drowing")
                 
             results = hands.process(frame_rgb)
             finger_tip_coords = None
@@ -555,6 +614,8 @@ def gen_frames_for_recommandation():
                 h, w, _ = frame.shape
                 cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                 finger_tip_coords = {'x': cx, 'y': cy}
+                # print("the finger tip index")
+                # print((cx, cy))
                 cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                 check_button_hover_recommand(finger_tip_coords)
 
@@ -637,8 +698,13 @@ def send_request_recommand(button, selected_item):
         socketio.emit('outfit_image_ready_recommand', {'status': 'sending', 'message': 'Request is being sent'})
         
         # Run the send_request_and_save function
-        send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
-        
+        if category == 'Lower-body':
+            print("Sending request with send_request_and_save function")
+            send_request_and_save(vton_img_path, garm_img_path, output_folder, category)
+        else:
+            print("Sending request with send_request_and_save_for_upperbody function")
+            send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_folder)      
+
         print("Request completed")
         
         output_file_path = os.path.join(output_folder, 'generated_image.webp')
