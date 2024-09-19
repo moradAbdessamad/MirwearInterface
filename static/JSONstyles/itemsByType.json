@@ -575,6 +575,12 @@
             "gender": "Men",
             "color": "Powder blue",
             "style": "Workwear"
+        },
+        "adamTop.jpeg": {
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Olive drab",
+            "style": "Military"
         }
     },
     "bottom": {
@@ -835,6 +841,12 @@
             "gender": "Men",
             "color": "Jet black",
             "style": "Luxe Loungewear"
+        },
+        "imageAdam.jpeg": {
+            "type": "Cargo pants",
+            "gender": "Men",
+            "color": "Khaki",
+            "style": "Officewear"
         }
     },
     "foot": {

@@ -9,12 +9,12 @@
             "style": "Athletic Luxe"
         },
         "bottom": {
-            "image": "image101.jpg",
-            "type": "Jeans",
-            "gender": "Men",
-            "color": "Dark blue",
+            "image": "image103.jpg",
+            "type": "Leggings",
+            "gender": "Women",
+            "color": "Black",
             "season": null,
-            "style": "Capsule Wardrobe"
+            "style": "Luxe Loungewear"
         },
         "shoes": {
             "image": "image100.jpg",
@@ -27,38 +27,38 @@
     },
     "style_2": {
         "top": {
-            "image": "image111.jpg",
-            "type": "Suit jacket",
-            "gender": "Men",
-            "color": "Burgundy",
+            "image": "image15.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Navy",
             "season": null,
-            "style": "Formalwear"
+            "style": "Daywear"
         },
         "bottom": {
-            "image": "image103.jpg",
-            "type": "Dress pants",
+            "image": "image147.jpg",
+            "type": "Jeans",
             "gender": "Men",
-            "color": "Dark gray",
+            "color": "Dark blue",
             "season": null,
-            "style": "Luxe Loungewear"
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image121.jpg",
-            "type": "Derby shoes",
+            "image": "image131.jpg",
+            "type": "Sneakers",
             "gender": "Both",
-            "color": "Jet black",
+            "color": "Navy",
             "season": null,
-            "style": "Bespoke"
+            "style": "Athletic Luxe"
         }
     },
     "style_3": {
         "top": {
-            "image": "image110.png",
+            "image": "image183.jpg",
             "type": "Blouse",
             "gender": "Women",
-            "color": "Pastel lavender",
+            "color": "Powder blue",
             "season": null,
-            "style": "Occasionwear"
+            "style": "Nightwear"
         },
         "bottom": {
             "image": "image189.jpg",
@@ -75,58 +75,6 @@
             "color": "Jet black",
             "season": null,
             "style": "Occasionwear"
-        }
-    },
-    "style_4": {
-        "top": {
-            "image": "image15.jpg",
-            "type": "T-shirt",
-            "gender": "Both",
-            "color": "Navy",
-            "season": null,
-            "style": "Daywear"
-        },
-        "bottom": {
-            "image": "image143.jpg",
-            "type": "Wide-leg pants",
-            "gender": "Women",
-            "color": "Navy",
-            "season": null,
-            "style": "Capsule Wardrobe"
-        },
-        "shoes": {
-            "image": "image160.jpg",
-            "type": "Espadrilles",
-            "gender": "Women",
-            "color": "Jet black",
-            "season": null,
-            "style": "Athletic Luxe"
-        }
-    },
-    "style_5": {
-        "top": {
-            "image": "image13.jpg",
-            "type": "Polo shirt",
-            "gender": "Men",
-            "color": "Navy",
-            "season": null,
-            "style": "Preppy"
-        },
-        "bottom": {
-            "image": "image109.jpg",
-            "type": "Jeans",
-            "gender": "Men",
-            "color": "Dark blue",
-            "season": null,
-            "style": "Capsule Wardrobe"
-        },
-        "shoes": {
-            "image": "image131.jpg",
-            "type": "Sneakers",
-            "gender": "Both",
-            "color": "Navy",
-            "season": null,
-            "style": "Athletic Luxe"
         }
     }
 }

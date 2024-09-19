@@ -184,9 +184,24 @@ def classify_image(image_path, text_labels):
     best_match = text_labels[probs.argmax()]
     return best_match
 
+def load_existing_results():
+    """Load existing results from the JSON file."""
+    try:
+        with open(output_json_file, 'r') as f:
+            return json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError):
+        return {}
+
 def process_images():
-    """Processes all images in the folder and saves each result to the JSON file immediately."""
+    """Processes only new images in the folder and saves each result to the JSON file immediately."""
+    global classification_results
+    classification_results = load_existing_results()
+    
     for i, image_file in enumerate(image_files, start=1):
+        if image_file in classification_results:
+            print(f"Skipping {i}/{len(image_files)}: {image_file} (already processed)")
+            continue
+        
         image_path = os.path.join(image_folder, image_file)
         
         # Classify the image in all categories
@@ -221,14 +236,6 @@ def save_results_to_json():
     """Save the classification results to a JSON file."""
     with open(output_json_file, 'w') as f:
         json.dump(classification_results, f, indent=4)
-
-def clear_json_file():
-    """Clears the content of the JSON file."""
-    with open(output_json_file, 'w') as f:
-        json.dump({}, f)
-
-# Clear the JSON file content
-clear_json_file()
 
 # Process all images
 process_images()

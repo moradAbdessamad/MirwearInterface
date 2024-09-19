@@ -201,9 +201,9 @@
           image2.style.display = images[1] ? "block" : "none";
           image3.style.display = images[2] ? "block" : "none";
       
-          // Toggle arrow visibility
-          document.getElementById("up-arrow").style.display = (currentIndex[category] > 0) ? "block" : "none";
-          document.getElementById("down-arrow").style.display = (currentIndex[category] + itemsPerPage < Object.keys(jsonData[category]).length) ? "block" : "none";
+          // Remove the arrow visibility toggle
+          // document.getElementById("up-arrow").style.display = (currentIndex[category] > 0) ? "block" : "none";
+          // document.getElementById("down-arrow").style.display = (currentIndex[category] + itemsPerPage < Object.keys(jsonData[category]).length) ? "block" : "none";
 
           sendCurrentItemsToServer(category);
         } 
@@ -240,6 +240,20 @@
             var rightsImages = document.querySelector("#rights_button");
             rightsImages.style.display = "flex";
     
+            // Get current window size
+            var windowSize = {
+                width: window.innerWidth,
+                height: window.innerHeight
+            };
+
+            sendButtonPositions();
+
+            // Emit window size along with the button hover data
+            socket.emit('button_hover_with_window_size', {
+                button: data.button,
+                windowSize: windowSize
+            });
+
             if (data.button == "Top") {
                 lastCategory = "top";
                 updateImages("top");
@@ -304,6 +318,70 @@
               };
           }
         });
+
+        function sendButtonPositions() {
+        // Get the video element
+        var videoElement = document.getElementById('video');
+        var videoRect = videoElement.getBoundingClientRect();
+
+        var videoWidth = videoElement.clientWidth;
+        var videoHeight = videoElement.clientHeight;
+
+        // Actual frame size captured by OpenCV
+        var actualFrameWidth = 1536;
+        var actualFrameHeight = 738;
+
+        var scaleX = actualFrameWidth / videoWidth;
+        var scaleY = actualFrameHeight / videoHeight;
+
+        // Create an object to hold the button positions
+        var buttonPositions = {};
+
+        // Mapping from HTML IDs to backend button names
+        var buttonIdToBackendName = {
+            'button1': 'Top',
+            'button2': 'Bottom',
+            'button3': 'Foot',
+            'option1_1': 'option1_1',
+            'option1_2': 'option1_2',
+            'option1_3': 'option1_3',
+            'up-arrow': 'ChangeUp',
+            'down-arrow': 'Changedown',
+            'recommend': 'Recommend'
+        };
+
+        // List of button IDs
+        var buttonIds = Object.keys(buttonIdToBackendName);
+
+        buttonIds.forEach(function(buttonId) {
+            var buttonElement = document.getElementById(buttonId);
+            if (buttonElement && buttonElement.style.display !== 'none') {
+                var rect = buttonElement.getBoundingClientRect();
+
+                // Calculate positions relative to the video element and scale them
+                var topLeftX = (rect.left - videoRect.left) * scaleX;
+                var topLeftY = (rect.top - videoRect.top) * scaleY;
+                var bottomRightX = (rect.right - videoRect.left) * scaleX;
+                var bottomRightY = (rect.bottom - videoRect.top) * scaleY;
+
+                var backendButtonName = buttonIdToBackendName[buttonId];
+
+                buttonPositions[backendButtonName] = {
+                    'top_left': {'x': topLeftX, 'y': topLeftY},
+                    'bottom_right': {'x': bottomRightX, 'y': bottomRightY}
+                };
+            }
+        });
+
+        // Send the positions to the server
+        socket.emit('button_positions', buttonPositions);
+      }
+
+      // Call the function when the page loads
+      sendButtonPositions();
+
+      // Also call the function when the window is resized
+      window.addEventListener('resize', sendButtonPositions);
 
     });
     </script>

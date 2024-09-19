@@ -1096,5 +1096,17 @@
         "gender": "Both",
         "color": "Espresso brown",
         "style": "Bespoke"
+    },
+    "adamTop.jpeg": {
+        "type": "T-shirt",
+        "gender": "Both",
+        "color": "Olive drab",
+        "style": "Military"
+    },
+    "imageAdam.jpeg": {
+        "type": "Cargo pants",
+        "gender": "Men",
+        "color": "Khaki",
+        "style": "Officewear"
     }
 }

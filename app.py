@@ -109,19 +109,38 @@ def check_user_in_outline_v1():
         global size_capture_done
         size_capture_done = True
         socketio.emit('size_capture_done', {'status': 'completed'})
+
+
+@socketio.on('button_hover_with_window_size')
+def handle_button_hover_with_window_size(data):
+    button = data['button']
+    window_size = data['windowSize']
+    print(f"Button hover: {button}")
+    print(f"Window size: Width: {window_size['width']}, Height: {window_size['height']}")
+    global frame_width, frame_height
+    frame_width, frame_height = window_size['width'], window_size['height']
+
+@socketio.on('button_positions')
+def handle_button_positions(data):
+    global buttons
+    buttons = {}
+    for button_id, coords in data.items():
+        buttons[button_id] = {
+            'top_left': (int(coords['top_left']['x']), int(coords['top_left']['y'])),
+            'bottom_right': (int(coords['bottom_right']['x']), int(coords['bottom_right']['y']))
+        }
+    print("Updated button positions:", buttons)
+
     
-
-
 buttons = {
-    'Top': {'top_left': (657, 462), 'bottom_right': (723, 505)},
-    'Bottom': {'top_left': (657, 515), 'bottom_right': (723, 558)},
-    'Foot': {'top_left':  (657, 568), 'bottom_right':(723, 611)},
-    'Recommend': {'top_left': (925, 1051), 'bottom_right': (1061, 1097)},
-    'Changedown': {'top_left': (1194, 669), 'bottom_right': (1229, 706)},
-    'ChangeUp': {'top_left': (1194, 388), 'bottom_right':  (1229, 425)},
-    'option1_1': {'top_left': (1175, 429), 'bottom_right': (1244, 501)},
-    'option1_2': {'top_left': (1175, 511), 'bottom_right': (1244, 583)},
-    'option1_3': {'top_left': (1175, 593), 'bottom_right': (1244, 665)},
+    'Top': {'top_left': (9, 208), 'bottom_right': (112, 312)},
+    'Bottom': {'top_left': (9, 318), 'bottom_right': (112, 422)},
+    'Foot': {'top_left': (9, 428), 'bottom_right': (112, 532)},
+    'option1_1': {'top_left': (1329, 156), 'bottom_right': (1482, 309)},
+    'option1_2': {'top_left': (1329, 316), 'bottom_right': (1482, 469)},
+    'option1_3': {'top_left': (1329, 476), 'bottom_right': (1482, 629)},
+    'Changedown': {'top_left': (1386, 111), 'bottom_right': (1421, 146)},
+    'Recommend': {'top_left': (701, 593), 'bottom_right': (834, 637)}
 }
 
 
@@ -169,13 +188,13 @@ def check_button_hover(finger_tip_coords):
 
 capture_requested_recommand = False
 
+frame_width, frame_height = 1536, 738  # Default values
 
 def gen_frames():
     global camera
     global capture_requested_recommand
+    global frame_width, frame_height
     camera = cv2.VideoCapture(camera_index)
-    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Changed from 1480 to 1080
     
     mp_hands = mp.solutions.hands
     
@@ -185,13 +204,18 @@ def gen_frames():
             break
         else:
             frame = cv2.flip(frame, 1)
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
+            
+            # Always resize the frame to match the window size
+            frame = cv2.resize(frame, (frame_width, frame_height))
+            
+            # Draw buttons on the frame
             for button, coords in buttons.items():
                 cv2.rectangle(frame,
                             coords['top_left'],
                             coords['bottom_right'],
                             (255, 255, 255))
+            
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                    
             results = hands.process(frame_rgb)
             finger_tip_coords = None
