@@ -104,20 +104,20 @@
       </div>
 
       <div class="arrow-container">
-        <dir class="top-arrow-class">
-          <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="top-left"></i>
-          <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="top-right"></i>
-        </dir>
+        <div class="top-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left" id="top-left" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+          <i class="fa-solid fa-circle-arrow-right" id="top-right" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+        </div>
 
-        <dir class="bottom-arrow-class">
-          <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="bottom-left"></i>
-          <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="bottom-right"></i>
-        </dir>
+        <div class="bottom-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left" id="bottom-left" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+          <i class="fa-solid fa-circle-arrow-right" id="bottom-right" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+        </div>
 
-        <dir class="shoes-arrow-class">
-          <i class="fa-solid fa-circle-arrow-left" id="arrow-icone" id="shoes-left"></i>
-          <i class="fa-solid fa-circle-arrow-right" id="arrow-icone" id="shoes-right"></i>
-        </dir>
+        <div class="shoes-arrow-class">
+          <i class="fa-solid fa-circle-arrow-left" id="shoes-left" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+          <i class="fa-solid fa-circle-arrow-right" id="shoes-right" class="arrow-icone" style="font-size: 220%; color: #F5AC72;"></i>
+        </div>
 
       </div>
 
@@ -233,6 +233,8 @@
 
         var buttonName = message.button_recommand;
 
+        sendButtonPositions();
+
         if (buttonName === 'recommand') {
           handleRecommendButtonClick();
         } else if (buttonName === 'shoffle') {
@@ -274,6 +276,9 @@
       });
 
       function handleButtonRecommand(buttonName) {
+
+        sendButtonPositions();
+
         // Hide all dropdown contents first
         var dropdownContents = document.querySelectorAll('.dropdown-content');
         dropdownContents.forEach(function (content) {
@@ -397,6 +402,8 @@
         } else if (checkDisplay(recommandationButtonsContainer) == 'none') {
           socket.emit('ui_update', { element: 'arrowIcones' });
         }
+
+        sendButtonPositions();
       }
 
       function shuffleImages() {
@@ -420,6 +427,8 @@
           // Emit the displayed images
           emitDisplayedImages();
         }
+
+        sendButtonPositions();
       }
 
       function checkDisplay(element) {
@@ -558,6 +567,105 @@
         titleElement.textContent = data.message;
         titleElement.style.color = 'orange';
       });
+
+
+      function getElementByTextInParent(parentSelector, selector, text) {
+        var parent = document.querySelector(parentSelector);
+        if (parent) {
+          var elements = parent.querySelectorAll(selector);
+          for (var i = 0; i < elements.length; i++) {
+            if (elements[i].textContent.trim().toLowerCase() === text.toLowerCase()) {
+              return elements[i];
+            }
+          }
+        }
+        return null;
+      }
+
+      // Mapping from dictionary keys to functions that return DOM elements
+      var buttonToElement = {
+        'Season': function() { return getElementByTextInParent('#seasonDropdown', 'div.dropbtn', 'Season'); },
+        'winter': function() { return getElementByTextInParent('#seasonDropdown .dropdown-content', 'div', 'Winter'); },
+        'summer': function() { return getElementByTextInParent('#seasonDropdown .dropdown-content', 'div', 'Summer'); },
+        'spring': function() { return getElementByTextInParent('#seasonDropdown .dropdown-content', 'div', 'Spring'); },
+        'fall': function() { return getElementByTextInParent('#seasonDropdown .dropdown-content', 'div', 'Fall'); },
+        'Gender': function() { return getElementByTextInParent('#genderDropdown', 'div.dropbtn', 'Gender'); },
+        'male': function() { return getElementByTextInParent('#genderDropdown .dropdown-content', 'div', 'Male'); },
+        'female': function() { return getElementByTextInParent('#genderDropdown .dropdown-content', 'div', 'Female'); },
+        'unisex': function() { return getElementByTextInParent('#genderDropdown .dropdown-content', 'div', 'Unisex'); },
+        'kids': function() { return getElementByTextInParent('#genderDropdown .dropdown-content', 'div', 'Kids'); },
+        'Color': function() { return getElementByTextInParent('#colorDropdown', 'div.dropbtn', 'Color'); },
+        'red': function() { return getElementByTextInParent('#colorDropdown .dropdown-content', 'div', 'Red'); },
+        'blue': function() { return getElementByTextInParent('#colorDropdown .dropdown-content', 'div', 'Blue'); },
+        'green': function() { return getElementByTextInParent('#colorDropdown .dropdown-content', 'div', 'Green'); },
+        'yellow': function() { return getElementByTextInParent('#colorDropdown .dropdown-content', 'div', 'Yellow'); },
+        'Style': function() { return getElementByTextInParent('#styleDropdown', 'div.dropbtn', 'Style'); },
+        'casual': function() { return getElementByTextInParent('#styleDropdown .dropdown-content', 'div', 'Casual'); },
+        'formal': function() { return getElementByTextInParent('#styleDropdown .dropdown-content', 'div', 'Formal'); },
+        'sport': function() { return getElementByTextInParent('#styleDropdown .dropdown-content', 'div', 'Sport'); },
+        'vintage': function() { return getElementByTextInParent('#styleDropdown .dropdown-content', 'div', 'Vintage'); },
+        'recommand': function() { return document.getElementById('recommend-recommand'); },
+        'topLeft': function() { return document.getElementById('top-left'); },
+        'topright': function() { return document.getElementById('top-right'); },
+        'bottomLeft': function() { return document.getElementById('bottom-left'); },
+        'bottomRight': function() { return document.getElementById('bottom-right'); },
+        'shoesLeft': function() { return document.getElementById('shoes-left'); },
+        'shoesRight': function() { return document.getElementById('shoes-right'); },
+        'shoffle': function() { return document.getElementById('shuffle-icone'); },
+        'refresh': function() { return document.getElementById('refresh'); },
+        'topRecommandItem': function() { return document.getElementById('recommanded-top'); },
+        'bottomRecommandItem': function() { return document.getElementById('recommanded-bottom'); },
+        'footRecommandItem': function() { return document.getElementById('recommanded-foot'); }
+      };
+
+      // Function to send button positions to the server
+      function sendButtonPositions() {
+        // Get the video element
+        var videoElement = document.getElementById('video-recommandation');
+        var videoRect = videoElement.getBoundingClientRect();
+
+        var videoWidth = videoElement.clientWidth;
+        var videoHeight = videoElement.clientHeight;
+
+        // Actual frame size captured by OpenCV
+        var actualFrameWidth = 1536;
+        var actualFrameHeight = 738;
+
+        var scaleX = actualFrameWidth / videoWidth;
+        var scaleY = actualFrameHeight / videoHeight;
+
+        // Create an object to hold the button positions
+        var buttonPositions = {};
+
+        var buttonNames = Object.keys(buttonToElement);
+
+        buttonNames.forEach(function(buttonName) {
+          var element = buttonToElement[buttonName]();
+          if (element && element.style.display !== 'none') {
+            var rect = element.getBoundingClientRect();
+
+            // Calculate positions relative to the video element and scale them
+            var topLeftX = (rect.left - videoRect.left) * scaleX;
+            var topLeftY = (rect.top - videoRect.top) * scaleY;
+            var bottomRightX = (rect.right - videoRect.left) * scaleX;
+            var bottomRightY = (rect.bottom - videoRect.top) * scaleY;
+
+            buttonPositions[buttonName] = {
+              'top_left': {'x': topLeftX, 'y': topLeftY},
+              'bottom_right': {'x': bottomRightX, 'y': bottomRightY}
+            };
+          }
+        });
+
+        // Send the positions to the server
+        socket.emit('button_positions_recommand', buttonPositions);
+      }
+
+      // Call sendButtonPositions when the page loads
+      window.addEventListener('load', sendButtonPositions);
+
+      // Optionally, call sendButtonPositions whenever the window is resized
+      window.addEventListener('resize', sendButtonPositions);
     });    
   </script>
 </body>

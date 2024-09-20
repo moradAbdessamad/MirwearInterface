@@ -1,20 +1,20 @@
 {
     "style_1": {
         "top": {
-            "image": "image1.jpg",
-            "type": "T-shirt",
-            "gender": "Both",
-            "color": "Rose",
+            "image": "image107.jpg",
+            "type": "Graphic tee",
+            "gender": "Men",
+            "color": "Espresso brown",
             "season": null,
-            "style": "Athletic Luxe"
+            "style": "Avant-Garde Streetwear"
         },
         "bottom": {
-            "image": "image103.jpg",
-            "type": "Leggings",
-            "gender": "Women",
-            "color": "Black",
+            "image": "image101.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Dark blue",
             "season": null,
-            "style": "Luxe Loungewear"
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
             "image": "image100.jpg",
@@ -35,6 +35,58 @@
             "style": "Daywear"
         },
         "bottom": {
+            "image": "image103.jpg",
+            "type": "Leggings",
+            "gender": "Women",
+            "color": "Black",
+            "season": null,
+            "style": "Luxe Loungewear"
+        },
+        "shoes": {
+            "image": "image190.jpg",
+            "type": "Platform shoes",
+            "gender": "Women",
+            "color": "Ivory white",
+            "season": null,
+            "style": "Occasionwear"
+        }
+    },
+    "style_3": {
+        "top": {
+            "image": "image111.jpeg",
+            "type": "Suit jacket",
+            "gender": "Men",
+            "color": "Dark gray",
+            "season": null,
+            "style": "Formalwear"
+        },
+        "bottom": {
+            "image": "image136.jpg",
+            "type": "Dress pants",
+            "gender": "Men",
+            "color": "Dark gray",
+            "season": null,
+            "style": "Tailored Casual"
+        },
+        "shoes": {
+            "image": "image115.jpg",
+            "type": "Derby shoes",
+            "gender": "Both",
+            "color": "Oxblood",
+            "season": null,
+            "style": "Officewear"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image194.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Dark gray",
+            "season": null,
+            "style": "Unisex"
+        },
+        "bottom": {
             "image": "image147.jpg",
             "type": "Jeans",
             "gender": "Men",
@@ -43,38 +95,38 @@
             "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image131.jpg",
+            "image": "image29.jpg",
             "type": "Sneakers",
             "gender": "Both",
-            "color": "Navy",
+            "color": "Bright white",
             "season": null,
             "style": "Athletic Luxe"
         }
     },
-    "style_3": {
+    "style_5": {
         "top": {
-            "image": "image183.jpg",
-            "type": "Blouse",
-            "gender": "Women",
-            "color": "Powder blue",
+            "image": "image120.jpg",
+            "type": "Dress shirt",
+            "gender": "Men",
+            "color": "Navy",
             "season": null,
-            "style": "Nightwear"
+            "style": "Smart Casual"
         },
         "bottom": {
-            "image": "image189.jpg",
-            "type": "Palazzo pants",
-            "gender": "Women",
-            "color": "Taupe",
+            "image": "image159.jpg",
+            "type": "Dress pants",
+            "gender": "Men",
+            "color": "Light gray",
             "season": null,
-            "style": "Luxe Loungewear"
+            "style": "Tailored"
         },
         "shoes": {
-            "image": "image201.jpg",
-            "type": "Ballet flats",
-            "gender": "Women",
+            "image": "image121.jpg",
+            "type": "Derby shoes",
+            "gender": "Both",
             "color": "Jet black",
             "season": null,
-            "style": "Occasionwear"
+            "style": "Bespoke"
         }
     }
 }

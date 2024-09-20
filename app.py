@@ -188,6 +188,8 @@ def check_button_hover(finger_tip_coords):
 
 capture_requested_recommand = False
 
+#don't forget to change the w and h to align with the window 
+# and also change it in the html code 
 frame_width, frame_height = 1536, 738  # Default values
 
 def gen_frames():
@@ -319,6 +321,7 @@ def crop_person_for_send(input_path, output_path):
 
 def send_request(button, selected_item):
     global request_in_progress_send
+    global request_in_progress_flag  # Added this line
     print(f"send_request called with button: {button}, selected_item: {selected_item}")
     try:
         # Run the capture and crop process
@@ -381,7 +384,7 @@ def send_request(button, selected_item):
     
     finally:
         request_in_progress_send = False
-        request_in_progress_flag = False  # Change this to False instead of None
+        request_in_progress_flag = False  # This now correctly modifies the global variable
 
 
 def send_request_and_save(vton_img_path, garm_img_path, output_folder, category):
@@ -497,7 +500,38 @@ def send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_fol
 #     'spring': {'top_left': (130, 313), 'bottom_right': (200, 336)},
 #     'fall': {'top_left': (130, 352), 'bottom_right': (200, 376)},
 # }
-        
+
+@socketio.on('button_positions_recommand')
+def handle_button_positions(button_positions):
+    print('Received button positions:', button_positions)
+
+    # Update buttons_recommand with received positions
+    for button, coords in button_positions.items():
+        if button in buttons_recommand:
+            buttons_recommand[button]['top_left'] = (
+                int(coords['top_left']['x']),
+                int(coords['top_left']['y'])
+            )
+            buttons_recommand[button]['bottom_right'] = (
+                int(coords['bottom_right']['x']),
+                int(coords['bottom_right']['y'])
+            )
+
+    # Update arrow_recommand with received positions
+    for button, coords in button_positions.items():
+        if button in arrow_recommand:
+            arrow_recommand[button]['top_left'] = (
+                int(coords['top_left']['x']),
+                int(coords['top_left']['y'])
+            )
+            arrow_recommand[button]['bottom_right'] = (
+                int(coords['bottom_right']['x']),
+                int(coords['bottom_right']['y'])
+            )
+
+    # Emit a response if needed
+    emit('response', {'status': 'success', 'message': 'Button positions updated'})
+
 buttons_recommand = {
     'Season': {'top_left': (175, 114), 'bottom_right': (233, 126)},
     'winter': {'top_left': (175, 132), 'bottom_right': (233, 137)},
@@ -609,6 +643,8 @@ def gen_frames_for_recommandation():
             break
         else:
             frame = cv2.flip(frame, 1)
+            frame = cv2.resize(frame, (frame_width, frame_height))
+
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
 
             # Draw rectangles based on the received positions
@@ -617,7 +653,7 @@ def gen_frames_for_recommandation():
                     cv2.rectangle(frame, 
                                 coords['top_left'], 
                                 coords['bottom_right'], 
-                                (0, 0, 0), 2)  # White rectangle with thickness of 1
+                                (255, 255, 255), 1)  # White rectangle with thickness of 1
 
             if current_recommand_mode == 'arrows':
                 for button, coords in arrow_recommand.items():
@@ -690,12 +726,23 @@ def send_request_recommand(button, selected_item):
     global request_in_progress
     print(f"send_request_recommand called with button: {button}, selected_item: {selected_item}")
     try:
+        # Ensure camera_recommand is valid
+        if camera_recommand is None:
+            print("Error: camera_recommand is not initialized.")
+            raise Exception("Camera not initialized")
+
         # Run the capture and crop process asynchronously
+        print("Starting capture_and_crop_image")
         asyncio.run(capture_and_crop_image())
+        print("Finished capture_and_crop_image")
         
         # Define the paths and parameters based on the selected_item
         models_folder = r'D:\OSC\MirwearInterface\static\models'
-        vton_img_path = max([os.path.join(models_folder, f) for f in os.listdir(models_folder) if f.endswith('.jpg')], key=os.path.getmtime)
+        # Ensure that there is at least one jpg file in models_folder
+        jpg_files = [f for f in os.listdir(models_folder) if f.endswith('.jpg')]
+        if not jpg_files:
+            raise Exception(f"No jpg files found in {models_folder}")
+        vton_img_path = max([os.path.join(models_folder, f) for f in jpg_files], key=os.path.getmtime)
         garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
         output_folder = r'D:\OSC\MirwearInterface\static\output'  
 
@@ -744,12 +791,13 @@ def send_request_recommand(button, selected_item):
             socketio.emit('outfit_image_ready_recommand', {'status': 'error', 'message': 'Generated image not found'})
     
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred in send_request_recommand: {e}")
         import traceback
         traceback.print_exc()
         socketio.emit('outfit_image_ready_recommand', {'status': 'error', 'message': str(e)})
     
     finally:
+        print("Resetting request_in_progress to False")
         request_in_progress = False
 
 
