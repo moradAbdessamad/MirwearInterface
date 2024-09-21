@@ -328,8 +328,8 @@
         var videoHeight = videoElement.clientHeight;
 
         // Actual frame size captured by OpenCV
-        var actualFrameWidth = 1536;
-        var actualFrameHeight = 738;
+        var actualFrameWidth = 1080;
+        var actualFrameHeight = 1920;
 
         var scaleX = actualFrameWidth / videoWidth;
         var scaleY = actualFrameHeight / videoHeight;
@@ -381,7 +381,28 @@
       sendButtonPositions();
 
       // Also call the function when the window is resized
-      window.addEventListener('resize', sendButtonPositions);
+      window.addEventListener('resize', function() {
+          sendButtonPositions();
+          var windowSize = {
+              width: window.innerWidth,
+              height: window.innerHeight
+          };
+          socket.emit('button_hover_with_window_size', {
+              button: 'window_resized',
+              windowSize: windowSize
+          });
+      });
+
+      // Emit button_hover_with_window_size when the document is loaded
+      var windowSize = {
+          width: window.innerWidth,
+          height: window.innerHeight
+      };
+      socket.emit('button_hover_with_window_size', {
+          button: 'document_loaded',
+          windowSize: windowSize
+      });
+
 
     });
     </script>

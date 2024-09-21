@@ -129,7 +129,7 @@ def handle_button_positions(data):
             'top_left': (int(coords['top_left']['x']), int(coords['top_left']['y'])),
             'bottom_right': (int(coords['bottom_right']['x']), int(coords['bottom_right']['y']))
         }
-    print("Updated button positions:", buttons)
+    # print("Updated button positions:", buttons)
 
     
 buttons = {
@@ -190,7 +190,7 @@ capture_requested_recommand = False
 
 #don't forget to change the w and h to align with the window 
 # and also change it in the html code 
-frame_width, frame_height = 1536, 738  # Default values
+frame_width, frame_height = 1080, 1920  # Default values
 
 def gen_frames():
     global camera
@@ -363,6 +363,8 @@ def send_request(button, selected_item):
             send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_folder)
         
         print("Request completed")
+        request_in_progress_send = False
+        request_in_progress_flag = False
         
         output_file_path = os.path.join(output_folder, 'generated_image.webp')
         if os.path.exists(output_file_path):
@@ -503,7 +505,7 @@ def send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_fol
 
 @socketio.on('button_positions_recommand')
 def handle_button_positions(button_positions):
-    print('Received button positions:', button_positions)
+    # print('Received button positions:', button_positions)
 
     # Update buttons_recommand with received positions
     for button, coords in button_positions.items():
@@ -777,6 +779,7 @@ def send_request_recommand(button, selected_item):
             send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_folder)      
 
         print("Request completed")
+        request_in_progress = False
         
         output_file_path = os.path.join(output_folder, 'generated_image.webp')
         if os.path.exists(output_file_path):

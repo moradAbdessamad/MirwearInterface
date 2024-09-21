@@ -51,9 +51,9 @@
 
       <h1 id="application"> Application successfully connected </h1>
 
-      <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;">Hello world gggg </h1>
+      <h1 class="title" class="title_recommandation" id="title_recommandation" style="display: none;">Please select your preferences and hover 'Recommend' for 1s </h1>
 
-      <h1 class="title title-recommandatio-clothings" id="title-recommandatio-clothings">Hello world</h1>
+      <h1 class="title title-recommandatio-clothings" id="title-recommandatio-clothings"> </h1>
 
       <i class="fa-solid fa-spinner fa-spin-pulse" id="spin-icones"></i>
       <img src="{{ url_for('video_feed_recommandation') }}" style="width: 100%" id="video-recommandation" />
@@ -233,8 +233,6 @@
 
         var buttonName = message.button_recommand;
 
-        sendButtonPositions();
-
         if (buttonName === 'recommand') {
           handleRecommendButtonClick();
         } else if (buttonName === 'shoffle') {
@@ -276,9 +274,6 @@
       });
 
       function handleButtonRecommand(buttonName) {
-
-        sendButtonPositions();
-
         // Hide all dropdown contents first
         var dropdownContents = document.querySelectorAll('.dropdown-content');
         dropdownContents.forEach(function (content) {
@@ -402,11 +397,11 @@
         } else if (checkDisplay(recommandationButtonsContainer) == 'none') {
           socket.emit('ui_update', { element: 'arrowIcones' });
         }
-
-        sendButtonPositions();
       }
 
       function shuffleImages() {
+        tryOnImage.style.display = 'none'; // Added line to hide the image
+
         // Increment the style index, and loop back to 1 if it exceeds the number of styles
         if (stylesData) {
           currentStyleIndex = (currentStyleIndex % Object.keys(stylesData).length) + 1;  // Loop through available styles
@@ -427,8 +422,6 @@
           // Emit the displayed images
           emitDisplayedImages();
         }
-
-        sendButtonPositions();
       }
 
       function checkDisplay(element) {
@@ -446,6 +439,8 @@
       }
 
       function updateImageForArrow(category) {
+        tryOnImage.style.display = 'none'; // Added line to hide the image
+
         let index;
         let element;
 
@@ -561,6 +556,7 @@
       });
 
       socket.on('pose_adjustment_needed', function (data) {
+        document.getElementById('thetryonImageRecommand').style.display = 'none'; // Use correct ID
         console.log('Received pose_adjustment_needed:', data);
 
         var titleElement = document.querySelector('.title-recommandatio-clothings');
@@ -628,8 +624,8 @@
         var videoHeight = videoElement.clientHeight;
 
         // Actual frame size captured by OpenCV
-        var actualFrameWidth = 1536;
-        var actualFrameHeight = 738;
+        var actualFrameWidth = 1080;
+        var actualFrameHeight = 1920;
 
         var scaleX = actualFrameWidth / videoWidth;
         var scaleY = actualFrameHeight / videoHeight;
@@ -666,6 +662,8 @@
 
       // Optionally, call sendButtonPositions whenever the window is resized
       window.addEventListener('resize', sendButtonPositions);
+
+    setInterval(sendButtonPositions, 1000);
     });    
   </script>
 </body>
