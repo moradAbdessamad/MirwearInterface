@@ -10,8 +10,8 @@ model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
 processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
 # Define the path to the image folder and output JSON file
-image_folder = r'D:\OSC\MirwearInterface\static\ClothsImageTest'
-output_json_file = r'D:\OSC\MirwearInterface\static\JSONstyles\style.json'
+image_folder = "./static/imagesformcam"
+output_json_file = "./static/JSONstyles/style_recommendations.json"
 
 # Define the possible types of clothing features
 clothing_items = [

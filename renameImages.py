@@ -40,7 +40,7 @@ def rename_and_remove_images(folder_path):
             print(f'Removed: {file}')
 
 # Folder path
-folder_path = r'D:\OSC\MirwearInterface\static\ClothsImageTest'
+folder_path = "./static/imagesformcam"
 
 # Call the function to rename and remove images
 rename_and_remove_images(folder_path)

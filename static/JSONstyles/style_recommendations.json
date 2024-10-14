@@ -1,71 +1,80 @@
 {
     "style_1": {
         "top": {
-            "image": "image140.jpeg",
-            "type": "Dress shirt",
-            "gender": "Men",
-            "color": "Powder blue",
-            "style": "Daywear"
+            "image": "image130.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Cerulean",
+            "season": null,
+            "style": "Refined"
         },
         "bottom": {
-            "image": "image159.jpg",
-            "type": "Dress pants",
-            "gender": "Men",
-            "color": "Light gray",
-            "style": "Tailored"
+            "image": "image146.jpg",
+            "type": "Palazzo pants",
+            "gender": "Women",
+            "color": "Taupe",
+            "season": null,
+            "style": "Luxe Loungewear"
         },
         "shoes": {
-            "image": "image115.jpg",
-            "type": "Derby shoes",
-            "gender": "Both",
-            "color": "Oxblood",
-            "style": "Officewear"
+            "image": "image190.jpg",
+            "type": "Platform shoes",
+            "gender": "Women",
+            "color": "Ivory white",
+            "season": null,
+            "style": "Occasionwear"
         }
     },
     "style_2": {
         "top": {
-            "image": "image15.jpg",
-            "type": "T-shirt",
-            "gender": "Both",
-            "color": "Navy",
-            "style": "Daywear"
+            "image": "image141.jpg",
+            "type": "Henley shirt",
+            "gender": "Men",
+            "color": "Olive drab",
+            "season": null,
+            "style": "Smart Casual"
         },
         "bottom": {
-            "image": "image101.jpg",
-            "type": "Jeans",
+            "image": "imageAdam.jpeg",
+            "type": "Cargo pants",
             "gender": "Men",
-            "color": "Dark blue",
-            "style": "Capsule Wardrobe"
+            "color": "Khaki",
+            "season": null,
+            "style": "Officewear"
         },
         "shoes": {
-            "image": "image131.jpg",
-            "type": "Sneakers",
+            "image": "image198.jpg",
+            "type": "Monk strap shoes",
             "gender": "Both",
-            "color": "Navy",
-            "style": "Athletic Luxe"
+            "color": "Jet black",
+            "season": null,
+            "style": "Officewear"
         }
     },
     "style_3": {
         "top": {
-            "image": "image19.jpeg",
-            "type": "Dress shirt",
+            "image": "image180.jpg",
+            "type": "Henley shirt",
             "gender": "Men",
-            "color": "Powder blue",
-            "style": "Daywear"
+            "color": "Mauve",
+            "season": null,
+            "style": "Smart Casual"
         },
         "bottom": {
-            "image": "image129.jpeg",
-            "type": "Dress pants",
-            "gender": "Men",
-            "color": "Light gray",
-            "style": "Officewear"
+            "image": "image143.jpg",
+            "type": "Wide-leg pants",
+            "gender": "Women",
+            "color": "Navy",
+            "season": null,
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image121.jpg",
-            "type": "Derby shoes",
+            "image": "image200.jpg",
+            "type": "Moccasins",
             "gender": "Both",
-            "color": "Jet black",
-            "style": "Bespoke"
+            "color": "Mulberry",
+            "season": null,
+            "style": "Athletic Luxe"
         }
     }
 }

@@ -44,7 +44,7 @@ pose = mp_pose.Pose()
 mp_drawing = mp.solutions.drawing_utils
 
 # Add camera_index variable
-camera_index = 0  # Default to first camera, change as needed
+camera_index = 1  # Default to first camera, change as needed
 
 selected_items = {'option1_1': None, 'option1_2': None, 'option1_3': None}
 
@@ -55,8 +55,8 @@ current_category = None
 current_items = None
 request_in_progress = None
 
-output_folder = r'D:\OSC\MirwearInterface\static\output'
-folder_path = r"D:\OSC\MirwearInterface\static\output"
+output_folder = "./static/output"
+folder_path = "./static/output"
 
 
 def check_user_in_outline_v1():
@@ -146,8 +146,8 @@ buttons = {
 
 request_in_progress_flag = None
 capture_requested_send = False
-CAPTURED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\imagesformcam\latest_capture.jpg'
-CROPPED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\models\cropped_person_image.jpg'
+CAPTURED_IMAGE_PATH = "./static/imagesformcam/latest_capture.jpg"
+CROPPED_IMAGE_PATH = "./static/models/cropped_person_image.jpg"
 
 def check_button_hover(finger_tip_coords):
     global hover_start_time
@@ -190,67 +190,97 @@ capture_requested_recommand = False
 
 #don't forget to change the w and h to align with the window 
 # and also change it in the html code 
-frame_width, frame_height = 1080, 1920  # Default values
+frame_width, frame_height = 1080, 1920  # Default values for monitor size
 
 def gen_frames():
     global camera
     global capture_requested_recommand
     global frame_width, frame_height
     camera = cv2.VideoCapture(camera_index)
-    
+
     mp_hands = mp.solutions.hands
-    
+    hands = mp_hands.Hands()  # Initialize the hands model
+
+    # Get the original width and height of the video feed
+    original_width = int(camera.get(cv2.CAP_PROP_FRAME_WIDTH))
+    original_height = int(camera.get(cv2.CAP_PROP_FRAME_HEIGHT))
+
+    # Calculate the aspect ratio of the video feed
+    aspect_ratio = original_width / original_height
+
     while True:
         success, frame = camera.read()
         if not success:
             break
         else:
             frame = cv2.flip(frame, 1)
-            
-            # Always resize the frame to match the window size
-            frame = cv2.resize(frame, (frame_width, frame_height))
-            
+
+            # Calculate the new width and height while maintaining the aspect ratio
+            new_height = frame_height  # Use the full height of the monitor
+            new_width = int(new_height * aspect_ratio)  # Adjust width based on aspect ratio
+
+            # If new_width is greater than the monitor width, resize based on frame_width instead
+            if new_width > frame_width:
+                new_width = frame_width
+                new_height = int(new_width / aspect_ratio)
+
+            # Calculate padding to center the frame (ensure padding is not negative)
+            padding = max((frame_width - new_width) // 2, 0)
+
+            # Always resize the frame to match the adjusted size
+            frame = cv2.resize(frame, (new_width, new_height))
+
+            # Add padding to center the frame (if applicable)
+            frame_with_padding = cv2.copyMakeBorder(
+                frame, 0, 0, padding, padding, cv2.BORDER_CONSTANT)
+
             # Draw buttons on the frame
             for button, coords in buttons.items():
-                cv2.rectangle(frame,
-                            coords['top_left'],
-                            coords['bottom_right'],
-                            (255, 255, 255))
-            
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                   
+                cv2.rectangle(frame_with_padding,
+                              coords['top_left'],
+                              coords['bottom_right'],
+                              (255, 255, 255))
+
+            frame_rgb = cv2.cvtColor(frame_with_padding, cv2.COLOR_BGR2RGB)
             results = hands.process(frame_rgb)
-            finger_tip_coords = None
 
             if results.multi_hand_landmarks:
-                # Process only the first detected hand for finger tip
                 hand_landmarks = results.multi_hand_landmarks[0]
-                index_finger_tip = hand_landmarks.landmark[mp_hands.HandLandmark.INDEX_FINGER_TIP]
-                h, w, c = frame.shape
-                cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
-                finger_tip_coords = {'x': cx, 'y': cy}
-                # print((cx, cy))
-                cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
-                check_button_hover(finger_tip_coords)
+                finger_tips_coords = []
+
+                for finger in [mp_hands.HandLandmark.THUMB_TIP,
+                               mp_hands.HandLandmark.INDEX_FINGER_TIP,
+                               mp_hands.HandLandmark.MIDDLE_FINGER_TIP,
+                               mp_hands.HandLandmark.RING_FINGER_TIP,
+                               mp_hands.HandLandmark.PINKY_TIP]:
+                    tip = hand_landmarks.landmark[finger]
+                    cx, cy = int(tip.x * new_width), int(tip.y * new_height)
+                    finger_tips_coords.append({'x': cx, 'y': cy})
+
+                index_finger_tip = finger_tips_coords[1]
+                cv2.circle(frame_with_padding, (index_finger_tip['x'], index_finger_tip['y']), 20, (255, 255, 255), 2)
+
+                check_button_hover(index_finger_tip)
 
             if capture_requested_recommand:
-                input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+                input_folder = "./static/imagesformcam"
                 os.makedirs(input_folder, exist_ok=True)
                 capture_path = os.path.join(input_folder, 'latest_capture.jpg')
-                cv2.imwrite(capture_path, frame)
+                cv2.imwrite(capture_path, frame_with_padding)
                 print(f"Image captured and saved to {capture_path}")
                 capture_requested_recommand = False
                 socketio.emit('image_captured', {'message': 'Image captured successfully'})
 
-            ret, buffer = cv2.imencode('.jpg', frame)
-            frame = buffer.tobytes()
+            ret, buffer = cv2.imencode('.jpg', frame_with_padding)
+            frame_with_padding = buffer.tobytes()
             yield (b'--frame\r\n'
-                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-            
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame_with_padding + b'\r\n')
+
     camera.release()
 
 
-capture_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+
+capture_folder = "./static/imagesformcam"
 
 def capture_and_crop_image_for_send():
     global capture_requested_send, camera
@@ -329,15 +359,15 @@ def send_request(button, selected_item):
         
         # Define the paths and parameters based on the selected_item
         vton_img_path = CROPPED_IMAGE_PATH
-        garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
-        output_folder = r'D:\OSC\MirwearInterface\static\output'  
+        garm_img_path = os.path.join("./static/ClothsImageTest", selected_item)  
+        output_folder = "./static/output"  
 
         print(f"vton_img_path: {vton_img_path}")
         print(f"garm_img_path: {garm_img_path}")
         print(f"output_folder: {output_folder}")
 
         # Determine the category based on the selected item
-        with open(r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json', 'r') as f:
+        with open("./static/JSONstyles/itemsByType.json", 'r') as f:
             items_by_type = json.load(f)
         
         if selected_item in items_by_type.get('top', {}):
@@ -468,8 +498,8 @@ def send_request_and_save_for_upperbody(vton_img_path, garm_img_path, output_fol
 
     # Calculate the time taken
     time_taken = end_time - start_time
-    print(f"Time taken for the request: {time_taken:.2f} seconds")
-
+    print(f"Time taken for the request: {time_taken:.2f} seconds OIUH")
+    print()
     # Check if the result is a list and contains a dictionary with the image path
     if isinstance(result, list) and len(result) > 0 and 'image' in result[0]:
         image_path = result[0]['image']  # Access the image path
@@ -637,35 +667,53 @@ def check_button_hover_recommand(finger_tip_coords):
 def gen_frames_for_recommandation():
     global camera_recommand
     global selected_recommanded_items, capture_requested
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(1)
     camera_recommand = camera
+
+    # Actual frame size (9:16 aspect ratio)
+    actual_frame_width = 1080
+    actual_frame_height = 1920
+
+    # Scaling factor to maintain 9:16 ratio
     while True:
         success, frame = camera.read()
         if not success:
             break
         else:
             frame = cv2.flip(frame, 1)
-            frame = cv2.resize(frame, (frame_width, frame_height))
-
-            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            
+            # Calculate the aspect ratio based on actual frame dimensions
+            height, width, _ = frame.shape
+            aspect_ratio = actual_frame_height / actual_frame_width
+            
+            # Resize the frame to maintain 9:16 aspect ratio
+            if width / height > aspect_ratio:
+                # If the frame is too wide, scale based on height
+                new_height = frame_height
+                new_width = int(new_height * aspect_ratio)
+            else:
+                # Otherwise, scale based on width
+                new_width = frame_width
+                new_height = int(new_width / aspect_ratio)
+            
+            frame = cv2.resize(frame, (new_width, new_height))
 
             # Draw rectangles based on the received positions
             if current_recommand_mode == 'buttons':
                 for button, coords in buttons_recommand.items():
                     cv2.rectangle(frame, 
-                                coords['top_left'], 
-                                coords['bottom_right'], 
-                                (255, 255, 255), 1)  # White rectangle with thickness of 1
+                                  coords['top_left'], 
+                                  coords['bottom_right'], 
+                                  (255, 255, 255), 1)  # White rectangle with thickness of 1
 
             if current_recommand_mode == 'arrows':
                 for button, coords in arrow_recommand.items():
                     cv2.rectangle(frame,
-                                coords['top_left'],
-                                coords['bottom_right'],
-                                (255, 255, 255), 1)      
-                    
-            # print("The frame has been finish drowing")
-                
+                                  coords['top_left'],
+                                  coords['bottom_right'],
+                                  (255, 255, 255), 1)      
+
+            frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             results = hands.process(frame_rgb)
             finger_tip_coords = None
 
@@ -676,13 +724,11 @@ def gen_frames_for_recommandation():
                 h, w, _ = frame.shape
                 cx, cy = int(index_finger_tip.x * w), int(index_finger_tip.y * h)
                 finger_tip_coords = {'x': cx, 'y': cy}
-                # print("the finger tip index")
-                # print((cx, cy))
                 cv2.circle(frame, (cx, cy), 20, (255, 255, 255), 2)
                 check_button_hover_recommand(finger_tip_coords)
 
             if capture_requested:
-                input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
+                input_folder = "./static/imagesformcam"
                 os.makedirs(input_folder, exist_ok=True)
                 capture_path = os.path.join(input_folder, 'latest_capture.jpg')
                 cv2.imwrite(capture_path, frame)
@@ -698,8 +744,8 @@ def gen_frames_for_recommandation():
     camera.release()
 
 camera_recommand = None
-CAPTURED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\imagesformcam\latest_capture.jpg'
-CROPPED_IMAGE_PATH = r'D:\OSC\MirwearInterface\static\models\cropped_person_image.jpg'
+CAPTURED_IMAGE_PATH = "./static/imagesformcam/latest_capture.jpg"
+CROPPED_IMAGE_PATH = "./static/models/cropped_person_image.jpg"
 
 async def capture_and_crop_image():
     global camera_recommand
@@ -739,21 +785,21 @@ def send_request_recommand(button, selected_item):
         print("Finished capture_and_crop_image")
         
         # Define the paths and parameters based on the selected_item
-        models_folder = r'D:\OSC\MirwearInterface\static\models'
+        models_folder = "./static/models"
         # Ensure that there is at least one jpg file in models_folder
         jpg_files = [f for f in os.listdir(models_folder) if f.endswith('.jpg')]
         if not jpg_files:
             raise Exception(f"No jpg files found in {models_folder}")
         vton_img_path = max([os.path.join(models_folder, f) for f in jpg_files], key=os.path.getmtime)
-        garm_img_path = os.path.join(r'D:\OSC\MirwearInterface\static\ClothsImageTest', selected_item)  
-        output_folder = r'D:\OSC\MirwearInterface\static\output'  
+        garm_img_path = os.path.join("./static/imagesformcam", selected_item)  
+        output_folder = "./static/output"  
 
         print(f"vton_img_path: {vton_img_path}")
         print(f"garm_img_path: {garm_img_path}")
         print(f"output_folder: {output_folder}")
 
         # Determine the category based on the selected item
-        with open(r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json', 'r') as f:
+        with open("./static/JSONstyles/itemsByType.json", 'r') as f:
             items_by_type = json.load(f)
         
         if selected_item in items_by_type.get('top', {}):
@@ -812,8 +858,8 @@ def crop_person_from_image():
     model = YOLO('yolov8n.pt').to(device)
 
     # Define input and output folders
-    input_folder = r'D:\OSC\MirwearInterface\static\imagesformcam'
-    output_folder = r'D:\OSC\MirwearInterface\static\models'
+    input_folder = "./static/imagesformcam"
+    output_folder = "./static/models"
 
     # Get the latest image from the input folder
     latest_image = max([os.path.join(input_folder, f) for f in os.listdir(input_folder) if f.endswith('.jpg')], key=os.path.getmtime)
@@ -988,7 +1034,7 @@ def check_qrcode_button_hover(finger_tip_coords):
             print(f"Hovering over {button}")
 
 def gen_qrcode_frames():
-    camera = cv2.VideoCapture(0)
+    camera = cv2.VideoCapture(1)
     while True:
         success, frame = camera.read()
         if not success:
@@ -1228,7 +1274,7 @@ def generate_cloths():
 
 @app.route('/static/JSONstyles/itemsByType.json')
 def serve_json():
-    with open('static/JSONstyles/itemsByType.json') as json_file:
+    with open('./static/JSONstyles/itemsByType.json') as json_file:
         data = json.load(json_file)
     return jsonify(data)
 
@@ -1256,7 +1302,7 @@ def handle_displayed_items(data):
     print(f"Received update for {current_category}: {current_items}")
     
 
-wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
+wardrobe_file_path = "./static/JSONstyles/itemsByType.json"
 processing_in_progress = False  # Flag to track if processing is in progress
 
 @socketio.on('recommendation_selected')
@@ -1388,7 +1434,7 @@ def handle_recommendation_selected(data):
         response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
 
         # Extract and save the JSON
-        extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
+        extract_and_save_json(response_content=response_content, file_path='./static/JSONstyles/style_recommendations.json')
         # Emit that the processing is complete
         socketio.emit('process_status', {'status': 'complete'})
     

@@ -32,7 +32,7 @@ bottom_list = [item for sublist in bottom_list for item in sublist]
 foot_list = [item for sublist in foot_list for item in sublist]
 
 # Load the original JSON data
-input_path = 'D:/OSC/MirwearInterface/static/JSONstyles/style.json'
+input_path = './static/JSONstyles/style.json'
 with open(input_path, 'r') as file:
     data = json.load(file)
 
@@ -49,7 +49,7 @@ for image, attributes in data.items():
         filtered_data['foot'][image] = attributes
 
 # Clear the existing items in itemsByType.json
-output_path = 'D:/OSC/MirwearInterface/static/JSONstyles/itemsByType.json'
+output_path = './static/JSONstyles/itemsByType.json'
 with open(output_path, 'w') as outfile:
     json.dump({}, outfile, indent=4)  # Save an empty dictionary to clear the file
 

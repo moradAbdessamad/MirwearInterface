@@ -76,8 +76,8 @@ def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_l
 
 
 image_path = r'D:\OSC\MirwearInterface\segmentation\truck.jpg'
-sam2_checkpoint = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_large.pt'
-model_cfg = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_l.yaml'
+sam2_checkpoint = "./static/JSONstyles/style_recommendations.json"
+model_cfg = "./static/JSONstyles/style_recommendations.json"
 
 import os
 os.environ["PYTORCH_ENABLE_MPS_FALLBACK"] = "1"
@@ -157,8 +157,8 @@ def show_masks(image, masks, scores, point_coords=None, box_coords=None, input_l
 
 
 image_path = r'D:\OSC\MirwearInterface\static\ClothsImageTest\image61.jpeg'
-sam2_checkpoint = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_large.pt'
-model_cfg = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_l.yaml'
+sam2_checkpoint = "./static/JSONstyles/style_recommendations.json"
+model_cfg = "./static/JSONstyles/style_recommendations.json"
 
 image = Image.open(image_path)
 image = np.array(image.convert("RGB"))

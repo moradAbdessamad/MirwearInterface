@@ -6,8 +6,8 @@ import re
 # Initialize the Groq client with your API key
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
 
-wardrobe_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\itemsByType.json'
-criteria_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\criteria.json'
+wardrobe_file_path = "./static/JSONstyles/itemsByType.json"
+criteria_file_path = "./static/JSONstyles/criteria.json"
 
 # Load user wardrobe data
 def load_wordrobe_data(file_path):
@@ -158,4 +158,4 @@ completion = client.chat.completions.create(
 response_content = completion.choices[0].message['content'] if 'content' in completion.choices[0].message else completion.choices[0].message
 print(response_content)
 
-extract_and_save_json(response_content=response_content, file_path='D:/OSC/MirwearInterface/static/JSONstyles/style_recommendations.json')
+extract_and_save_json(response_content=response_content, file_path='./static/JSONstyles/style_recommendations.json')

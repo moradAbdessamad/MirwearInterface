@@ -29,7 +29,7 @@ model = torch.nn.Linear(2, 1).to(device)
 def save_image():
     success, image = cap.read()
     if success:
-        save_path = r"D:\OSC\MirwearInterface\static\output"
+        save_path = "./static/output"
         os.makedirs(save_path, exist_ok=True)
         file_name = f"captured_image_{len(os.listdir(save_path))}.jpg"
         cv2.imwrite(os.path.join(save_path, file_name), image)

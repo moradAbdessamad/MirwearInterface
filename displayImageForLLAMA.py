@@ -25,8 +25,8 @@ class StyleViewerApp:
         self.right_button.pack(side="right", padx=10)
 
         # Hard-coded paths
-        self.json_file_path = r'D:\OSC\MirwearInterface\static\JSONstyles\style_recommendations.json'
-        self.folder_path = r'D:\OSC\MirwearInterface\static\ClothsImageTest'
+        self.json_file_path = "./static/JSONstyles/style_recommendations.json"
+        self.folder_path = "./static/imagesformcam"
 
         # Load the JSON and display the first style
         self.styles = self.load_json(self.json_file_path)

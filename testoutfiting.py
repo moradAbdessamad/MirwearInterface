@@ -6,7 +6,7 @@ import shutil
 import os
 
 # Initialize the camera
-camera = cv2.VideoCapture(0)  # Use 0 for default camera, adjust if needed
+camera = cv2.VideoCapture(1)  # Use 0 for default camera, adjust if needed
 
 # Function to capture image from camera
 def capture_image():

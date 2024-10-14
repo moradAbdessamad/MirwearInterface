@@ -57,20 +57,23 @@
           </svg>
         </div>
 
-        <h1 id="application"> The Application is connected </h1>
+        <h1 id="application">The Application is connected</h1>
 
         <h1 class="title">
           Please hover with your index fingertip for 1 second to click
         </h1>
 
-        <h1 class="title-layout-generating">
-          select the item to get dress
-        </h1>
+        <h1 class="title-layout-generating">select the item to get dress</h1>
 
         <img id="video" src="{{ url_for('video_feed') }}" />
 
         <div class="image-clothings">
-            <img src="{{ url_for('static', filename='output/generated_image.webp') }}" alt="Generated Image" id="thetryonImage" style="display: none;">
+          <img
+            src="{{ url_for('static', filename='output/generated_image.webp') }}"
+            alt="Generated Image"
+            id="thetryonImage"
+            style="display: none"
+          />
         </div>
 
         <div class="buttonsCon">
@@ -88,7 +91,7 @@
               <img
                 id="button2"
                 class="cloth-image"
-                src="{{ url_for('static', filename='ClothsImageTest/image196.jpg') }}"
+                src="{{ url_for('static', filename='ClothsImageTest/image147.jpg') }}"
                 style="display: inline"
               />
             </div>
@@ -104,31 +107,21 @@
           </div>
 
           <div class="rights_button" id="rights_button" style="display: none">
-            <i
-              class="fa-solid fa-circle-arrow-up"
-              id="down-arrow"
-            ></i>
+            <i class="fa-solid fa-circle-arrow-up" id="down-arrow"></i>
 
             <div class="image-container-rights">
               <img id="option1_1" class="cloth-image" src="" />
             </div>
 
             <div class="image-container-rights">
-              <img
-                id="option1_2"
-                class="cloth-image"
-                src=""
-              />
+              <img id="option1_2" class="cloth-image" src="" />
             </div>
 
             <div class="image-container-rights">
               <img id="option1_3" class="cloth-image" src="" />
             </div>
 
-            <i
-              class="fa-solid fa-circle-arrow-down"
-              id="up-arrow"
-            ></i>
+            <i class="fa-solid fa-circle-arrow-down" id="up-arrow"></i>
           </div>
         </div>
 
@@ -140,271 +133,298 @@
       crossorigin="anonymous"
     ></script>
     <script>
-
-      window.addEventListener('load', function () {
-        document.body.classList.add('loaded');
+      window.addEventListener("load", function () {
+        document.body.classList.add("loaded");
       });
-      
+
       document.addEventListener("DOMContentLoaded", function () {
         var socket = io();
         var jsonData = null;
-        var currentIndex = { "top": 0, "bottom": 0, "foot": 0 };
+        var currentIndex = { top: 0, bottom: 0, foot: 0 };
         const itemsPerPage = 3;
         var lastCategory = null;
-        var thetryonImage = document.getElementById('thetryonImage');
-        var generatingTitle = document.querySelector('.title-layout-generating');
-        var imageClothings = document.querySelector('.image-clothings');
-        var titleElement = document.querySelector('.title');
-
+        var thetryonImage = document.getElementById("thetryonImage");
+        var generatingTitle = document.querySelector(
+          ".title-layout-generating"
+        );
+        var imageClothings = document.querySelector(".image-clothings");
+        var titleElement = document.querySelector(".title");
 
         // Load the JSON file
-        fetch("/static/JSONstyles/itemsByType.json")
-        .then((response) => response.json())
-        .then((data) => {
+        fetch("./static/JSONstyles/itemsByType.json")
+          .then((response) => response.json())
+          .then((data) => {
             jsonData = data;
             console.log("JSON data loaded:", jsonData);
-        })
-        .catch((error) => console.error("Error loading JSON:", error));
-    
+          })
+          .catch((error) => console.error("Error loading JSON:", error));
+
         function updateImages(category) {
           if (!jsonData) {
-              console.error("JSON data not loaded yet");
-              return;
+            console.error("JSON data not loaded yet");
+            return;
           }
-      
+
           var image1 = document.getElementById("option1_1");
           var image2 = document.getElementById("option1_2");
           var image3 = document.getElementById("option1_3");
-      
+
           // Calculate the remaining items
-          const remainingItems = Object.keys(jsonData[category]).length - currentIndex[category];
-      
+          const remainingItems =
+            Object.keys(jsonData[category]).length - currentIndex[category];
+
           // If there are not enough items left to display, reset the index to 0
           if (remainingItems < itemsPerPage) {
-              currentIndex[category] = 0;
+            currentIndex[category] = 0;
           }
-      
+
           // Get the images from JSON starting at currentIndex[category]
-          const images = Object.keys(jsonData[category]).slice(currentIndex[category], currentIndex[category] + itemsPerPage);
-      
-          console.log(
-              `Displaying items ${currentIndex[category] + 1} to ${currentIndex[category] + images.length} for category: ${category}`
+          const images = Object.keys(jsonData[category]).slice(
+            currentIndex[category],
+            currentIndex[category] + itemsPerPage
           );
-      
+
+          console.log(
+            `Displaying items ${currentIndex[category] + 1} to ${
+              currentIndex[category] + images.length
+            } for category: ${category}`
+          );
+
           // Update the src attributes of the images, only if the images exist
           image1.src = images[0] ? `static/ClothsImageTest/${images[0]}` : "";
           image2.src = images[1] ? `static/ClothsImageTest/${images[1]}` : "";
           image3.src = images[2] ? `static/ClothsImageTest/${images[2]}` : "";
-      
+
           // Optionally, hide the image elements if they have no valid src
           image1.style.display = images[0] ? "block" : "none";
           image2.style.display = images[1] ? "block" : "none";
           image3.style.display = images[2] ? "block" : "none";
-      
+
           // Remove the arrow visibility toggle
           // document.getElementById("up-arrow").style.display = (currentIndex[category] > 0) ? "block" : "none";
           // document.getElementById("down-arrow").style.display = (currentIndex[category] + itemsPerPage < Object.keys(jsonData[category]).length) ? "block" : "none";
 
           sendCurrentItemsToServer(category);
-        } 
-        
+        }
+
         function sendCurrentItemsToServer(category) {
           const image1 = document.getElementById("option1_1");
           const image2 = document.getElementById("option1_2");
           const image3 = document.getElementById("option1_3");
 
           const displayedItems = [image1.src, image2.src, image3.src]
-            .filter(src => src !== "")
-            .map(src => src.split('/').pop());
+            .filter((src) => src !== "")
+            .map((src) => src.split("/").pop());
 
-          socket.emit('update_displayed_items', {
+          socket.emit("update_displayed_items", {
             category: category,
-            items: displayedItems
+            items: displayedItems,
           });
         }
 
         function showGeneratingMessage(message) {
-            generatingTitle.textContent = message;
-            generatingTitle.style.display = 'block';
+          generatingTitle.textContent = message;
+          generatingTitle.style.display = "block";
         }
 
         function hideGeneratingMessage() {
-            generatingTitle.style.display = 'none';
+          generatingTitle.style.display = "none";
         }
 
         function showImageClothings() {
-            imageClothings.style.display = 'block';
+          imageClothings.style.display = "block";
         }
 
         socket.on("button_hover", function (data) {
-            var rightsImages = document.querySelector("#rights_button");
-            rightsImages.style.display = "flex";
-    
-            // Get current window size
-            var windowSize = {
-                width: window.innerWidth,
-                height: window.innerHeight
-            };
+          var rightsImages = document.querySelector("#rights_button");
+          rightsImages.style.display = "flex";
 
-            sendButtonPositions();
+          // Get current window size
+          var windowSize = {
+            width: window.innerWidth,
+            height: window.innerHeight,
+          };
 
-            // Emit window size along with the button hover data
-            socket.emit('button_hover_with_window_size', {
-                button: data.button,
-                windowSize: windowSize
-            });
+          sendButtonPositions();
 
-            if (data.button == "Top") {
-                lastCategory = "top";
-                updateImages("top");
-            } else if (data.button == "Bottom") {
-                lastCategory = "bottom";
-                updateImages("bottom");
-            } else if (data.button == "Foot") {
-                lastCategory = "foot";
-                updateImages("foot");
-            } else if (data.button == "Recommend") {
-                window.location.href = "/recommandation";
-            } else if (data.button == "ChangeUp" && lastCategory) {
-                currentIndex[lastCategory] += itemsPerPage;
-                if (currentIndex[lastCategory] >= Object.keys(jsonData[lastCategory]).length) {
-                    currentIndex[lastCategory] = 0; // Reset to 0 if the end is reached
-                }
-                updateImages(lastCategory);
-            } else if (data.button == "Changedown" && lastCategory) {
-                if (currentIndex[lastCategory] > 0) {
-                    currentIndex[lastCategory] -= itemsPerPage;
-                } else {
-                    // Wrap around to the last page if ChangeDown is pressed on the first page
-                    currentIndex[lastCategory] = Math.max(0, Object.keys(jsonData[lastCategory]).length - itemsPerPage);
-                }
-                updateImages(lastCategory);
+          // Emit window size along with the button hover data
+          socket.emit("button_hover_with_window_size", {
+            button: data.button,
+            windowSize: windowSize,
+          });
+
+          if (data.button == "Top") {
+            lastCategory = "top";
+            updateImages("top");
+          } else if (data.button == "Bottom") {
+            lastCategory = "bottom";
+            updateImages("bottom");
+          } else if (data.button == "Foot") {
+            lastCategory = "foot";
+            updateImages("foot");
+          } else if (data.button == "Recommend") {
+            window.location.href = "/recommandation";
+          } else if (data.button == "ChangeUp" && lastCategory) {
+            currentIndex[lastCategory] += itemsPerPage;
+            if (
+              currentIndex[lastCategory] >=
+              Object.keys(jsonData[lastCategory]).length
+            ) {
+              currentIndex[lastCategory] = 0; // Reset to 0 if the end is reached
             }
-        });
-        
-        socket.on('pose_adjustment_needed_send', function (data) {
-          console.log('Received pose_adjustment_needed_send:', data);
-          generatingTitle.textContent = data.message;
-          generatingTitle.style.display = 'block';
-          thetryonImage.style.display = 'none';
-        });
-
-        socket.on('outfit_image_ready', function(data) {
-            if (data.status === 'sending') {
-                generatingTitle.textContent = 'Generating the outfit...';
-            } else if (data.status === 'complete') {
-                generatingTitle.textContent = 'Outfit is generated';
-            } else if (data.status === 'error') {
-                generatingTitle.textContent = 'Error: ' + data.message;
+            updateImages(lastCategory);
+          } else if (data.button == "Changedown" && lastCategory) {
+            if (currentIndex[lastCategory] > 0) {
+              currentIndex[lastCategory] -= itemsPerPage;
+            } else {
+              // Wrap around to the last page if ChangeDown is pressed on the first page
+              currentIndex[lastCategory] = Math.max(
+                0,
+                Object.keys(jsonData[lastCategory]).length - itemsPerPage
+              );
             }
-        });
-
-        socket.on('outfit_image_ready_in_request', function(data) {
-          if (data.status === 'complete') {
-              var thetryonImage = document.getElementById('thetryonImage');
-              // Add a timestamp to prevent caching
-              thetryonImage.src = data.path + '?t=' + new Date().getTime();
-              thetryonImage.style.display = 'block';
-              
-              console.log('Image path:', data.path); // Log the image path
-
-              // Add an onload event to check if the image loads successfully
-              thetryonImage.onload = function() {
-                  console.log('Image loaded successfully');
-              };
-              
-              thetryonImage.onerror = function() {
-                  console.error('Error loading image');
-              };
+            updateImages(lastCategory);
           }
         });
 
-        function sendButtonPositions() {
-        // Get the video element
-        var videoElement = document.getElementById('video');
-        var videoRect = videoElement.getBoundingClientRect();
-
-        var videoWidth = videoElement.clientWidth;
-        var videoHeight = videoElement.clientHeight;
-
-        // Actual frame size captured by OpenCV
-        var actualFrameWidth = 1080;
-        var actualFrameHeight = 1920;
-
-        var scaleX = actualFrameWidth / videoWidth;
-        var scaleY = actualFrameHeight / videoHeight;
-
-        // Create an object to hold the button positions
-        var buttonPositions = {};
-
-        // Mapping from HTML IDs to backend button names
-        var buttonIdToBackendName = {
-            'button1': 'Top',
-            'button2': 'Bottom',
-            'button3': 'Foot',
-            'option1_1': 'option1_1',
-            'option1_2': 'option1_2',
-            'option1_3': 'option1_3',
-            'up-arrow': 'ChangeUp',
-            'down-arrow': 'Changedown',
-            'recommend': 'Recommend'
-        };
-
-        // List of button IDs
-        var buttonIds = Object.keys(buttonIdToBackendName);
-
-        buttonIds.forEach(function(buttonId) {
-            var buttonElement = document.getElementById(buttonId);
-            if (buttonElement && buttonElement.style.display !== 'none') {
-                var rect = buttonElement.getBoundingClientRect();
-
-                // Calculate positions relative to the video element and scale them
-                var topLeftX = (rect.left - videoRect.left) * scaleX;
-                var topLeftY = (rect.top - videoRect.top) * scaleY;
-                var bottomRightX = (rect.right - videoRect.left) * scaleX;
-                var bottomRightY = (rect.bottom - videoRect.top) * scaleY;
-
-                var backendButtonName = buttonIdToBackendName[buttonId];
-
-                buttonPositions[backendButtonName] = {
-                    'top_left': {'x': topLeftX, 'y': topLeftY},
-                    'bottom_right': {'x': bottomRightX, 'y': bottomRightY}
-                };
-            }
+        socket.on("pose_adjustment_needed_send", function (data) {
+          console.log("Received pose_adjustment_needed_send:", data);
+          generatingTitle.textContent = data.message;
+          generatingTitle.style.display = "block";
+          thetryonImage.style.display = "none";
         });
 
-        // Send the positions to the server
-        socket.emit('button_positions', buttonPositions);
-      }
+        socket.on("outfit_image_ready", function (data) {
+          if (data.status === "sending") {
+            generatingTitle.textContent = "Generating the outfit...";
+          } else if (data.status === "complete") {
+            generatingTitle.textContent = "Outfit is generated";
+          } else if (data.status === "error") {
+            generatingTitle.textContent = "Error: " + data.message;
+          }
+        });
 
-      // Call the function when the page loads
-      sendButtonPositions();
+        socket.on("outfit_image_ready_in_request", function (data) {
+          if (data.status === "complete") {
+            var thetryonImage = document.getElementById("thetryonImage");
+            // Add a timestamp to prevent caching
+            thetryonImage.src = data.path + "?t=" + new Date().getTime();
+            thetryonImage.style.display = "block";
 
-      // Also call the function when the window is resized
-      window.addEventListener('resize', function() {
+            console.log("Image path:", data.path); // Log the image path
+
+            // Add an onload event to check if the image loads successfully
+            thetryonImage.onload = function () {
+              console.log("Image loaded successfully");
+            };
+
+            thetryonImage.onerror = function () {
+              console.error("Error loading image");
+            };
+          }
+        });
+
+        // Dezoom factor, adjust this to match the dezoom factor from the Python side
+        function sendButtonPositions() {
+          var videoElement = document.getElementById("video");
+          var videoRect = videoElement.getBoundingClientRect();
+
+          var videoWidth = videoElement.clientWidth;
+          var videoHeight = videoElement.clientHeight;
+
+          // Actual frame size captured by OpenCV (9:16 ratio)
+          var actualFrameWidth = 360;
+          var actualFrameHeight = 610;
+
+          // Calculate scaling factors based on the new 9:16 aspect ratio
+          var scaleX = actualFrameWidth / videoWidth;
+          var scaleY = actualFrameHeight / videoHeight;
+
+          // Visible portion of the frame (assumes monitor only shows the center of the frame)
+          var visibleWidth = videoWidth; // This represents the width visible on the monitor
+          var visibleHeight = videoHeight; // The height remains unchanged
+
+          // Calculate the portion of the frame that is centered (cropping left and right)
+          var cropLeft = (actualFrameWidth - visibleWidth) / 2; // Cropped pixels on the left
+          var cropRight = actualFrameWidth - cropLeft; // End of the visible area on the right
+
+          // Create an object to hold the button positions
+          var buttonPositions = {};
+
+          // Mapping from HTML IDs to backend button names
+          var buttonIdToBackendName = {
+            button1: "Top",
+            button2: "Bottom",
+            button3: "Foot",
+            option1_1: "option1_1",
+            option1_2: "option1_2",
+            option1_3: "option1_3",
+            "up-arrow": "ChangeUp",
+            "down-arrow": "Changedown",
+            recommend: "Recommend",
+          };
+
+          // List of button IDs
+          var buttonIds = Object.keys(buttonIdToBackendName);
+
+          buttonIds.forEach(function (buttonId) {
+            var buttonElement = document.getElementById(buttonId);
+            if (buttonElement && buttonElement.style.display !== "none") {
+              var rect = buttonElement.getBoundingClientRect();
+
+              // Calculate positions relative to the video element and scale them
+              var topLeftX = (rect.left - videoRect.left) * scaleX;
+              var topLeftY = (rect.top - videoRect.top) * scaleY;
+              var bottomRightX = (rect.right - videoRect.left) * scaleX;
+              var bottomRightY = (rect.bottom - videoRect.top) * scaleY;
+
+              // Adjust the button positions to align with the visible (centered) portion of the frame
+              topLeftX -= cropLeft; // Shift left by the cropped portion
+              bottomRightX -= cropLeft;
+
+              // Ensure that the button positions stay within the visible area
+              if (topLeftX < 0) topLeftX = 0;
+              if (bottomRightX > visibleWidth) bottomRightX = visibleWidth;
+
+              var backendButtonName = buttonIdToBackendName[buttonId];
+
+              buttonPositions[backendButtonName] = {
+                top_left: { x: topLeftX, y: topLeftY },
+                bottom_right: { x: bottomRightX, y: bottomRightY },
+              };
+            }
+          });
+
+          // Send the positions to the server
+          socket.emit("button_positions", buttonPositions);
+        }
+
+        // Call the function when the page loads
+        sendButtonPositions();
+
+        // Also call the function when the window is resized
+        window.addEventListener("resize", function () {
           sendButtonPositions();
           var windowSize = {
-              width: window.innerWidth,
-              height: window.innerHeight
+            width: window.innerWidth,
+            height: window.innerHeight,
           };
-          socket.emit('button_hover_with_window_size', {
-              button: 'window_resized',
-              windowSize: windowSize
+          socket.emit("button_hover_with_window_size", {
+            button: "window_resized",
+            windowSize: windowSize,
           });
-      });
+        });
 
-      // Emit button_hover_with_window_size when the document is loaded
-      var windowSize = {
+        // Emit button_hover_with_window_size when the document is loaded
+        var windowSize = {
           width: window.innerWidth,
-          height: window.innerHeight
-      };
-      socket.emit('button_hover_with_window_size', {
-          button: 'document_loaded',
-          windowSize: windowSize
+          height: window.innerHeight,
+        };
+        socket.emit("button_hover_with_window_size", {
+          button: "document_loaded",
+          windowSize: windowSize,
+        });
       });
-
-
-    });
     </script>
   </body>
 </html>

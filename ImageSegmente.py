@@ -110,13 +110,13 @@ def show_masks_on_frame(frame, masks, scores, point_coords=None, box_coords=None
     
 
 # Load the image and model configuration
-sam2_checkpoint = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_large.pt'
-model_cfg = r'D:\OSC\MirwearInterface\sam2\sam2_hiera_l.yaml'
+sam2_checkpoint = "./static/JSONstyles/style_recommendations.json"
+model_cfg = "./static/JSONstyles/style_recommendations.json"
 
 predictor = SAM2VideoPredictor.from_pretrained("facebook/sam2-hiera-large")
 
 # Load your video
-video_path = r'D:\OSC\MirwearInterface\segmentation\sav_000001.mp4'
+video_path = "./segmentation/sav_000001.mp4"
 cap = cv2.VideoCapture(video_path)
 
 # Define the output video
