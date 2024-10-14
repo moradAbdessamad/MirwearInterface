@@ -61,6 +61,9 @@ folder_path = "./static/output"
 
 def check_user_in_outline_v1():
     cap = cv2.VideoCapture(camera_index)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    cap.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     start_time = None
     capturing = False
     outline_image = cv2.imread('static/Cloths/image.png', -1)
@@ -942,6 +945,9 @@ def is_within_circle(point_x, point_y, circle_x, circle_y, radius=20):
 
 def gen_frames_for_outline():
     cam = cv2.VideoCapture(camera_index)
+    # cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    # cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    # cam.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     
     if not cam.isOpened():
         print("Error: Could not open video source.")
@@ -1018,8 +1024,6 @@ def gen_frames_for_outline():
 #     'shoffle': {'top_left': (548, 428), 'bottom_right': (596, 476)}
 # }
             
-
-
 
 qr_buttons = {
     'qr_button1': {'top_left': (100, 100), 'bottom_right': (200, 200)},
