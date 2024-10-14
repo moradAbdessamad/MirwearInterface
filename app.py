@@ -61,6 +61,9 @@ folder_path = r"D:\OSC\MirwearInterface\static\output"
 
 def check_user_in_outline_v1():
     cap = cv2.VideoCapture(camera_index)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    cap.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     start_time = None
     capturing = False
     outline_image = cv2.imread('static/Cloths/image.png', -1)
@@ -197,6 +200,9 @@ def gen_frames():
     global capture_requested_recommand
     global frame_width, frame_height
     camera = cv2.VideoCapture(camera_index)
+    # camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    # camera.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     
     mp_hands = mp.solutions.hands
     
@@ -638,6 +644,9 @@ def gen_frames_for_recommandation():
     global camera_recommand
     global selected_recommanded_items, capture_requested
     camera = cv2.VideoCapture(0)
+    # camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    # camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    # camera.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     camera_recommand = camera
     while True:
         success, frame = camera.read()
@@ -896,6 +905,9 @@ def is_within_circle(point_x, point_y, circle_x, circle_y, radius=20):
 
 def gen_frames_for_outline():
     cam = cv2.VideoCapture(camera_index)
+    # cam.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    # cam.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    # cam.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     
     if not cam.isOpened():
         print("Error: Could not open video source.")
@@ -973,8 +985,6 @@ def gen_frames_for_outline():
 # }
             
 
-
-
 qr_buttons = {
     'qr_button1': {'top_left': (100, 100), 'bottom_right': (200, 200)},
     'qr_button2': {'top_left': (300, 300), 'bottom_right': (400, 400)},
@@ -989,6 +999,9 @@ def check_qrcode_button_hover(finger_tip_coords):
 
 def gen_qrcode_frames():
     camera = cv2.VideoCapture(0)
+    camera.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)  # Set the width to 1920
+    camera.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)  # Set the height to 1080
+    camera.set(cv2.CAP_PROP_FPS, 30)  # Set the frame rate to 30 FPS
     while True:
         success, frame = camera.read()
         if not success:

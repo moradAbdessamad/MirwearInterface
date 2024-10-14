@@ -1,34 +1,34 @@
 {
     "style_1": {
         "top": {
-            "image": "image140.jpeg",
-            "type": "Dress shirt",
+            "image": "image140.jpg",
+            "type": "Henley shirt",
             "gender": "Men",
-            "color": "Powder blue",
-            "style": "Daywear"
+            "color": "Pastel lavender",
+            "style": "Partywear"
         },
         "bottom": {
-            "image": "image159.jpg",
-            "type": "Dress pants",
-            "gender": "Men",
-            "color": "Light gray",
-            "style": "Tailored"
+            "image": "image103.jpg",
+            "type": "Leggings",
+            "gender": "Women",
+            "color": "Black",
+            "style": "Luxe Loungewear"
         },
         "shoes": {
-            "image": "image115.jpg",
-            "type": "Derby shoes",
+            "image": "image200.jpg",
+            "type": "Moccasins",
             "gender": "Both",
-            "color": "Oxblood",
-            "style": "Officewear"
+            "color": "Mulberry",
+            "style": "Athletic Luxe"
         }
     },
     "style_2": {
         "top": {
-            "image": "image15.jpg",
+            "image": "image1.jpg",
             "type": "T-shirt",
             "gender": "Both",
-            "color": "Navy",
-            "style": "Daywear"
+            "color": "Rose",
+            "style": "Athletic Luxe"
         },
         "bottom": {
             "image": "image101.jpg",
@@ -38,34 +38,80 @@
             "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image131.jpg",
+            "image": "image100.jpg",
             "type": "Sneakers",
             "gender": "Both",
-            "color": "Navy",
-            "style": "Athletic Luxe"
+            "color": "Pastel blue",
+            "style": "Sportswear"
         }
     },
     "style_3": {
         "top": {
-            "image": "image19.jpeg",
-            "type": "Dress shirt",
-            "gender": "Men",
-            "color": "Powder blue",
+            "image": "image15.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Navy",
             "style": "Daywear"
         },
         "bottom": {
-            "image": "image129.jpeg",
-            "type": "Dress pants",
-            "gender": "Men",
-            "color": "Light gray",
-            "style": "Officewear"
+            "image": "image143.jpg",
+            "type": "Wide-leg pants",
+            "gender": "Women",
+            "color": "Navy",
+            "style": "Capsule Wardrobe"
         },
         "shoes": {
-            "image": "image121.jpg",
-            "type": "Derby shoes",
+            "image": "image197.jpg",
+            "type": "Sneakers",
             "gender": "Both",
             "color": "Jet black",
-            "style": "Bespoke"
+            "style": "Retro Revival"
+        }
+    },
+    "style_4": {
+        "top": {
+            "image": "image130.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Cerulean",
+            "style": "Refined"
+        },
+        "bottom": {
+            "image": "image24.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Dark blue",
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image110.jpg",
+            "type": "Espadrilles",
+            "gender": "Women",
+            "color": "Navy",
+            "style": "Athletic Luxe"
+        }
+    },
+    "style_5": {
+        "top": {
+            "image": "image16.jpg",
+            "type": "T-shirt",
+            "gender": "Both",
+            "color": "Navy",
+            "style": "Daywear"
+        },
+        "bottom": {
+            "image": "image26.jpg",
+            "type": "Jeans",
+            "gender": "Men",
+            "color": "Denim",
+            "style": "Capsule Wardrobe"
+        },
+        "shoes": {
+            "image": "image160.jpg",
+            "type": "Espadrilles",
+            "gender": "Women",
+            "color": "Jet black",
+            "style": "Athletic Luxe"
         }
     }
 }
